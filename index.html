@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Baby Carrusel</title>
+  <style>
+    :root { --rosa:#f8c9d4; --lavanda:#dcd3f3; --crema:#fffaf4; --tinta:#493f45; --blanco:#fff; }
+    * { box-sizing:border-box; }
+    body { margin:0; font-family:Arial, Helvetica, sans-serif; color:var(--tinta); background:var(--crema); }
+    header { display:flex; align-items:center; justify-content:space-between; max-width:1100px; margin:auto; padding:22px 28px; }
+    .logo { font-weight:800; font-size:22px; letter-spacing:.5px; }
+    nav { display:flex; gap:26px; }
+    nav a { color:var(--tinta); text-decoration:none; font-weight:600; }
+    .menu { display:none; border:0; background:none; font-size:24px; }
+    .hero { min-height:520px; display:grid; grid-template-columns:1fr 1fr; align-items:center; max-width:1100px; margin:auto; padding:30px 28px 70px; }
+    .hero-copy { max-width:520px; }
+    .eyebrow { display:inline-block; padding:8px 14px; border-radius:20px; background:var(--lavanda); font-size:13px; font-weight:bold; }
+    h1 { margin:22px 0 18px; font-size:clamp(42px,7vw,76px); line-height:.95; }
+    .hero p { font-size:18px; line-height:1.7; max-width:460px; }
+    .boton { display:inline-block; margin-top:10px; padding:15px 24px; border-radius:30px; background:var(--tinta); color:white; text-decoration:none; font-weight:bold; }
+    .visual { position:relative; height:430px; border-radius:48% 48% 28px 28px; background:linear-gradient(145deg,var(--rosa),var(--lavanda)); overflow:hidden; }
+    .visual::before { content:""; position:absolute; width:210px; height:210px; left:50%; top:48%; transform:translate(-50%,-50%); border-radius:50%; background:rgba(255,255,255,.75); }
+    .visual span { position:absolute; inset:0; display:grid; place-items:center; font-size:110px; z-index:1; }
+    section { max-width:1100px; margin:auto; padding:70px 28px; }
+    .tarjetas { display:grid; grid-template-columns:repeat(3,1fr); gap:20px; }
+    .tarjeta { padding:28px; border-radius:20px; background:white; border:1px solid #eee6e8; }
+    .tarjeta h3 { margin-top:18px; }
+    .icono { display:grid; place-items:center; width:52px; height:52px; border-radius:50%; background:var(--rosa); font-size:24px; }
+    footer { text-align:center; padding:30px; color:#756a6f; }
+    @media (max-width:700px) {
+      nav { display:none; } .menu { display:block; }
+      .hero { grid-template-columns:1fr; text-align:center; } .hero-copy { margin:auto; } .hero p { margin-inline:auto; }
+      .visual { height:340px; margin-top:36px; } .tarjetas { grid-template-columns:1fr; }
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <div class="logo">Baby Carrusel</div>
+    <nav aria-label="Navegación principal">
+      <a href="#inicio">Inicio</a>
+      <a href="#servicios">Servicios</a>
+      <a href="#nosotros">Nosotros</a>
+    </nav>
+    <button class="menu" aria-label="Abrir menú">☰</button>
+  </header>
+
+  <main>
+    <div class="hero" id="inicio">
+      <div class="hero-copy">
+        <span class="eyebrow">Pequeños momentos, grandes recuerdos</span>
+        <h1>Cuidamos su mundo</h1>
+        <p>Un espacio cálido, seguro y lleno de descubrimientos para acompañar a tu bebé en cada nueva etapa.</p>
+        <a class="boton" href="#servicios">Conocer más</a>
+      </div>
+      <div class="visual" aria-label="Ilustración infantil"><span>☁️</span></div>
+    </div>
+
+    <section id="servicios">
+      <div class="tarjetas">
+        <article class="tarjeta"><div class="icono">♡</div><h3>Cuidado cariñoso</h3><p>Atención individualizada basada en confianza y respeto.</p></article>
+        <article class="tarjeta"><div class="icono">☆</div><h3>Aprendizaje divertido</h3><p>Actividades pensadas para explorar, crear y crecer.</p></article>
+        <article class="tarjeta"><div class="icono">✓</div><h3>Entorno seguro</h3><p>Espacios cómodos diseñados para cuidar cada detalle.</p></article>
+      </div>
+    </section>
+  </main>
+  <footer id="nosotros">© 2026 Baby Carrusel</footer>
+</body>
+</html>
