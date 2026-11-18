@@ -1,0 +1,117 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 600 400" width="100%" height="100%">
+  <defs>
+    <linearGradient id="warmBg" x1="0%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%" stop-color="#fffbeb"/>
+      <stop offset="100%" stop-color="#fef3c7"/>
+    </linearGradient>
+    <linearGradient id="matBg" x1="0%" y1="0%" x2="100%" y2="0%">
+      <stop offset="0%" stop-color="#dbeafe"/>
+      <stop offset="50%" stop-color="#e0e7ff"/>
+      <stop offset="100%" stop-color="#fae8ff"/>
+    </linearGradient>
+    <linearGradient id="carouselRoof" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#a43073"/>
+      <stop offset="50%" stop-color="#f472b6"/>
+      <stop offset="100%" stop-color="#fbbf24"/>
+    </linearGradient>
+  </defs>
+
+  <!-- Wall Background -->
+  <rect width="600" height="250" fill="url(#warmBg)"/>
+  
+  <!-- Soft Sun / Rainbow on wall -->
+  <g transform="translate(100, 110)">
+    <path d="M -70,0 A 70,70 0 0,1 70,0" fill="none" stroke="#f472b6" stroke-width="8" opacity="0.6"/>
+    <path d="M -60,0 A 60,60 0 0,1 60,0" fill="none" stroke="#fbbf24" stroke-width="8" opacity="0.6"/>
+    <path d="M -50,0 A 50,50 0 0,1 50,0" fill="none" stroke="#34d399" stroke-width="8" opacity="0.6"/>
+    <path d="M -40,0 A 40,40 0 0,1 40,0" fill="none" stroke="#38bdf8" stroke-width="8" opacity="0.6"/>
+  </g>
+
+  <!-- Sensory wall gear toys on left wall -->
+  <circle cx="210" cy="80" r="22" fill="#38bdf8" opacity="0.8"/>
+  <circle cx="210" cy="80" r="10" fill="#ffffff"/>
+  <circle cx="245" cy="100" r="16" fill="#fbbf24" opacity="0.8"/>
+  <circle cx="245" cy="100" r="7" fill="#ffffff"/>
+
+  <!-- Floor -->
+  <rect y="250" width="600" height="150" fill="url(#matBg)"/>
+
+  <!-- The Carousel (Center-Right) -->
+  <g transform="translate(420, 130)">
+    <!-- Roof Cone -->
+    <path d="M -90,50 L 0,-20 L 90,50 Z" fill="url(#carouselRoof)"/>
+    <!-- Stripes on roof -->
+    <path d="M -50,50 L 0,-20 L -20,50 Z" fill="#ffffff" opacity="0.6"/>
+    <path d="M 20,50 L 0,-20 L 50,50 Z" fill="#ffffff" opacity="0.6"/>
+    <circle cx="0" cy="-20" r="7" fill="#fbbf24"/>
+
+    <!-- Roof rim valance -->
+    <path d="M -92,50 Q -75,62 -60,50 Q -45,62 -30,50 Q -15,62 0,50 Q 15,62 30,50 Q 45,62 60,50 Q 75,62 92,50 L 92,54 L -92,54 Z" fill="#f59e0b"/>
+
+    <!-- Poles -->
+    <rect x="-60" y="54" width="4" height="90" fill="#fbbf24"/>
+    <rect x="-1" y="50" width="6" height="95" fill="#f472b6"/>
+    <rect x="56" y="54" width="4" height="90" fill="#fbbf24"/>
+
+    <!-- Carousel Horses (Stylized) -->
+    <!-- Horse 1 -->
+    <g transform="translate(-60, 95)">
+      <ellipse cx="0" cy="0" rx="14" ry="9" fill="#ffffff" stroke="#a43073" stroke-width="2"/>
+      <circle cx="-10" cy="-8" r="6" fill="#ffffff" stroke="#a43073" stroke-width="2"/>
+      <rect x="-4" y="-2" width="8" height="6" rx="2" fill="#f472b6"/>
+      <path d="M -10,9 L -12,18 M 8,9 L 10,18" stroke="#a43073" stroke-width="2"/>
+    </g>
+    <!-- Horse 2 -->
+    <g transform="translate(56, 100)">
+      <ellipse cx="0" cy="0" rx="14" ry="9" fill="#ffffff" stroke="#a43073" stroke-width="2"/>
+      <circle cx="-10" cy="-8" r="6" fill="#ffffff" stroke="#a43073" stroke-width="2"/>
+      <rect x="-4" y="-2" width="8" height="6" rx="2" fill="#fbbf24"/>
+      <path d="M -10,9 L -12,18 M 8,9 L 10,18" stroke="#a43073" stroke-width="2"/>
+    </g>
+
+    <!-- Base / Deck Platform -->
+    <ellipse cx="0" cy="145" rx="95" ry="24" fill="#a43073"/>
+    <ellipse cx="0" cy="142" rx="90" ry="20" fill="#fdf2f8"/>
+    <ellipse cx="0" cy="142" rx="75" ry="16" fill="#fbbf24"/>
+  </g>
+
+  <!-- Caterpillar Play Tunnel (Left foreground) -->
+  <g transform="translate(80, 240)">
+    <!-- Body Segment 4 -->
+    <ellipse cx="140" cy="40" rx="28" ry="34" fill="#a78bfa" stroke="#7c3aed" stroke-width="2"/>
+    <!-- Feet -->
+    <circle cx="130" cy="74" r="8" fill="#fbbf24"/>
+    <circle cx="150" cy="74" r="8" fill="#fbbf24"/>
+
+    <!-- Body Segment 3 -->
+    <ellipse cx="105" cy="40" rx="28" ry="34" fill="#38bdf8" stroke="#0284c7" stroke-width="2"/>
+    <circle cx="95" cy="74" r="8" fill="#fbbf24"/>
+    <circle cx="115" cy="74" r="8" fill="#fbbf24"/>
+
+    <!-- Body Segment 2 -->
+    <ellipse cx="70" cy="40" rx="28" ry="34" fill="#fbbf24" stroke="#d97706" stroke-width="2"/>
+    <circle cx="60" cy="74" r="8" fill="#fbbf24"/>
+    <circle cx="80" cy="74" r="8" fill="#fbbf24"/>
+
+    <!-- Head Segment 1 -->
+    <ellipse cx="30" cy="38" rx="32" ry="36" fill="#4ade80" stroke="#16a34a" stroke-width="2"/>
+    <!-- Open Mouth / Tunnel Entry -->
+    <ellipse cx="30" cy="44" rx="18" ry="22" fill="#15803d"/>
+    <ellipse cx="30" cy="44" rx="14" ry="18" fill="#052e16"/>
+    <!-- Antennas -->
+    <path d="M 20,8 Q 12,-15 8,-12" stroke="#16a34a" stroke-width="3" fill="none"/>
+    <circle cx="8" cy="-12" r="5" fill="#f43f5e"/>
+    <path d="M 40,8 Q 48,-15 52,-12" stroke="#16a34a" stroke-width="3" fill="none"/>
+    <circle cx="52" cy="-12" r="5" fill="#f43f5e"/>
+    <!-- Eyes -->
+    <circle cx="18" cy="22" r="6" fill="#ffffff"/>
+    <circle cx="18" cy="22" r="3" fill="#0f172a"/>
+    <circle cx="42" cy="22" r="6" fill="#ffffff"/>
+    <circle cx="42" cy="22" r="3" fill="#0f172a"/>
+  </g>
+
+  <!-- Title Badge overlay at bottom -->
+  <rect x="20" y="335" width="280" height="48" rx="12" fill="#0d1c2f" fill-opacity="0.8" backdrop-filter="blur(4px)"/>
+  <text x="35" y="356" font-family="'Plus Jakarta Sans', system-ui, sans-serif" font-weight="700" font-size="14" fill="#ffffff">🐛 Estimulación Temprana &amp; Oruga</text>
+  <text x="35" y="372" font-family="'Inter', system-ui, sans-serif" font-weight="500" font-size="11" fill="#f472b6">● Espuma Suave Sanitizada con Vapor</text>
+</svg>

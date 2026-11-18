@@ -1,0 +1,100 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 600 400" width="100%" height="100%">
+  <defs>
+    <linearGradient id="roomSky" x1="0%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%" stop-color="#eff6ff"/>
+      <stop offset="100%" stop-color="#dbeafe"/>
+    </linearGradient>
+    <linearGradient id="floorGrad" x1="0%" y1="0%" x2="100%" y2="0%">
+      <stop offset="0%" stop-color="#fdf2f8"/>
+      <stop offset="50%" stop-color="#fce7f3"/>
+      <stop offset="100%" stop-color="#fbcfe8"/>
+    </linearGradient>
+    <linearGradient id="trampGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#0284c7"/>
+      <stop offset="100%" stop-color="#38bdf8"/>
+    </linearGradient>
+  </defs>
+
+  <!-- Wall Background -->
+  <rect width="600" height="260" fill="url(#roomSky)"/>
+  <!-- Wall decorative clouds / arches -->
+  <circle cx="80" cy="90" r="45" fill="#ffffff" opacity="0.6"/>
+  <circle cx="120" cy="80" r="55" fill="#ffffff" opacity="0.6"/>
+  <circle cx="160" cy="95" r="40" fill="#ffffff" opacity="0.6"/>
+  <circle cx="480" cy="80" r="50" fill="#ffffff" opacity="0.5"/>
+  <circle cx="520" cy="70" r="60" fill="#ffffff" opacity="0.5"/>
+
+  <!-- Pastel wall bunting -->
+  <g stroke="#cbd5e1" stroke-width="1.5" fill="none">
+    <path d="M 20,40 Q 150,70 280,40 Q 430,70 580,40"/>
+  </g>
+  <!-- Triangle flags -->
+  <polygon points="60,52 80,85 100,56" fill="#f472b6"/>
+  <polygon points="120,60 140,95 160,63" fill="#fbbf24"/>
+  <polygon points="180,64 200,98 220,64" fill="#38bdf8"/>
+  <polygon points="240,58 260,90 280,53" fill="#a78bfa"/>
+  <polygon points="340,55 360,90 380,59" fill="#34d399"/>
+  <polygon points="400,63 420,96 440,64" fill="#f472b6"/>
+  <polygon points="460,63 480,95 500,59" fill="#fbbf24"/>
+
+  <!-- Padded Floor -->
+  <rect y="260" width="600" height="140" fill="url(#floorGrad)"/>
+  <!-- Floor Grid (Soft interlocking mats) -->
+  <line x1="0" y1="320" x2="600" y2="320" stroke="#f472b6" stroke-opacity="0.3" stroke-width="2"/>
+  <line x1="150" y1="260" x2="150" y2="400" stroke="#f472b6" stroke-opacity="0.3" stroke-width="2"/>
+  <line x1="300" y1="260" x2="300" y2="400" stroke="#f472b6" stroke-opacity="0.3" stroke-width="2"/>
+  <line x1="450" y1="260" x2="450" y2="400" stroke="#f472b6" stroke-opacity="0.3" stroke-width="2"/>
+
+  <!-- Trampoline 1 (Left) -->
+  <g transform="translate(60, 200)">
+    <!-- Net posts -->
+    <rect x="10" y="-80" width="6" height="130" rx="3" fill="#94a3b8"/>
+    <rect x="184" y="-80" width="6" height="130" rx="3" fill="#94a3b8"/>
+    <!-- Safety Netting -->
+    <rect x="14" y="-75" width="172" height="115" fill="#38bdf8" fill-opacity="0.2" stroke="#38bdf8" stroke-width="1.5" stroke-dasharray="4,4"/>
+    <!-- Padding Ring -->
+    <ellipse cx="100" cy="45" rx="100" ry="25" fill="#0284c7"/>
+    <ellipse cx="100" cy="45" rx="80" ry="18" fill="#1e293b"/>
+    <!-- Springs ring detail -->
+    <ellipse cx="100" cy="45" rx="90" ry="21" fill="none" stroke="#fbbf24" stroke-width="4"/>
+    <!-- Legs -->
+    <path d="M 25,60 L 15,100 M 175,60 L 185,100 M 100,68 L 100,105" stroke="#64748b" stroke-width="6" stroke-linecap="round"/>
+  </g>
+
+  <!-- Ball Pit & Soft Play Slide (Right) -->
+  <g transform="translate(320, 160)">
+    <!-- Ball Pit Basin -->
+    <rect x="60" y="80" width="200" height="90" rx="20" fill="#f472b6" stroke="#db2777" stroke-width="3"/>
+    <!-- Foam Slide into pit -->
+    <path d="M 0,110 L 40,30 L 80,30 L 100,110 Z" fill="#fbbf24" stroke="#d97706" stroke-width="2"/>
+    <path d="M 20,110 L 50,45 L 80,45 L 90,110 Z" fill="#fef08a"/>
+    <!-- Slide steps -->
+    <rect x="35" y="48" width="12" height="8" rx="2" fill="#d97706"/>
+    <rect x="25" y="65" width="12" height="8" rx="2" fill="#d97706"/>
+    <rect x="15" y="82" width="12" height="8" rx="2" fill="#d97706"/>
+
+    <!-- Colorful balls inside pit -->
+    <circle cx="85" cy="110" r="12" fill="#38bdf8"/>
+    <circle cx="105" cy="115" r="12" fill="#fbbf24"/>
+    <circle cx="125" cy="108" r="12" fill="#ec4899"/>
+    <circle cx="145" cy="114" r="12" fill="#a855f7"/>
+    <circle cx="165" cy="109" r="12" fill="#34d399"/>
+    <circle cx="185" cy="115" r="12" fill="#f97316"/>
+    <circle cx="205" cy="110" r="12" fill="#38bdf8"/>
+    <circle cx="225" cy="118" r="12" fill="#ec4899"/>
+
+    <circle cx="95" cy="125" r="12" fill="#34d399"/>
+    <circle cx="115" cy="128" r="12" fill="#f43f5e"/>
+    <circle cx="135" cy="122" r="12" fill="#38bdf8"/>
+    <circle cx="155" cy="126" r="12" fill="#fbbf24"/>
+    <circle cx="175" cy="123" r="12" fill="#a855f7"/>
+    <circle cx="195" cy="128" r="12" fill="#34d399"/>
+    <circle cx="215" cy="124" r="12" fill="#f97316"/>
+    <circle cx="235" cy="128" r="12" fill="#fbbf24"/>
+  </g>
+
+  <!-- Title Badge overlay at bottom -->
+  <rect x="20" y="335" width="260" height="48" rx="12" fill="#0d1c2f" fill-opacity="0.8" backdrop-filter="blur(4px)"/>
+  <text x="35" y="356" font-family="'Plus Jakarta Sans', system-ui, sans-serif" font-weight="700" font-size="14" fill="#ffffff">🤸 Zona de Juegos &amp; Brincolines</text>
+  <text x="35" y="372" font-family="'Inter', system-ui, sans-serif" font-weight="500" font-size="11" fill="#86efac">● Área Acolchonada y Monitoreada</text>
+</svg>
