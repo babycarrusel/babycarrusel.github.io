@@ -5,6 +5,7 @@
   <meta content="width=device-width, initial-scale=1.0" name="viewport"/>
   <meta content="web_standard" name="shell-type"/>
   <title>Baby Carrusel | Centro de Operaciones y Reservaciones</title>
+  <link rel="icon" type="image/png" href="assets/images/logo.png"/>
   <link rel="preconnect" href="https://fonts.googleapis.com"/>
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
   <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@500;600;700;800&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet"/>
@@ -108,7 +109,7 @@
       
       <!-- Logo y Nombre del Salón -->
       <a href="#" onclick="window.scrollTo({top:0, behavior:'smooth'}); return false;" class="flex items-center gap-space-md focus:outline-none">
-        <img alt="Logo Baby Carrusel" class="h-9 w-auto object-contain" src="assets/images/logo.png" onerror="this.onerror=null; this.src='assets/images/logo.svg';"/>
+        <img alt="Logo Jolie Baby Carrusel" class="h-12 w-12 rounded-full object-contain shadow-xs ring-2 ring-primary-fixed bg-white" src="assets/images/logo.png" onerror="this.onerror=null; this.src='assets/images/logo.svg';"/>
         <div class="flex flex-col">
           <span class="font-headline-md text-headline-md text-on-surface tracking-tight leading-none font-bold">Baby Carrusel</span>
           <span class="font-label-sm text-[11px] text-on-surface-variant tracking-wider uppercase leading-none mt-1">Salón de Eventos &amp; Fiestas</span>
@@ -155,7 +156,7 @@
 
         <!-- Perfil del Responsable -->
         <div class="flex items-center gap-space-sm pl-2">
-          <img alt="Foto de perfil de Jolie" class="w-8 h-8 rounded-full object-cover ring-2 ring-primary-fixed" src="assets/images/avatar.jpg" onerror="this.onerror=null; this.src='assets/images/avatar.svg';"/>
+          <img alt="Logo Equipo Jolie" class="w-9 h-9 rounded-full object-contain bg-white ring-2 ring-primary-fixed" src="assets/images/logo.png" onerror="this.onerror=null; this.src='assets/images/avatar.svg';"/>
           <div class="hidden md:flex flex-col text-left">
             <div class="flex items-center gap-1.5">
               <span class="font-label-md text-label-md font-bold text-on-surface leading-tight tracking-wide">JOLIE</span>
@@ -183,9 +184,7 @@
           <div class="absolute -bottom-10 left-1/3 w-36 h-36 bg-secondary-container/20 rounded-full blur-xl pointer-events-none"></div>
 
           <div class="flex items-center gap-space-md z-10">
-            <div class="w-16 h-16 rounded-2xl bg-primary-fixed/40 flex items-center justify-center text-primary shadow-sm flex-shrink-0">
-              <span class="material-symbols-outlined text-4xl" style="font-variation-settings: 'FILL' 1;">toys</span>
-            </div>
+            <img alt="Logo Oficial Jolie Baby Carrusel" class="w-16 h-16 rounded-2xl object-contain bg-white p-0.5 ring-2 ring-primary-fixed shadow-sm flex-shrink-0" src="assets/images/logo.png"/>
             <div class="flex flex-col">
               <div class="flex items-center gap-2 flex-wrap">
                 <h1 class="font-headline-xl text-headline-xl text-on-surface tracking-tight flex items-center gap-2">
@@ -199,6 +198,10 @@
                 <span class="inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-[11px] font-semibold bg-amber-100 text-amber-800">
                   ✨ Modo Fiesta Activo
                 </span>
+                <button id="db-status-badge" onclick="openManageSlotModal()" title="Ver estado de Base de Datos MariaDB (Raspberry Pi + Tailscale)" class="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full text-[11px] font-semibold bg-emerald-100 text-emerald-800 hover:bg-emerald-200 transition-colors cursor-pointer" type="button">
+                  <span id="db-status-dot" class="w-2 h-2 rounded-full bg-emerald-600 animate-pulse"></span>
+                  <span id="db-status-text">BD MariaDB • Sincronizando</span>
+                </button>
               </div>
               <p class="font-body-md text-body-md text-on-surface-variant mt-1">
                 Celebraciones mágicas, gestión sin esfuerzo del salón y logística segura para los más pequeños.
@@ -535,29 +538,29 @@
             <div class="bg-surface-container-lowest p-space-lg rounded-2xl shadow-sm flex flex-col gap-space-md relative overflow-hidden">
               <div class="flex items-center justify-between">
                 <span class="font-label-sm text-label-sm text-on-surface-variant uppercase tracking-wider font-semibold">Reservación en Curso</span>
-                <span class="px-2.5 py-0.5 rounded-full text-xs font-bold bg-primary text-white">#BC-2025-104</span>
+                <span id="spotlight-code" class="px-2.5 py-0.5 rounded-full text-xs font-bold bg-primary text-white">#BC-2025-104</span>
               </div>
 
               <div class="flex flex-col gap-1">
                 <div class="flex items-center gap-2 flex-wrap">
-                  <h2 class="font-headline-lg text-headline-lg text-on-surface font-bold">Cumpleaños #4 de Lucas</h2>
+                  <h2 id="spotlight-title" class="font-headline-lg text-headline-lg text-on-surface font-bold">Cumpleaños #4 de Lucas</h2>
                   <span class="text-xl">🎉🎂</span>
                 </div>
                 <div class="flex items-center gap-1.5 text-xs text-on-surface-variant font-medium">
                   <span class="material-symbols-outlined text-base text-primary">theater_comedy</span>
-                  <span>Temática: Carnaval de Carrusel y Safari Mágico</span>
+                  <span id="spotlight-theme">Temática: Carnaval de Carrusel y Safari Mágico</span>
                 </div>
               </div>
 
               <!-- Tarjeta de Anfitrión y Contacto Directo -->
               <div class="p-space-sm rounded-xl bg-surface-container-low flex items-center justify-between">
                 <div class="flex items-center gap-space-xs">
-                  <div class="w-9 h-9 rounded-lg bg-primary-fixed/40 text-primary flex items-center justify-center font-bold text-sm">
+                  <div id="spotlight-host-initials" class="w-9 h-9 rounded-lg bg-primary-fixed/40 text-primary flex items-center justify-center font-bold text-sm">
                     CP
                   </div>
                   <div class="flex flex-col">
-                    <span class="text-xs font-bold text-on-surface">Camila &amp; Roberto Peña</span>
-                    <span class="text-[11px] text-on-surface-variant">+52 55 8492 1034 • Salón Principal</span>
+                    <span id="spotlight-host-name" class="text-xs font-bold text-on-surface">Camila &amp; Roberto Peña</span>
+                    <span id="spotlight-host-phone" class="text-[11px] text-on-surface-variant">+52 444 849 1034 • Salón Principal</span>
                   </div>
                 </div>
                 <button onclick="openContactHostModal()" aria-label="Contactar Anfitrión" class="w-8 h-8 rounded-lg bg-surface-container-lowest text-secondary flex items-center justify-center hover:bg-secondary-fixed/50 transition-colors shadow-xs" type="button">
@@ -692,7 +695,7 @@
   <footer class="w-full bg-surface-container-low py-margin">
     <div class="w-full px-margin flex flex-col md:flex-row items-center justify-between gap-space-md">
       <div class="flex items-center gap-space-sm">
-        <img alt="Logo Baby Carrusel" class="h-6 w-auto object-contain opacity-75" src="assets/images/logo.png" onerror="this.onerror=null; this.src='assets/images/logo.svg';"/>
+        <img alt="Logo Jolie Baby Carrusel" class="h-9 w-9 rounded-full object-contain bg-white ring-1 ring-primary-fixed shadow-2xs" src="assets/images/logo.png" onerror="this.onerror=null; this.src='assets/images/logo.svg';"/>
         <span class="font-label-md text-label-md text-on-surface-variant">© 2025 Baby Carrusel - Salón de Eventos &amp; Fiestas Infantiles. Todos los derechos reservados.</span>
       </div>
       <div class="flex items-center gap-space-lg">
@@ -748,21 +751,32 @@
           </div>
           <div>
             <label class="block text-xs font-semibold text-on-surface mb-1">Teléfono WhatsApp *</label>
-            <input id="booking-phone" required type="tel" placeholder="+52 55 ..." class="w-full px-3 py-2 rounded-xl bg-surface-container-low text-on-surface text-sm border border-transparent focus:border-primary focus:outline-none"/>
+            <input id="booking-phone" required type="tel" placeholder="+52 444 ..." class="w-full px-3 py-2 rounded-xl bg-surface-container-low text-on-surface text-sm border border-transparent focus:border-primary focus:outline-none"/>
+          </div>
+        </div>
+
+        <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
+          <div>
+            <label class="block text-xs font-semibold text-on-surface mb-1">Correo Electrónico (Cliente)</label>
+            <input id="booking-email" type="email" placeholder="cliente@correo.mx" class="w-full px-3 py-2 rounded-xl bg-surface-container-low text-on-surface text-sm border border-transparent focus:border-primary focus:outline-none"/>
+          </div>
+          <div>
+            <label class="block text-xs font-semibold text-on-surface mb-1">Invitados Estimados (Máx. 80) *</label>
+            <input id="booking-guests" required type="number" min="10" max="80" value="50" class="w-full px-3 py-2 rounded-xl bg-surface-container-low text-on-surface text-sm border border-transparent focus:border-primary focus:outline-none"/>
           </div>
         </div>
 
         <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
           <div>
             <label class="block text-xs font-semibold text-on-surface mb-1">Fecha del Evento *</label>
-            <input id="booking-date" required type="date" value="2025-10-26" class="w-full px-3 py-2 rounded-xl bg-surface-container-low text-on-surface text-sm border border-transparent focus:border-primary focus:outline-none"/>
+            <input id="booking-date" required type="date" value="2025-10-25" class="w-full px-3 py-2 rounded-xl bg-surface-container-low text-on-surface text-sm border border-transparent focus:border-primary focus:outline-none"/>
           </div>
           <div>
             <label class="block text-xs font-semibold text-on-surface mb-1">Turno Solicitado *</label>
             <select id="booking-slot" class="w-full px-3 py-2 rounded-xl bg-surface-container-low text-on-surface text-sm border border-transparent focus:border-primary focus:outline-none">
               <option value="mañana">Mañana (09:30 - 13:30)</option>
-              <option value="tarde" selected>Tarde (15:00 - 19:00)</option>
-              <option value="noche">Noche (20:00 - 23:30)</option>
+              <option value="tarde">Tarde (15:00 - 19:00)</option>
+              <option value="noche" selected>Noche (20:00 - 23:30)</option>
             </select>
           </div>
         </div>
@@ -802,8 +816,8 @@
   <div id="modal-day-sheet" class="modal-wrapper hidden fixed inset-0 z-50 modal-backdrop items-center justify-center p-4">
     <div class="bg-surface-container-lowest w-full max-w-2xl rounded-2xl shadow-2xl border border-surface-container p-6 modal-enter max-h-[90vh] overflow-y-auto">
       <div class="flex items-center justify-between pb-4 border-b border-surface-container">
-        <div class="flex items-center gap-2">
-          <span class="material-symbols-outlined text-primary text-2xl">description</span>
+        <div class="flex items-center gap-2.5">
+          <img alt="Logo Jolie Baby Carrusel" class="w-10 h-10 rounded-full object-contain bg-white ring-2 ring-primary-fixed" src="assets/images/logo.png"/>
           <div>
             <h3 class="font-headline-md text-headline-md font-bold text-on-surface">Hoja de Operaciones del Día</h3>
             <p class="text-xs text-on-surface-variant">Sábado 25 de Octubre 2025 • Salón Baby Carrusel</p>
@@ -821,15 +835,22 @@
       <div id="printable-day-sheet" class="flex flex-col gap-4 pt-4 text-xs">
         <div class="p-3 rounded-xl bg-primary-fixed/20 flex items-center justify-between">
           <div>
-            <span class="font-bold text-sm text-primary block">Responsable en Turno: Jolie (Gerente General)</span>
-            <span class="text-on-surface-variant">Equipo en piso: Elena R. (Seguridad), Carlos M. (Mobiliario), Sofía T. (Limpieza)</span>
+            <span class="font-bold text-sm text-primary block">Responsable en Turno: Jolie (Coordinación) &amp; Javier García Ramos (Administración)</span>
+            <span class="text-on-surface-variant">Propietario: Heriberto García • Ubicación: C. 5 de Mayo 1940, San Juan de Guadalupe, C.P. 78340, San Luis Potosí, S.L.P.</span>
           </div>
           <span class="px-2.5 py-1 rounded-lg bg-emerald-100 text-emerald-800 font-bold">Piso Activo</span>
         </div>
 
         <div class="border rounded-xl p-3">
-          <span class="font-bold text-on-surface block mb-2 text-sm">Programación de Turnos:</span>
-          <div class="space-y-2">
+          <span class="font-bold text-on-surface block mb-2 text-sm">Personal Operativo Registrado (Tabla <code class="text-primary">empleados</code>):</span>
+          <div id="day-sheet-empleados" class="grid grid-cols-1 sm:grid-cols-2 gap-2">
+            <!-- Se llena dinámicamente desde MariaDB -->
+          </div>
+        </div>
+
+        <div class="border rounded-xl p-3">
+          <span class="font-bold text-on-surface block mb-2 text-sm">Programación de Turnos (Tabla <code class="text-primary">reservaciones</code>):</span>
+          <div id="day-sheet-turnos" class="space-y-2">
             <div class="p-2 rounded bg-surface-container-low flex justify-between items-center">
               <div>
                 <strong>Turno 1 (09:30 - 13:30):</strong> Safari Mágico de Mía • Valeria Silva • 45 Invitados
@@ -852,7 +873,7 @@
         </div>
 
         <div class="border rounded-xl p-3">
-          <span class="font-bold text-on-surface block mb-1">Checklist de Cumplimiento Técnico:</span>
+          <span class="font-bold text-on-surface block mb-1">Checklist de Cumplimiento Técnico &amp; Mobiliario:</span>
           <ul class="list-disc list-inside space-y-1 text-on-surface-variant">
             <li>Carrusel inspeccionado: Paro de emergencia verificado a las 14:15 hrs.</li>
             <li>Volumen de cabina de sonido limitado a 80 dB (Seguridad auditiva infantil).</li>
@@ -866,35 +887,44 @@
 
   <!-- 3. MODAL DE CONTACTAR ANFITRIÓN -->
   <div id="modal-contact-host" class="modal-wrapper hidden fixed inset-0 z-50 modal-backdrop items-center justify-center p-4">
-    <div class="bg-surface-container-lowest w-full max-w-md rounded-2xl shadow-2xl border border-surface-container p-6 modal-enter">
+    <div class="bg-surface-container-lowest w-full max-w-md rounded-2xl shadow-2xl border border-surface-container p-6 modal-enter max-h-[90vh] overflow-y-auto">
       <div class="flex items-center justify-between pb-3 border-b border-surface-container">
         <div class="flex items-center gap-2">
           <span class="material-symbols-outlined text-secondary text-2xl">contact_phone</span>
-          <h3 class="font-headline-sm text-sm font-bold text-on-surface">Contactar con Anfitriones</h3>
+          <h3 class="font-headline-sm text-sm font-bold text-on-surface">Contactar con Anfitriones &amp; Administración</h3>
         </div>
         <button onclick="closeModal('modal-contact-host')" class="p-1 rounded-lg text-on-surface-variant hover:bg-surface-container text-xl">&times;</button>
       </div>
 
       <div class="flex flex-col gap-3 pt-4">
         <div class="flex items-center gap-3 p-3 rounded-xl bg-surface-container-low">
-          <div class="w-10 h-10 rounded-full bg-primary-container text-on-primary-container flex items-center justify-center font-bold">
+          <div id="contact-host-initials" class="w-10 h-10 rounded-full bg-primary-container text-on-primary-container flex items-center justify-center font-bold">
             CP
           </div>
           <div>
-            <h4 class="font-bold text-sm text-on-surface">Camila &amp; Roberto Peña</h4>
-            <span class="text-xs text-on-surface-variant">Festejado: Lucas (4to Cumpleaños)</span>
+            <h4 id="contact-host-name" class="font-bold text-sm text-on-surface">Camila &amp; Roberto Peña</h4>
+            <span id="contact-host-event" class="text-xs text-on-surface-variant">Festejado: Lucas (4to Cumpleaños)</span>
           </div>
         </div>
 
-        <a href="https://wa.me/525584921034?text=Hola%20Camila,%20te%20saludamos%20del%20Sal%C3%B3n%20Baby%20Carrusel.%20%C2%A1Todo%20va%20excelente%20con%20la%20fiesta!" target="_blank" class="p-3 rounded-xl bg-emerald-500 text-white font-semibold text-xs flex items-center justify-center gap-2 hover:bg-emerald-600 transition-colors shadow-xs">
+        <a id="contact-wa-link" href="https://wa.me/524448491034?text=Hola%20Camila,%20te%20saludamos%20del%20Sal%C3%B3n%20Baby%20Carrusel.%20Te%20recordamos%20el%20aforo%20m%C3%A1ximo%20de%2080%20invitados%20y%20la%20pol%C3%ADtica%20de%20dep%C3%B3sito%20reembolsable%20de%20$350." target="_blank" class="p-3 rounded-xl bg-emerald-500 text-white font-semibold text-xs flex items-center justify-center gap-2 hover:bg-emerald-600 transition-colors shadow-xs">
           <span class="material-symbols-outlined text-lg">chat</span>
-          <span>Enviar Mensaje de WhatsApp</span>
+          <span>Enviar Recordatorio y Reglamento por WhatsApp</span>
         </a>
 
-        <a href="tel:+525584921034" class="p-3 rounded-xl bg-secondary text-white font-semibold text-xs flex items-center justify-center gap-2 hover:brightness-105 transition-all shadow-xs">
+        <a id="contact-tel-link" href="tel:+524448491034" class="p-3 rounded-xl bg-secondary text-white font-semibold text-xs flex items-center justify-center gap-2 hover:brightness-105 transition-all shadow-xs">
           <span class="material-symbols-outlined text-lg">call</span>
-          <span>Llamar al Móvil (+52 55 8492 1034)</span>
+          <span id="contact-tel-text">Llamar al Móvil (+52 444 849 1034)</span>
         </a>
+
+        <div class="p-3 rounded-xl bg-surface-container-low border border-surface-container text-xs flex flex-col gap-1.5">
+          <span class="font-bold text-on-surface">Administración Baby Carrusel (San Luis Potosí):</span>
+          <span class="text-on-surface-variant">Javier García Ramos • Tel: +52 444 540 2978</span>
+          <a href="https://wa.me/524445402978?text=Reporte%20operativo%20de%20Baby%20Carrusel" target="_blank" class="text-primary font-semibold hover:underline flex items-center gap-1">
+            <span class="material-symbols-outlined text-sm">support_agent</span>
+            <span>Contactar a Javier García por WhatsApp</span>
+          </a>
+        </div>
 
         <button onclick="showToast('Notificación enviada a la pantalla del anfitrión'); closeModal('modal-contact-host');" class="p-3 rounded-xl bg-surface-container text-on-surface font-semibold text-xs flex items-center justify-center gap-2 hover:bg-surface-variant transition-colors">
           <span class="material-symbols-outlined text-lg">campaign</span>
@@ -917,24 +947,25 @@
 
       <div class="flex flex-col gap-4 pt-4 text-xs leading-relaxed text-on-surface-variant">
         <div class="p-3 rounded-xl bg-emerald-50 text-emerald-900 border border-emerald-200">
-          <h4 class="font-bold text-sm text-emerald-950 mb-1">Garantía de Depósito Transparente ($350)</h4>
+          <h4 class="font-bold text-sm text-emerald-950 mb-1">Garantía de Depósito Transparente ($350) • Corresponsabilidad ESS</h4>
           <p>El depósito en resguardo tiene la única finalidad de incentivar el buen uso de las instalaciones y el cumplimiento de los horarios. Es <strong>100% reembolsable</strong> y se transfiere de regreso en un plazo máximo de 24 horas tras finalizar el evento sin incidencias graves.</p>
         </div>
 
         <div>
-          <h4 class="font-bold text-sm text-on-surface mb-1">Normas de Convivencia y Seguridad:</h4>
-          <ul class="list-disc list-inside space-y-1">
-            <li><strong>Calcetines antideslizantes obligatorios:</strong> Todo niño y adulto que ingrese a las áreas de brincolines, alberca de pelotas o carrusel debe usar calcetines.</li>
-            <li><strong>Alimentos y bebidas:</strong> Exclusivamente permitidos en el área de mesas y comedor. Prohibido ingresar bebidas o snacks a las zonas de juego y túneles.</li>
-            <li><strong>Límite de decibeles:</strong> Por bienestar infantil y normatividad, el volumen de la música no superará los 80 dB.</li>
-            <li><strong>Capacidad y aforo:</strong> No se permitirá el ingreso de más de 80 personas en total (niños + adultos).</li>
-          </ul>
+          <h4 class="font-bold text-sm text-on-surface mb-2">Reglamento Activo en Base de Datos (Tabla <code class="text-primary">reglamento</code>):</h4>
+          <div id="db-reglamento-list" class="flex flex-col gap-2">
+            <!-- Cargado dinámicamente desde la tabla reglamento en MariaDB -->
+          </div>
         </div>
 
-        <div>
-          <h4 class="font-bold text-sm text-on-surface mb-1">Causas Justificadas de Deducción:</h4>
-          <p>Rotura o daño estructural a la maquinaria del carrusel, rasgaduras en brincolines por objetos punzocortantes, o retraso de más de 45 minutos en la entrega del salón.</p>
-        </div>
+        <form onsubmit="submitNewRule(event)" class="p-3 rounded-xl bg-surface-container-low flex flex-col gap-2 border border-surface-container">
+          <span class="font-bold text-on-surface">Agregar Nueva Regla al Reglamento (MariaDB):</span>
+          <input id="new-rule-title" required type="text" placeholder="Título de la regla (ej. Puntualidad de Recepción)" class="w-full px-3 py-1.5 rounded-lg bg-surface-container-lowest text-on-surface text-xs border border-transparent focus:border-primary focus:outline-none"/>
+          <textarea id="new-rule-desc" required rows="2" placeholder="Descripción detallada de la norma..." class="w-full px-3 py-1.5 rounded-lg bg-surface-container-lowest text-on-surface text-xs border border-transparent focus:border-primary focus:outline-none"></textarea>
+          <div class="flex justify-end">
+            <button type="submit" class="px-3 py-1.5 rounded-lg bg-primary text-white font-bold text-xs hover:brightness-105">+ Guardar Regla en BD</button>
+          </div>
+        </form>
       </div>
     </div>
   </div>
@@ -1038,28 +1069,44 @@
     </div>
   </div>
 
-  <!-- 9. MODAL DE GESTIÓN DEL TURNO ACTIVO -->
+  <!-- 9. MODAL DE GESTIÓN DEL TURNO ACTIVO & CONTROL DE MOBILIARIO BD -->
   <div id="modal-manage-slot" class="modal-wrapper hidden fixed inset-0 z-50 modal-backdrop items-center justify-center p-4">
-    <div class="bg-surface-container-lowest w-full max-w-md rounded-2xl shadow-2xl border border-surface-container p-6 modal-enter">
+    <div class="bg-surface-container-lowest w-full max-w-lg rounded-2xl shadow-2xl border border-surface-container p-6 modal-enter max-h-[90vh] overflow-y-auto">
       <div class="flex items-center justify-between pb-3 border-b border-surface-container">
         <div class="flex items-center gap-2">
           <span class="material-symbols-outlined text-primary text-2xl">tune</span>
-          <h3 class="font-headline-sm text-sm font-bold text-on-surface">Gestión en Vivo del Turno</h3>
+          <h3 class="font-headline-sm text-sm font-bold text-on-surface">Gestión en Vivo, Mobiliario &amp; Base de Datos</h3>
         </div>
         <button onclick="closeModal('modal-manage-slot')" class="p-1 rounded-lg text-on-surface-variant hover:bg-surface-container text-xl">&times;</button>
       </div>
 
       <div class="flex flex-col gap-3 pt-4 text-xs">
-        <div class="p-3 rounded-xl bg-primary-fixed/20">
-          <strong class="text-on-surface block font-bold">Lucas's 4th Carousel Carnival</strong>
-          <span class="text-on-surface-variant">Turno de 15:00 a 19:00 hrs • Anfitriones: Camila y Roberto Peña</span>
+        <div class="p-3 rounded-xl bg-primary-fixed/20 flex items-center justify-between">
+          <div>
+            <strong id="manage-slot-title" class="text-on-surface block font-bold">Cumpleaños #4 de Lucas • Carnaval de Carrusel</strong>
+            <span id="manage-slot-subtitle" class="text-on-surface-variant">Turno de 15:00 a 19:00 hrs • Anfitriones: Camila y Roberto Peña</span>
+          </div>
+          <button onclick="resetDemoDatabase()" title="Restaurar valores iniciales de demostración en MariaDB" class="px-2.5 py-1.5 rounded-lg bg-surface-container-lowest text-primary font-bold text-[11px] shadow-xs hover:bg-surface-container">
+            ↺ Reset Demo BD
+          </button>
         </div>
 
         <div class="flex items-center justify-between p-3 rounded-xl bg-surface-container-low">
-          <span>Control Rápido de Aforo:</span>
+          <span>Control Rápido de Aforo (Sincronizado con MariaDB):</span>
           <div class="flex items-center gap-2">
             <button onclick="updateAforo(-1)" class="w-7 h-7 rounded-lg bg-surface-container-lowest text-on-surface font-bold text-sm shadow-xs hover:bg-surface-container">-1</button>
             <button onclick="updateAforo(1)" class="w-7 h-7 rounded-lg bg-primary text-white font-bold text-sm shadow-xs hover:brightness-105">+1</button>
+          </div>
+        </div>
+
+        <!-- Inventario de Mobiliario en Vivo (Tabla mobiliario de baby_carrusel.sql) -->
+        <div class="p-3 rounded-xl bg-surface-container-low flex flex-col gap-2">
+          <div class="flex items-center justify-between">
+            <span class="font-bold text-on-surface">Inventario y Estado de Mobiliario (Tabla <code class="text-primary">mobiliario</code>):</span>
+            <span class="text-[10px] text-on-surface-variant">Bitácora SCAMPER</span>
+          </div>
+          <div id="db-mobiliario-list" class="flex flex-col gap-1.5 max-h-48 overflow-y-auto">
+            <!-- Renderizado dinámicamente desde la tabla mobiliario -->
           </div>
         </div>
 
@@ -1068,7 +1115,7 @@
             <span class="material-symbols-outlined text-secondary text-base">chat</span>
             <span>Mensaje a Anfitriones (WhatsApp)</span>
           </button>
-          <button onclick="showToast('Luces y música ambiental calibradas'); closeModal('modal-manage-slot');" class="p-2.5 rounded-xl bg-surface-container-low text-on-surface font-semibold hover:bg-surface-container flex items-center gap-2">
+          <button onclick="showToast('Luces y música ambiental calibradas a 80 dB'); closeModal('modal-manage-slot');" class="p-2.5 rounded-xl bg-surface-container-low text-on-surface font-semibold hover:bg-surface-container flex items-center gap-2">
             <span class="material-symbols-outlined text-amber-600 text-base">volume_up</span>
             <span>Ajustar Iluminación &amp; Sonido (80 dB)</span>
           </button>
