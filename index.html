@@ -424,11 +424,11 @@
                 <div class="flex items-center gap-2">
                   <span class="text-2xl">🎪</span>
                   <div>
-                    <h2 id="selected-day-title" class="font-headline-sm text-headline-sm text-on-surface font-bold">Horarios del Sábado 21 de Noviembre 2026</h2>
-                    <p id="selected-day-subtitle" class="font-body-sm text-body-sm text-on-surface-variant">Selecciona un turno disponible para reservar tu evento</p>
+                    <h2 id="selected-day-title" class="font-headline-sm text-headline-sm text-on-surface font-bold">Disponibilidad del Sábado 21 de Noviembre 2026</h2>
+                    <p id="selected-day-subtitle" class="font-body-sm text-body-sm text-on-surface-variant">Consulta el estado de la fecha seleccionada</p>
                   </div>
                 </div>
-                <span class="text-xs font-semibold px-3 py-1 rounded-full bg-surface-container text-on-surface-variant">7 Horas de Evento (Antes de 11:00 PM)</span>
+                <span class="text-xs font-semibold px-3 py-1 rounded-full bg-surface-container text-on-surface-variant">Estado de la Fecha</span>
               </div>
 
               <!-- Contenedor dinámico de turnos del día -->
@@ -537,11 +537,11 @@
                 </div>
 
                 <!-- Foto 7: Vista General y Decoración -->
-                <div onclick="openGalleryLightbox('assets/images/7.jpeg', 'Ambientación para Fiestas y Eventos', 'Salón versátil con internet Wi-Fi, iluminación natural y ventiladores para eventos de 50 u 80 personas (7 horas de duración).')" class="rounded-xl overflow-hidden relative group shadow-xs ring-1 ring-black/5 cursor-pointer interactive-card">
+                <div onclick="openGalleryLightbox('assets/images/7.jpeg', 'Ambientación para Fiestas y Eventos', 'Salón versátil con internet Wi-Fi, iluminación natural y ventiladores para eventos de 50 u 80 personas.')" class="rounded-xl overflow-hidden relative group shadow-xs ring-1 ring-black/5 cursor-pointer interactive-card">
                   <img alt="Ambientación y Decoración" class="w-full h-32 object-cover group-hover:scale-105 transition-transform duration-300" src="assets/images/7.jpeg"/>
                   <div class="absolute inset-0 bg-gradient-to-t from-black/80 via-black/15 to-transparent flex flex-col justify-end p-2.5">
                     <span class="text-[11px] text-white font-bold leading-tight">🎈 Montaje para 50 y 80 Pers.</span>
-                    <span class="text-[10px] text-blue-200">7 Horas • Wi-Fi Incluido</span>
+                    <span class="text-[10px] text-blue-200">Internet Wi-Fi Incluido</span>
                   </div>
                 </div>
 
@@ -560,7 +560,7 @@
               <!-- Tarjeta de Paquetes y Servicios Incluidos para Clientes -->
               <div class="bg-surface-container-lowest p-space-lg rounded-2xl shadow-sm flex flex-col gap-space-md relative overflow-hidden">
                 <div class="flex items-center justify-between">
-                  <span class="font-label-sm text-label-sm text-on-surface-variant uppercase tracking-wider font-semibold">7 Horas de Evento</span>
+                  <span class="font-label-sm text-label-sm text-on-surface-variant uppercase tracking-wider font-semibold">Paquetes del Salón</span>
                   <span class="px-2.5 py-0.5 rounded-full text-xs font-bold bg-primary text-white">50 o 80 Personas</span>
                 </div>
 
@@ -570,7 +570,7 @@
                     <span class="text-xl">🎠🎂</span>
                   </div>
                   <p class="text-xs text-on-surface-variant leading-relaxed">
-                    Manejamos <strong>2 precios según tu número de invitados</strong> (para <strong>50 personas</strong> o para <strong>80 personas</strong>), con <strong>7 horas continuas de evento</strong> en horario antes de las 11:00 de la noche.
+                    Manejamos <strong>2 opciones de precio</strong> según tu número de invitados: para <strong>50 personas</strong> o para <strong>80 personas</strong>.
                   </p>
                 </div>
 
@@ -579,12 +579,12 @@
                   <div onclick="openBookingModalWithPackage('50')" class="p-3 rounded-xl bg-surface-container-low border-2 border-primary/20 hover:border-primary cursor-pointer transition-all flex flex-col justify-between gap-1">
                     <span class="text-[10px] font-bold uppercase text-primary">Modalidad 1</span>
                     <strong class="text-sm font-extrabold text-on-surface">Paquete 50 Personas</strong>
-                    <span class="text-[11px] text-on-surface-variant">7 Horas • Todo Incluido</span>
+                    <span class="text-[11px] text-on-surface-variant">Todo Incluido</span>
                   </div>
                   <div onclick="openBookingModalWithPackage('80')" class="p-3 rounded-xl bg-primary-fixed/25 border-2 border-primary/40 hover:border-primary cursor-pointer transition-all flex flex-col justify-between gap-1">
                     <span class="text-[10px] font-bold uppercase text-primary">Modalidad 2</span>
                     <strong class="text-sm font-extrabold text-on-surface">Paquete 80 Personas</strong>
-                    <span class="text-[11px] text-on-surface-variant">7 Horas • Cupo Máximo</span>
+                    <span class="text-[11px] text-on-surface-variant">Cupo Máximo</span>
                   </div>
                 </div>
 
@@ -603,12 +603,6 @@
                     <span class="flex items-center gap-1"><strong class="text-emerald-600">✓</strong> Estufa equipada</span>
                     <span class="flex items-center gap-1"><strong class="text-emerald-600">✓</strong> Gas incluido</span>
                   </div>
-                </div>
-
-                <!-- Horario Límite -->
-                <div class="p-2.5 rounded-xl bg-amber-50 border border-amber-200 text-amber-950 text-xs flex items-center gap-2">
-                  <span class="material-symbols-outlined text-amber-600 text-lg">schedule</span>
-                  <span><strong>Horario del Salón:</strong> 7 horas de evento a elegir, terminando siempre <strong>antes de las 11:00 de la noche (23:00 hrs)</strong>.</span>
                 </div>
 
                 <!-- Ubicación y Contacto -->
@@ -935,8 +929,8 @@
           <div>
             <label class="block text-xs font-semibold text-on-surface mb-1">Paquete por Capacidad *</label>
             <select id="booking-package" onchange="onPackageCapacityChange(this.value)" class="w-full px-3 py-2 rounded-xl bg-surface-container-low text-on-surface text-sm font-semibold border border-transparent focus:border-primary focus:outline-none">
-              <option value="50">Paquete para 50 Personas (7 Horas)</option>
-              <option value="80" selected>Paquete para 80 Personas (7 Horas)</option>
+              <option value="50">Paquete para 50 Personas</option>
+              <option value="80" selected>Paquete para 80 Personas</option>
             </select>
           </div>
         </div>
@@ -953,13 +947,13 @@
             <input id="booking-date" required type="date" min="2026-11-21" value="2026-11-23" class="w-full px-3 py-2 rounded-xl bg-surface-container-low text-on-surface text-sm border border-transparent focus:border-primary focus:outline-none"/>
           </div>
           <div>
-            <label class="block text-xs font-semibold text-on-surface mb-1">Horario de 7 Horas (Antes de 11:00 PM) *</label>
+            <label class="block text-xs font-semibold text-on-surface mb-1">Horario del Evento (7 Horas) *</label>
             <select id="booking-slot" class="w-full px-3 py-2 rounded-xl bg-surface-container-low text-on-surface text-sm border border-transparent focus:border-primary focus:outline-none">
-              <option value="11:00-18:00">11:00 AM a 06:00 PM (7 Horas)</option>
-              <option value="13:00-20:00">01:00 PM a 08:00 PM (7 Horas)</option>
-              <option value="14:00-21:00" selected>02:00 PM a 09:00 PM (7 Horas)</option>
-              <option value="15:00-22:00">03:00 PM a 10:00 PM (7 Horas)</option>
-              <option value="16:00-23:00">04:00 PM a 11:00 PM (7 Hrs • Límite 11 PM)</option>
+              <option value="11:00-18:00">11:00 AM a 06:00 PM</option>
+              <option value="13:00-20:00">01:00 PM a 08:00 PM</option>
+              <option value="14:00-21:00" selected>02:00 PM a 09:00 PM</option>
+              <option value="15:00-22:00">03:00 PM a 10:00 PM</option>
+              <option value="16:00-23:00">04:00 PM a 11:00 PM</option>
             </select>
           </div>
         </div>
@@ -977,11 +971,11 @@
 
         <div class="p-3 rounded-xl bg-surface-container-low flex flex-col gap-1 text-xs">
           <div class="flex justify-between font-bold text-on-surface">
-            <span id="booking-summary-pkg">Paquete Seleccionado (80 Personas • 7 Horas):</span>
+            <span id="booking-summary-pkg">Paquete Seleccionado (80 Personas):</span>
             <span class="text-primary">Todo Incluido</span>
           </div>
           <p class="text-[11px] text-on-surface-variant leading-relaxed">
-            <strong>Incluye:</strong> Mesas, sillas, manteles, cubremanteles, área de juegos infantiles, internet Wi-Fi, refrigerador, microondas, estufa y gas (7 hrs de evento antes de las 11:00 PM).
+            <strong>Incluye:</strong> Mesas, sillas, manteles, cubremanteles, área de juegos infantiles, internet Wi-Fi, refrigerador, microondas, estufa y gas.
           </p>
           <div class="flex justify-between text-emerald-800 font-semibold pt-1 border-t border-surface-container">
             <span>Depósito en Garantía (100% Reembolsable):</span>
@@ -1146,13 +1140,13 @@
 
       <div class="flex flex-col gap-3 pt-4">
         <div class="rounded-xl overflow-hidden border border-surface-container shadow-inner bg-slate-50 flex items-center justify-center">
-          <img alt="Plano de distribución del salón" class="w-full h-auto object-contain max-h-[500px]" src="assets/images/salon-mapa.svg?v=20261121_v7"/>
+          <img alt="Plano de distribución del salón" class="w-full h-auto object-contain max-h-[500px]" src="assets/images/salon-mapa.svg?v=20261121_v8"/>
         </div>
         <div class="grid grid-cols-2 sm:grid-cols-4 gap-2 text-[11px] pt-1">
-          <span class="p-2 rounded-lg bg-emerald-50 text-emerald-800 font-semibold text-center">🤸 Juegos y Trampolín (Piso Verde)</span>
-          <span class="p-2 rounded-lg bg-pink-50 text-pink-800 font-semibold text-center">🍳 Cocina: Refri, Estufa, Gas y Micro</span>
-          <span class="p-2 rounded-lg bg-amber-50 text-amber-900 font-semibold text-center">🍽️ Comedor: 50 o 80 Personas</span>
-          <span class="p-2 rounded-lg bg-blue-50 text-blue-800 font-semibold text-center">📶 Wi-Fi, Manteles y 7 Hrs Evento</span>
+          <span class="p-2 rounded-lg bg-pink-50 text-pink-800 font-semibold text-center">🎠 Zona A: Carrusel Central</span>
+          <span class="p-2 rounded-lg bg-blue-50 text-blue-800 font-semibold text-center">🧱 Zona B: Estimulación Suave</span>
+          <span class="p-2 rounded-lg bg-amber-50 text-amber-800 font-semibold text-center">🍽️ Zona C: Comedor Infantil</span>
+          <span class="p-2 rounded-lg bg-emerald-50 text-emerald-800 font-semibold text-center">🛡️ Zona D: Salidas y Sanitarios</span>
         </div>
       </div>
     </div>
@@ -1364,6 +1358,6 @@
   </div>
 
   <!-- SCRIPT PRINCIPAL INTERACTIVO -->
-  <script src="js/app.js?v=20261121_v7"></script>
+  <script src="js/app.js?v=20261121_v8"></script>
 </body>
 </html>

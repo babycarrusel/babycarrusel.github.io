@@ -334,7 +334,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
       if (isTodayDate && found.estado === 'confirmada') {
         uiStatus = 'active';
-        uiLabel = 'En Curso (7 Horas)';
+        uiLabel = 'En Curso';
       } else if (found.estado === 'finalizada') {
         uiStatus = 'completed';
         uiLabel = 'Finalizado';
@@ -350,8 +350,8 @@ document.addEventListener('DOMContentLoaded', () => {
             id_reservacion: found.id_reservacion,
             slotKey: `${hIni}-${hFin}`,
             shortTime: hIni,
-            time: `${hIni} - ${hFin} (7 Hrs)`,
-            title: found.tipo_evento || 'Evento Infantil (7 Horas)',
+            time: `${hIni} - ${hFin}`,
+            title: found.tipo_evento || 'Evento Infantil',
             host: found.cliente_nombre || 'Cliente Registrado',
             phone: found.cliente_telefono || '+52 444 540 2978',
             status: uiStatus,
@@ -366,15 +366,15 @@ document.addEventListener('DOMContentLoaded', () => {
       };
     }
 
-    // Día libre: Disponible para evento de 7 horas (antes de las 11:00 PM)
+    // Día libre
     return {
       isMaintenance: false,
       slots: [
         {
           slotKey: '14:00-21:00',
-          shortTime: '7 Hrs',
-          time: '7 Horas (Antes de 11:00 PM)',
-          title: 'Fecha Disponible para Evento de 7 Horas',
+          shortTime: 'Libre',
+          time: 'Horario a elegir',
+          title: 'Fecha Disponible',
           host: '-',
           status: 'open',
           statusLabel: 'Disponible',
@@ -446,7 +446,6 @@ document.addEventListener('DOMContentLoaded', () => {
 
     return `
       <span class="px-1.5 py-0.5 rounded text-[10px] font-semibold bg-emerald-100 text-emerald-800 truncate">🟢 Disponible</span>
-      <span class="px-1.5 py-0.5 rounded text-[9px] font-medium bg-emerald-50 text-emerald-700 truncate">7 Hrs • 50/80 Pers.</span>
     `;
   }
 
@@ -646,17 +645,17 @@ document.addEventListener('DOMContentLoaded', () => {
     const displayTitle = state.isOwner
       ? slot.title
       : isFree
-      ? 'Salón Disponible (Evento de 7 Horas)'
+      ? 'Salón Disponible para Reservar'
       : isPending
       ? 'Reservación en Espera de Confirmación (Pendiente)'
       : 'Fecha Reservada y Confirmada (Sin Cupo)';
 
     const displaySub = state.isOwner
-      ? (isFree ? 'Disponible para Paquete 50 o 80 personas (7 horas antes de las 11:00 PM)' : `Anfitrión: ${slot.host} • Aforo: ${slot.guests} Invitados`)
+      ? (isFree ? 'Disponible para Paquete de 50 o 80 personas' : `Anfitrión: ${slot.host} • Aforo: ${slot.guests} Invitados`)
       : (isFree ? 'Incluye mesas, sillas, manteles, cubremanteles, juegos, internet, refri, microondas, estufa y gas' : isPending ? 'Un cliente solicitó esta fecha; pendiente de confirmación del dueño' : 'Esta fecha ya fue confirmada y no tiene cupo disponible');
 
     const actionBtn = isFree
-      ? `<button onclick="openBookingModal('14:00-21:00', '${isoDate}')" class="px-4 py-2 rounded-xl bg-emerald-600 text-white text-xs font-bold hover:bg-emerald-700 transition-colors">Reservar 7 Horas</button>`
+      ? `<button onclick="openBookingModal('14:00-21:00', '${isoDate}')" class="px-4 py-2 rounded-xl bg-emerald-600 text-white text-xs font-bold hover:bg-emerald-700 transition-colors">Reservar Este Día</button>`
       : state.isOwner
       ? `<div class="flex items-center gap-2">
            ${isPending ? `<button onclick="quickConfirmReservation(${slot.id_reservacion})" class="px-3.5 py-2 rounded-xl bg-emerald-600 text-white text-xs font-bold hover:bg-emerald-700">Confirmar</button>` : ''}
@@ -666,7 +665,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
     container.innerHTML = `
       <div class="p-2.5 rounded-xl bg-surface-container-low/60 flex items-center justify-between text-xs text-on-surface-variant">
-        <span class="font-semibold">Preparación Pre-Evento • Montaje de Manteles, Cubremanteles, Cocina (Gas) y Limpieza de Juegos</span>
+        <span class="font-semibold">Preparación Pre-Evento • Montaje de Manteles, Cubremanteles, Cocina y Limpieza de Juegos</span>
         <span class="text-emerald-700 font-bold">Incluido ✓</span>
       </div>
       <div class="p-4 rounded-xl border ${bgClass} flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3">
@@ -680,7 +679,7 @@ document.addEventListener('DOMContentLoaded', () => {
         ${actionBtn}
       </div>
       <div class="p-2.5 rounded-xl bg-surface-container-low/60 flex items-center justify-between text-xs text-on-surface-variant">
-        <span class="font-semibold">Cierre del Salón (Horario Límite: Antes de las 11:00 de la Noche / 23:00 hrs)</span>
+        <span class="font-semibold">Cierre del Salón e Inspección de Entrega</span>
         <span class="text-secondary font-bold">Inspección y Entrega</span>
       </div>
     `;
@@ -802,7 +801,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
     const todayWeekday = dayNamesFull[new Date(TODAY_YEAR, TODAY_MONTH, TODAY_DAY).getDay()];
     if (todayText) {
-      todayText.textContent = `Hoy es ${todayWeekday} ${TODAY_DAY} de ${monthNames[TODAY_MONTH]} ${TODAY_YEAR} • Eventos de 7 Horas (Antes de 11:00 PM)`;
+      todayText.textContent = `Hoy es ${todayWeekday} ${TODAY_DAY} de ${monthNames[TODAY_MONTH]} ${TODAY_YEAR} • Selecciona una fecha disponible`;
     }
     if (monthLabel) {
       monthLabel.textContent = `${monthNames[state.popupMonthIndex]} ${state.popupYear}`;
@@ -893,7 +892,7 @@ document.addEventListener('DOMContentLoaded', () => {
           <span>¡Sin Cupo! Ya está reservado y confirmado el ${selWeekday} ${selDay} de ${monthNames[month]} ${year}</span>
         </div>
         <p class="text-xs text-rose-700">
-          El evento de 7 horas para esta fecha ya fue confirmado por el dueño del salón. Por favor selecciona otro día en verde en el calendario.
+          El evento para esta fecha ya fue confirmado por el dueño del salón. Por favor selecciona otro día en verde en el calendario.
         </p>
       `;
     } else if (selPending) {
@@ -915,7 +914,7 @@ document.addEventListener('DOMContentLoaded', () => {
         <div class="flex items-center gap-2.5">
           <span class="material-symbols-outlined text-2xl text-emerald-600">event_available</span>
           <div>
-            <span class="font-bold text-sm text-emerald-950 block">🟢 ${selWeekday} ${selDay} de ${monthNames[month]} ${year} • Disponible (7 Horas de Evento)</span>
+            <span class="font-bold text-sm text-emerald-950 block">🟢 ${selWeekday} ${selDay} de ${monthNames[month]} ${year} • Fecha Disponible</span>
             <span class="text-xs text-emerald-800">Paquete para 50 u 80 personas • Incluye mesas, sillas, manteles, cubremanteles, juegos, internet, refri, microondas, estufa y gas.</span>
           </div>
         </div>
@@ -1061,7 +1060,7 @@ document.addEventListener('DOMContentLoaded', () => {
         ? '🔴 Sin Cupo: Esta fecha ya fue confirmada por la administración'
         : pending
         ? '⏳ Solicitud de reservación en espera de confirmación por el dueño'
-        : '🟢 Fecha disponible para evento de 7 horas (Horario antes de las 11:00 PM)';
+        : '🟢 Fecha disponible para reservar tu evento';
     }
 
     const sessionsContainer = document.getElementById('daily-sessions-container');
@@ -1075,15 +1074,15 @@ document.addEventListener('DOMContentLoaded', () => {
         <div class="p-space-md rounded-xl bg-emerald-50/70 border border-emerald-200 flex flex-col md:flex-row items-start md:items-center justify-between gap-space-md">
           <div class="flex items-start gap-space-md">
             <div class="flex flex-col items-center justify-center w-24 py-2 rounded-lg bg-emerald-100 text-emerald-800 text-center">
-              <span class="text-xs font-bold uppercase tracking-wider">7 Horas</span>
-              <span class="font-label-sm text-[11px] font-semibold">Antes de 11 PM</span>
+              <span class="text-xs font-bold uppercase tracking-wider">Disponible</span>
+              <span class="font-label-sm text-[11px] font-semibold">50 / 80 Pers.</span>
             </div>
             <div class="flex flex-col">
               <div class="flex items-center gap-2 flex-wrap">
                 <span class="font-headline-sm text-headline-sm text-emerald-950 font-bold">Fecha Disponible • Paquete 50 o 80 Personas</span>
                 <span class="px-2 py-0.5 rounded-full text-[10px] font-bold bg-emerald-200 text-emerald-900">🟢 Disponible</span>
               </div>
-              <span class="text-xs text-emerald-900/80 mt-0.5">Incluye: Mesas, sillas, manteles, cubremanteles, juegos infantiles, internet Wi-Fi, refrigerador, microondas, estufa, gas y 7 horas de evento.</span>
+              <span class="text-xs text-emerald-900/80 mt-0.5">Incluye: Mesas, sillas, manteles, cubremanteles, juegos infantiles, internet Wi-Fi, refrigerador, microondas, estufa y gas.</span>
             </div>
           </div>
           <div class="flex items-center gap-2 self-end md:self-center">
@@ -1105,8 +1104,8 @@ document.addEventListener('DOMContentLoaded', () => {
           <div class="p-space-md rounded-xl bg-amber-50/80 border-2 border-amber-300 flex flex-col md:flex-row items-start md:items-center justify-between gap-space-md">
             <div class="flex items-start gap-space-md">
               <div class="flex flex-col items-center justify-center w-24 py-2 rounded-lg bg-amber-100 text-amber-900 text-center">
-                <span class="text-xs font-bold uppercase tracking-wider">7 Horas</span>
-                <span class="font-label-sm text-[11px] font-semibold">${slot.time.replace(' (7 Hrs)', '')}</span>
+                <span class="text-xs font-bold uppercase tracking-wider">Horario</span>
+                <span class="font-label-sm text-[11px] font-semibold">${slot.time}</span>
               </div>
               <div class="flex flex-col">
                 <div class="flex items-center gap-2 flex-wrap">
@@ -1127,7 +1126,7 @@ document.addEventListener('DOMContentLoaded', () => {
             <div class="flex items-start gap-space-md">
               <div class="flex flex-col items-center justify-center w-24 py-2 rounded-lg bg-rose-100 text-rose-800 text-center">
                 <span class="text-xs font-bold uppercase tracking-wider">Reservado</span>
-                <span class="font-label-sm text-[11px] font-semibold">7 Horas</span>
+                <span class="font-label-sm text-[11px] font-semibold">Confirmado</span>
               </div>
               <div class="flex flex-col">
                 <div class="flex items-center gap-2 flex-wrap">
@@ -1154,14 +1153,14 @@ document.addEventListener('DOMContentLoaded', () => {
           <div class="flex items-start gap-space-md">
             <div class="flex flex-col items-center justify-center w-24 py-2 rounded-lg bg-amber-100 text-amber-900 text-center">
               <span class="text-xs font-bold uppercase tracking-wider">Pendiente</span>
-              <span class="font-label-sm text-[11px] font-semibold">${slot.time.replace(' (7 Hrs)', '')}</span>
+              <span class="font-label-sm text-[11px] font-semibold">${slot.time}</span>
             </div>
             <div class="flex flex-col">
               <div class="flex items-center gap-2 flex-wrap">
                 <span class="font-headline-sm text-headline-sm text-amber-950 font-bold">${slot.title}</span>
                 <span class="px-2.5 py-0.5 rounded-full text-[10px] font-bold bg-amber-500 text-white">⏳ Pendiente de Confirmar</span>
               </div>
-              <span class="text-xs text-amber-900/90 mt-0.5">Cliente: ${slot.host} (${slot.phone || ''}) • Aforo: ${slot.guests} Personas • 7 Horas de Evento</span>
+              <span class="text-xs text-amber-900/90 mt-0.5">Cliente: ${slot.host} (${slot.phone || ''}) • Aforo: ${slot.guests} Personas</span>
             </div>
           </div>
           <div class="flex items-center gap-2 self-end md:self-center">
@@ -1182,7 +1181,7 @@ document.addEventListener('DOMContentLoaded', () => {
           <div class="flex items-start gap-space-md pl-1">
             <div class="flex flex-col items-center justify-center w-24 py-2 rounded-lg ${isCurrentActive ? 'bg-primary text-white' : 'bg-rose-600 text-white'} text-center shadow-xs">
               <span class="text-xs font-bold uppercase tracking-wider">${isCurrentActive ? 'En Curso' : 'Confirmado'}</span>
-              <span class="font-label-sm text-[11px] font-semibold">${slot.time.replace(' (7 Hrs)', '')}</span>
+              <span class="font-label-sm text-[11px] font-semibold">${slot.time}</span>
             </div>
             <div class="flex flex-col">
               <div class="flex items-center gap-2 flex-wrap">
@@ -1191,7 +1190,7 @@ document.addEventListener('DOMContentLoaded', () => {
                   ${isCurrentActive ? '<span class="w-1.5 h-1.5 rounded-full bg-white animate-ping"></span>Activo Ahora' : '🔴 Sin Cupo (Confirmado)'}
                 </span>
               </div>
-              <span id="${isCurrentActive ? 'slot-host-info' : ''}" class="text-xs text-on-surface-variant mt-0.5">Anfitrión: ${slot.host} (${slot.phone || ''}) • ${slot.guests} Invitados • Incluye Mantelería, Cocina con Gas, Wi-Fi y Juegos</span>
+              <span id="${isCurrentActive ? 'slot-host-info' : ''}" class="text-xs text-on-surface-variant mt-0.5">Anfitrión: ${slot.host} (${slot.phone || ''}) • ${slot.guests} Invitados</span>
             </div>
           </div>
           <div class="flex items-center gap-space-xs self-end md:self-center">
@@ -1857,7 +1856,7 @@ document.addEventListener('DOMContentLoaded', () => {
       guestsInput.value = String(cap);
     }
     if (summaryPkg) {
-      summaryPkg.textContent = `Paquete Seleccionado (${cap} Personas • 7 Horas):`;
+      summaryPkg.textContent = `Paquete Seleccionado (${cap} Personas):`;
     }
   }
   window.onPackageCapacityChange = onPackageCapacityChange;
