@@ -184,15 +184,15 @@ INSERT INTO `reglamento` (`id_regla`, `titulo`, `descripcion`, `activo`, `fecha_
 INSERT INTO `reservaciones` (`id_reservacion`, `id_cliente`, `fecha_evento`, `hora_inicio`, `hora_fin`, `tipo_evento`, `numero_invitados`, `estado`, `deposito`, `deposito_estado`, `observaciones`, `fecha_registro`) VALUES
 (1, 1, '2026-11-21', '15:00:00', '19:00:00', 'Cumpleaños #4 de Lucas • Carnaval de Carrusel y Safari Mágico', 62, 'confirmada', 350.00, 'pagado', 'Activo en Salón Principal • 38 Niños / 24 Adultos • Paquete $1,250.00 Liquidado', '2026-11-05 12:05:00'),
 (2, 2, '2026-11-21', '09:30:00', '13:30:00', 'Safari Mágico de Mía', 45, 'finalizada', 350.00, 'devuelto', 'Evento matutino completado e inspeccionado sin daños. Depósito reembolsado al 100%.', '2026-11-06 10:35:00'),
-(3, 3, '2026-11-15', '09:30:00', '13:30:00', 'Fiesta de Cumpleaños Mateo', 40, 'finalizada', 350.00, 'devuelto', 'Salón entregado en óptimas condiciones.', '2026-11-01 16:20:00'),
-(4, 4, '2026-11-15', '15:00:00', '19:00:00', 'Cumpleaños #5 de Valeria', 55, 'finalizada', 350.00, 'devuelto', 'Inspección post-evento aprobada.', '2026-11-02 11:25:00'),
-(5, 5, '2026-11-17', '09:30:00', '13:30:00', 'Bautizo de Santiago', 50, 'pendiente', 350.00, 'pendiente', 'Apartado pendiente de confirmación de pago.', '2026-11-08 09:50:00'),
-(6, 6, '2026-11-18', '15:00:00', '19:00:00', 'Baby Shower de Valentina', 60, 'confirmada', 350.00, 'pagado', 'Montaje especial en salón comedor y área de regalos.', '2026-11-09 14:10:00'),
-(7, 7, '2026-11-20', '15:00:00', '19:00:00', 'Cumpleaños #3 de Emma • Unicornios', 65, 'confirmada', 350.00, 'pagado', 'Temática Unicornio • Depósito de garantía cubierto.', '2026-11-10 17:35:00'),
-(8, 8, '2026-11-20', '20:00:00', '23:30:00', 'Pijamada VIP de Sofía', 30, 'pendiente', 350.00, 'pendiente', 'Apartado nocturno pendiente de confirmación.', '2026-11-12 18:15:00'),
-(9, 3, '2026-11-22', '15:00:00', '19:00:00', 'Cumpleaños #2 de Leo • Dinosaurios', 50, 'confirmada', 350.00, 'pagado', 'Paquete Fiesta Carrusel Mágico confirmado.', '2026-11-14 11:00:00'),
+(3, 3, '2026-11-22', '09:30:00', '13:30:00', 'Fiesta de Cumpleaños Mateo', 40, 'confirmada', 350.00, 'pagado', 'Turno mañana confirmado.', '2026-11-01 16:20:00'),
+(4, 4, '2026-11-22', '15:00:00', '19:00:00', 'Cumpleaños #5 de Valeria', 55, 'confirmada', 350.00, 'pagado', 'Turno tarde confirmado.', '2026-11-02 11:25:00'),
+(5, 3, '2026-11-22', '20:00:00', '23:30:00', 'Cumpleaños #2 de Leo • Dinosaurios', 50, 'confirmada', 350.00, 'pagado', 'Turno noche confirmado (Día con cupo lleno 3/3).', '2026-11-14 11:00:00'),
+(6, 5, '2026-11-24', '09:30:00', '13:30:00', 'Bautizo de Santiago', 50, 'pendiente', 350.00, 'pendiente', 'Apartado pendiente de confirmación de pago.', '2026-11-08 09:50:00'),
+(7, 6, '2026-11-25', '15:00:00', '19:00:00', 'Baby Shower de Valentina', 60, 'confirmada', 350.00, 'pagado', 'Montaje especial en salón comedor y área de regalos.', '2026-11-09 14:10:00'),
+(8, 7, '2026-11-27', '15:00:00', '19:00:00', 'Cumpleaños #3 de Emma • Unicornios', 65, 'confirmada', 350.00, 'pagado', 'Temática Unicornio • Depósito de garantía cubierto.', '2026-11-10 17:35:00'),
+(9, 8, '2026-11-27', '20:00:00', '23:30:00', 'Pijamada VIP de Sofía', 30, 'pendiente', 350.00, 'pendiente', 'Apartado nocturno pendiente de confirmación.', '2026-11-12 18:15:00'),
 (10, 6, '2026-11-28', '09:30:00', '13:30:00', 'Cumpleaños #1 de Regina • Baby Splash', 45, 'confirmada', 350.00, 'pagado', 'Área de estimulación temprana reservada.', '2026-11-15 13:20:00'),
-(11, 7, '2026-11-28', '15:00:00', '19:00:00', 'Fiesta Sorpresa de Emiliano #6', 70, 'pendiente', 350.00, 'pendiente', 'Solicitud de apartado fin de semana.', '2026-11-18 16:40:00');
+(11, 7, '2026-11-28', '15:00:00', '19:00:00', 'Fiesta Sorpresa de Emiliano #6', 70, 'confirmada', 350.00, 'pagado', 'Reservación fin de semana.', '2026-11-18 16:40:00');
 
 INSERT INTO `reservacion_mobiliario` (`id_reservacion_mobiliario`, `id_reservacion`, `id_mobiliario`, `cantidad`) VALUES
 (1, 1, 1, 1),

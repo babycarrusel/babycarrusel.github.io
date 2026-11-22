@@ -1,5 +1,5 @@
 /**
- * Baby Carrusel - Sistema de Reservaciones y Centro de Operaciones
+ * Baby Carrusel - Sistema de Reservaciones y Centro de Operaciones en Tiempo Real
  */
 
 document.addEventListener('DOMContentLoaded', () => {
@@ -14,6 +14,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
   let activeApiBase = null;
 
+  // Fecha actual real del sistema
   const now = new Date();
   const TODAY_YEAR = now.getFullYear();
   const TODAY_MONTH = now.getMonth();
@@ -26,12 +27,21 @@ document.addEventListener('DOMContentLoaded', () => {
   const dayNamesFull = ['Domingo', 'Lunes', 'Martes', 'Miércoles', 'Jueves', 'Viernes', 'Sábado'];
   const dayNamesShort = ['Dom', 'Lun', 'Mar', 'Mié', 'Jue', 'Vie', 'Sáb'];
 
+  function formatIsoDate(year, monthIdx, day) {
+    return `${year}-${String(monthIdx + 1).padStart(2, '0')}-${String(day).padStart(2, '0')}`;
+  }
+
+  const TODAY_ISO = formatIsoDate(TODAY_YEAR, TODAY_MONTH, TODAY_DAY);
+
   const state = {
     isOwner: sessionStorage.getItem('bc_owner_logged') === '1',
     activeReservationId: 1,
     currentYear: TODAY_YEAR,
     currentMonthIndex: TODAY_MONTH,
     selectedDay: TODAY_DAY,
+    popupYear: TODAY_YEAR,
+    popupMonthIndex: TODAY_MONTH,
+    popupSelectedDay: TODAY_DAY,
     viewMode: 'month', // 'month' | 'week' | 'day'
     aforo: {
       current: 62,
@@ -41,7 +51,7 @@ document.addEventListener('DOMContentLoaded', () => {
     },
     deposit: {
       amount: 350.00,
-      status: 'held', // 'held' | 'released' | 'deducted'
+      status: 'held',
       deduction: 0
     },
     activeChecklistTab: 'pre',
@@ -65,15 +75,15 @@ document.addEventListener('DOMContentLoaded', () => {
       reservaciones: [
         { id_reservacion: 1, id_cliente: 1, cliente_nombre: 'Camila y Roberto Peña', cliente_telefono: '+52 444 849 1034', fecha_evento: '2026-11-21', hora_inicio: '15:00:00', hora_fin: '19:00:00', tipo_evento: 'Cumpleaños #4 de Lucas • Carnaval de Carrusel y Safari Mágico', numero_invitados: 62, estado: 'confirmada', deposito: 350, deposito_estado: 'pagado' },
         { id_reservacion: 2, id_cliente: 2, cliente_nombre: 'Valeria Silva', cliente_telefono: '+52 444 219 4501', fecha_evento: '2026-11-21', hora_inicio: '09:30:00', hora_fin: '13:30:00', tipo_evento: 'Safari Mágico de Mía', numero_invitados: 45, estado: 'finalizada', deposito: 350, deposito_estado: 'devuelto' },
-        { id_reservacion: 3, id_cliente: 3, cliente_nombre: 'Familia Morales', cliente_telefono: '+52 444 310 8821', fecha_evento: '2026-11-15', hora_inicio: '09:30:00', hora_fin: '13:30:00', tipo_evento: 'Fiesta de Cumpleaños Mateo', numero_invitados: 40, estado: 'finalizada', deposito: 350, deposito_estado: 'devuelto' },
-        { id_reservacion: 4, id_cliente: 4, cliente_nombre: 'Lucía Mendoza', cliente_telefono: '+52 444 509 7712', fecha_evento: '2026-11-15', hora_inicio: '15:00:00', hora_fin: '19:00:00', tipo_evento: 'Cumpleaños #5 de Valeria', numero_invitados: 55, estado: 'finalizada', deposito: 350, deposito_estado: 'devuelto' },
-        { id_reservacion: 5, id_cliente: 5, cliente_nombre: 'Alejandro Cruz', cliente_telefono: '+52 444 618 9940', fecha_evento: '2026-11-17', hora_inicio: '09:30:00', hora_fin: '13:30:00', tipo_evento: 'Bautizo de Santiago', numero_invitados: 50, estado: 'pendiente', deposito: 350, deposito_estado: 'pendiente' },
-        { id_reservacion: 6, id_cliente: 6, cliente_nombre: 'Mariana Garza', cliente_telefono: '+52 444 720 1138', fecha_evento: '2026-11-18', hora_inicio: '15:00:00', hora_fin: '19:00:00', tipo_evento: 'Baby Shower de Valentina', numero_invitados: 60, estado: 'confirmada', deposito: 350, deposito_estado: 'pagado' },
-        { id_reservacion: 7, id_cliente: 7, cliente_nombre: 'Daniela Ríos', cliente_telefono: '+52 444 831 5560', fecha_evento: '2026-11-20', hora_inicio: '15:00:00', hora_fin: '19:00:00', tipo_evento: 'Cumpleaños #3 de Emma • Unicornios', numero_invitados: 65, estado: 'confirmada', deposito: 350, deposito_estado: 'pagado' },
-        { id_reservacion: 8, id_cliente: 8, cliente_nombre: 'Karla Gómez', cliente_telefono: '+52 444 942 6671', fecha_evento: '2026-11-20', hora_inicio: '20:00:00', hora_fin: '23:30:00', tipo_evento: 'Pijamada VIP de Sofía', numero_invitados: 30, estado: 'pendiente', deposito: 350, deposito_estado: 'pendiente' },
-        { id_reservacion: 9, id_cliente: 3, cliente_nombre: 'Familia Morales', cliente_telefono: '+52 444 310 8821', fecha_evento: '2026-11-22', hora_inicio: '15:00:00', hora_fin: '19:00:00', tipo_evento: 'Cumpleaños #2 de Leo • Dinosaurios', numero_invitados: 50, estado: 'confirmada', deposito: 350, deposito_estado: 'pagado' },
+        { id_reservacion: 3, id_cliente: 3, cliente_nombre: 'Familia Morales', cliente_telefono: '+52 444 310 8821', fecha_evento: '2026-11-22', hora_inicio: '09:30:00', hora_fin: '13:30:00', tipo_evento: 'Fiesta de Cumpleaños Mateo', numero_invitados: 40, estado: 'confirmada', deposito: 350, deposito_estado: 'pagado' },
+        { id_reservacion: 4, id_cliente: 4, cliente_nombre: 'Lucía Mendoza', cliente_telefono: '+52 444 509 7712', fecha_evento: '2026-11-22', hora_inicio: '15:00:00', hora_fin: '19:00:00', tipo_evento: 'Cumpleaños #5 de Valeria', numero_invitados: 55, estado: 'confirmada', deposito: 350, deposito_estado: 'pagado' },
+        { id_reservacion: 5, id_cliente: 3, cliente_nombre: 'Familia Morales', cliente_telefono: '+52 444 310 8821', fecha_evento: '2026-11-22', hora_inicio: '20:00:00', hora_fin: '23:30:00', tipo_evento: 'Cumpleaños #2 de Leo • Dinosaurios', numero_invitados: 50, estado: 'confirmada', deposito: 350, deposito_estado: 'pagado' },
+        { id_reservacion: 6, id_cliente: 5, cliente_nombre: 'Alejandro Cruz', cliente_telefono: '+52 444 618 9940', fecha_evento: '2026-11-24', hora_inicio: '09:30:00', hora_fin: '13:30:00', tipo_evento: 'Bautizo de Santiago', numero_invitados: 50, estado: 'pendiente', deposito: 350, deposito_estado: 'pendiente' },
+        { id_reservacion: 7, id_cliente: 6, cliente_nombre: 'Mariana Garza', cliente_telefono: '+52 444 720 1138', fecha_evento: '2026-11-25', hora_inicio: '15:00:00', hora_fin: '19:00:00', tipo_evento: 'Baby Shower de Valentina', numero_invitados: 60, estado: 'confirmada', deposito: 350, deposito_estado: 'pagado' },
+        { id_reservacion: 8, id_cliente: 7, cliente_nombre: 'Daniela Ríos', cliente_telefono: '+52 444 831 5560', fecha_evento: '2026-11-27', hora_inicio: '15:00:00', hora_fin: '19:00:00', tipo_evento: 'Cumpleaños #3 de Emma • Unicornios', numero_invitados: 65, estado: 'confirmada', deposito: 350, deposito_estado: 'pagado' },
+        { id_reservacion: 9, id_cliente: 8, cliente_nombre: 'Karla Gómez', cliente_telefono: '+52 444 942 6671', fecha_evento: '2026-11-27', hora_inicio: '20:00:00', hora_fin: '23:30:00', tipo_evento: 'Pijamada VIP de Sofía', numero_invitados: 30, estado: 'pendiente', deposito: 350, deposito_estado: 'pendiente' },
         { id_reservacion: 10, id_cliente: 6, cliente_nombre: 'Mariana Garza', cliente_telefono: '+52 444 720 1138', fecha_evento: '2026-11-28', hora_inicio: '09:30:00', hora_fin: '13:30:00', tipo_evento: 'Cumpleaños #1 de Regina • Baby Splash', numero_invitados: 45, estado: 'confirmada', deposito: 350, deposito_estado: 'pagado' },
-        { id_reservacion: 11, id_cliente: 7, cliente_nombre: 'Daniela Ríos', cliente_telefono: '+52 444 831 5560', fecha_evento: '2026-11-28', hora_inicio: '15:00:00', hora_fin: '19:00:00', tipo_evento: 'Fiesta Sorpresa de Emiliano #6', numero_invitados: 70, estado: 'pendiente', deposito: 350, deposito_estado: 'pendiente' }
+        { id_reservacion: 11, id_cliente: 7, cliente_nombre: 'Daniela Ríos', cliente_telefono: '+52 444 831 5560', fecha_evento: '2026-11-28', hora_inicio: '15:00:00', hora_fin: '19:00:00', tipo_evento: 'Fiesta Sorpresa de Emiliano #6', numero_invitados: 70, estado: 'confirmada', deposito: 350, deposito_estado: 'pagado' }
       ],
       clientes: [],
       empleados: [
@@ -109,7 +119,24 @@ document.addEventListener('DOMContentLoaded', () => {
   };
 
   /* ==========================================================================
-     COMUNICACIÓN CON EL SERVIDOR (TRANSPARENTE PARA EL USUARIO)
+     VALIDACIÓN DE FECHAS PASADAS Y DÍAS LLENOS
+     ========================================================================== */
+  function isPastDate(year, monthIdx, day) {
+    if (year < TODAY_YEAR) return true;
+    if (year > TODAY_YEAR) return false;
+    if (monthIdx < TODAY_MONTH) return true;
+    if (monthIdx > TODAY_MONTH) return false;
+    return day < TODAY_DAY;
+  }
+
+  function isDayFullyBooked(dayInfo) {
+    if (!dayInfo || dayInfo.isMaintenance) return false;
+    const openCount = dayInfo.slots.filter(s => s.status === 'open').length;
+    return openCount === 0;
+  }
+
+  /* ==========================================================================
+     COMUNICACIÓN CON EL SERVIDOR
      ========================================================================== */
   async function apiFetch(path, options = {}) {
     if (!activeApiBase) {
@@ -235,6 +262,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
     renderCalendar();
     renderDailySessions();
+    renderPopupCalendar();
   }
 
   function openAdminLoginModal() {
@@ -262,7 +290,6 @@ document.addEventListener('DOMContentLoaded', () => {
       closeModal('modal-admin-login');
       applyRoleUI();
       showToast('¡Bienvenida, Jolie! Panel de Operaciones activado.', 'success');
-      // Notificar al servidor opcionalmente
       apiFetch('/auth/login', {
         method: 'POST',
         body: JSON.stringify({ username: user, password: pass })
@@ -282,37 +309,14 @@ document.addEventListener('DOMContentLoaded', () => {
   window.logoutAdmin = logoutAdmin;
 
   /* ==========================================================================
-     UTILIDADES DE FECHAS Y TURNOS DEL CALENDARIO REAL
+     LÓGICA DE TURNOS POR FECHA
      ========================================================================== */
-  function formatIsoDate(year, monthIdx, day) {
-    return `${year}-${String(monthIdx + 1).padStart(2, '0')}-${String(day).padStart(2, '0')}`;
-  }
-
   function getSlotsForDate(year, monthIdx, day) {
     const isoDate = formatIsoDate(year, monthIdx, day);
-    const dateObj = new Date(year, monthIdx, day);
-    const weekday = dateObj.getDay(); // 0 = Dom, 1 = Lun ...
 
     const dayRes = state.dbData.reservaciones.filter(
       r => r.fecha_evento === isoDate && r.estado !== 'cancelada'
     );
-
-    // Lunes sin reservaciones = Día de Mantenimiento Preventivo y Sanitización
-    if (weekday === 1 && dayRes.length === 0) {
-      return {
-        isMaintenance: true,
-        slots: [
-          {
-            time: 'Todo el día',
-            title: 'Mantenimiento Preventivo y Sanitización Profunda',
-            host: 'Equipo Técnico Baby Carrusel',
-            status: 'maintenance',
-            statusLabel: 'Mantenimiento',
-            guests: '-'
-          }
-        ]
-      };
-    }
 
     const standardShifts = [
       { key: 'mañana', label: 'Horario Mañana Disponible', shortLabel: '09:30 Mañana', defaultTime: '09:30 - 13:30', matchHour: h => h < 14 },
@@ -338,7 +342,7 @@ document.addEventListener('DOMContentLoaded', () => {
         let uiStatus = 'confirmed';
         let uiLabel = 'Confirmado';
 
-        if ((isTodayDate && shift.key === 'tarde' && found.estado === 'confirmada') || found.id_reservacion === state.activeReservationId && isTodayDate) {
+        if ((isTodayDate && shift.key === 'tarde' && found.estado === 'confirmada') || (found.id_reservacion === state.activeReservationId && isTodayDate)) {
           uiStatus = 'active';
           uiLabel = 'En Curso (Activo)';
         } else if (found.estado === 'finalizada') {
@@ -386,7 +390,7 @@ document.addEventListener('DOMContentLoaded', () => {
   }
 
   /* ==========================================================================
-     RENDERIZADO REAL DE LAS 3 VISTAS DEL CALENDARIO (MENSUAL, SEMANAL, DIARIO)
+     RENDERIZADO DEL CALENDARIO PRINCIPAL (MENSUAL, SEMANAL, DIARIO)
      ========================================================================== */
   function renderCalendar() {
     const titleEl = document.getElementById('calendar-month-title');
@@ -410,28 +414,36 @@ document.addEventListener('DOMContentLoaded', () => {
     }
   }
 
-  function renderDayCellBadges(dayInfo) {
-    if (dayInfo.isMaintenance) {
-      return `<span class="px-1.5 py-0.5 rounded text-[10px] font-medium bg-surface-container text-on-surface-variant truncate">Sanitización</span>`;
+  function renderDayCellBadges(dayInfo, past, full) {
+    if (past) {
+      return `<span class="px-1.5 py-0.5 rounded text-[10px] font-medium bg-slate-200/70 text-slate-500 truncate">No disponible</span>`;
+    }
+
+    if (full) {
+      return `
+        <span class="px-1.5 py-0.5 rounded text-[10px] font-bold bg-rose-600 text-white truncate shadow-2xs">🔴 Todo Reservado</span>
+        <span class="px-1.5 py-0.5 rounded text-[9px] font-semibold bg-rose-200/80 text-rose-900 truncate">Sin Cupo (3/3)</span>
+      `;
     }
 
     if (!state.isOwner) {
-      // Vista limpia para el CLIENTE: muestra cuántos turnos están libres sin exponer datos privados
       const openCount = dayInfo.slots.filter(s => s.status === 'open').length;
-      const holdCount = dayInfo.slots.filter(s => s.status === 'hold').length;
       if (openCount === 3) {
-        return `<span class="px-1.5 py-0.5 rounded text-[10px] font-medium bg-emerald-50 text-emerald-700 truncate">3 Turnos Libres</span>`;
-      } else if (openCount > 0) {
+        return `<span class="px-1.5 py-0.5 rounded text-[10px] font-semibold bg-emerald-100 text-emerald-800 truncate">3 Turnos Libres</span>`;
+      } else if (openCount === 2) {
         return `
-          <span class="px-1.5 py-0.5 rounded text-[10px] font-semibold bg-emerald-50 text-emerald-700 truncate">${openCount} ${openCount === 1 ? 'Turno Libre' : 'Turnos Libres'}</span>
-          <span class="px-1.5 py-0.5 rounded text-[10px] font-medium ${holdCount > 0 ? 'bg-amber-50 text-amber-700' : 'bg-blue-50 text-blue-700'} truncate">${3 - openCount} Reservado${3 - openCount > 1 ? 's' : ''}</span>
+          <span class="px-1.5 py-0.5 rounded text-[10px] font-semibold bg-emerald-100 text-emerald-800 truncate">2 Turnos Libres</span>
+          <span class="px-1.5 py-0.5 rounded text-[9px] font-medium bg-amber-100 text-amber-800 truncate">1 Ocupado</span>
         `;
       } else {
-        return `<span class="px-1.5 py-0.5 rounded text-[10px] font-semibold bg-blue-100 text-blue-800 truncate">Fecha Completa</span>`;
+        return `
+          <span class="px-1.5 py-0.5 rounded text-[10px] font-bold bg-amber-100 text-amber-900 truncate">¡Último Turno!</span>
+          <span class="px-1.5 py-0.5 rounded text-[9px] font-medium bg-blue-100 text-blue-800 truncate">2 Reservados</span>
+        `;
       }
     }
 
-    // Vista detallada para DUEÑO / ADMINISTRACIÓN (idéntica al cartel)
+    // Vista detallada para DUEÑO / ADMINISTRACIÓN
     return dayInfo.slots.map(s => {
       if (s.status === 'active') {
         const shortTitle = s.title.split('•')[0].replace('Cumpleaños #4 de ', '').replace('Cumpleaños ', '').trim();
@@ -450,19 +462,19 @@ document.addEventListener('DOMContentLoaded', () => {
   function renderMonthView(container) {
     const year = state.currentYear;
     const month = state.currentMonthIndex;
-    const firstWeekday = new Date(year, month, 1).getDay(); // 0 (Dom) .. 6 (Sáb)
+    const firstWeekday = new Date(year, month, 1).getDay();
     const daysInMonth = new Date(year, month + 1, 0).getDate();
     const prevMonthDays = new Date(year, month, 0).getDate();
 
     const cells = [];
 
-    // Celdas de relleno del mes anterior
+    // Celdas de relleno del mes anterior (siempre opacas/bloqueadas si son pasadas)
     for (let i = firstWeekday - 1; i >= 0; i--) {
       const prevDay = prevMonthDays - i;
       cells.push(`
-        <div onclick="changeMonthAndSelect(-1, ${prevDay})" class="min-h-[84px] p-2 rounded-xl bg-surface-container-low/20 opacity-45 flex flex-col justify-between cursor-pointer hover:opacity-75 transition-opacity">
-          <span class="font-label-sm text-xs text-on-surface-variant">${prevDay}</span>
-          <span class="text-[10px] text-on-surface-variant">${monthNames[(month + 11) % 12].slice(0, 3)}</span>
+        <div class="min-h-[86px] p-2 rounded-xl bg-slate-100/40 opacity-30 flex flex-col justify-between cursor-not-allowed select-none">
+          <span class="font-label-sm text-xs text-slate-400">${prevDay}</span>
+          <span class="text-[9px] text-slate-400">${monthNames[(month + 11) % 12].slice(0, 3)}</span>
         </div>
       `);
     }
@@ -471,38 +483,71 @@ document.addEventListener('DOMContentLoaded', () => {
     for (let day = 1; day <= daysInMonth; day++) {
       const isToday = year === TODAY_YEAR && month === TODAY_MONTH && day === TODAY_DAY;
       const isSelected = day === state.selectedDay;
+      const past = isPastDate(year, month, day);
       const dayInfo = getSlotsForDate(year, month, day);
+      const full = !past && isDayFullyBooked(dayInfo);
 
+      if (past) {
+        // Día pasado: opaco y SIN permitir clic
+        cells.push(`
+          <div title="Fecha pasada no disponible" class="min-h-[92px] p-2 rounded-xl bg-slate-100/80 border border-slate-200/60 opacity-40 flex flex-col justify-between cursor-not-allowed select-none">
+            <span class="font-label-sm text-xs text-slate-400 font-semibold line-through">${day}</span>
+            <div class="flex flex-col gap-1 mt-1">
+              ${renderDayCellBadges(dayInfo, true, false)}
+            </div>
+          </div>
+        `);
+        continue;
+      }
+
+      if (full) {
+        // Día con los 3 turnos ocupados: En ROJO y opaco; al dar clic avisa que ya está todo reservado
+        const ringClass = isSelected ? 'ring-2 ring-rose-600' : '';
+        cells.push(`
+          <div onclick="handleCalendarDayClick(${year}, ${month}, ${day})" data-day="${day}" class="min-h-[92px] p-2 rounded-xl bg-rose-100/80 border-2 border-rose-300 text-rose-900 opacity-85 ${ringClass} flex flex-col justify-between relative cursor-pointer hover:bg-rose-200/70 transition-all">
+            <div class="flex items-center justify-between">
+              <span class="font-label-sm text-xs font-bold text-rose-800">${day}${isToday ? ' HOY' : ''}</span>
+              <span class="w-2 h-2 rounded-full bg-rose-600"></span>
+            </div>
+            <div class="flex flex-col gap-1 mt-1">
+              ${renderDayCellBadges(dayInfo, false, true)}
+            </div>
+          </div>
+        `);
+        continue;
+      }
+
+      // Día disponible (Hoy o futuro con turnos libres)
       const cellClasses = isSelected
         ? 'min-h-[92px] p-2 rounded-xl bg-primary-fixed/25 ring-2 ring-primary shadow-sm flex flex-col justify-between relative cursor-pointer transition-all'
         : isToday
         ? 'min-h-[92px] p-2 rounded-xl bg-primary-fixed/15 ring-1 ring-primary/50 flex flex-col justify-between relative cursor-pointer hover:bg-primary-fixed/25 transition-all'
-        : 'min-h-[92px] p-2 rounded-xl bg-surface-container-low/40 flex flex-col justify-between cursor-pointer hover:bg-surface-container-low transition-colors';
+        : 'min-h-[92px] p-2 rounded-xl bg-surface-container-low/50 border border-emerald-200/50 flex flex-col justify-between cursor-pointer hover:bg-emerald-50/40 transition-colors';
 
       const headerHtml = isToday
         ? `<div class="flex items-center justify-between">
              <span class="font-label-sm text-xs font-bold text-primary">${day} HOY</span>
              <span class="w-2 h-2 rounded-full bg-primary animate-ping"></span>
            </div>`
-        : `<span class="font-label-sm text-xs ${isSelected ? 'font-bold text-primary' : 'text-on-surface-variant font-semibold'}">${day}</span>`;
+        : `<span class="font-label-sm text-xs ${isSelected ? 'font-bold text-primary' : 'text-on-surface font-semibold'}">${day}</span>`;
 
       cells.push(`
-        <div onclick="selectCalendarDay(${day})" data-day="${day}" class="${cellClasses}">
+        <div onclick="handleCalendarDayClick(${year}, ${month}, ${day})" data-day="${day}" class="${cellClasses}">
           ${headerHtml}
           <div class="flex flex-col gap-1 mt-1">
-            ${renderDayCellBadges(dayInfo)}
+            ${renderDayCellBadges(dayInfo, false, false)}
           </div>
         </div>
       `);
     }
 
-    // Celdas de relleno del mes siguiente para completar fila de 7
+    // Celdas del mes siguiente
     const remaining = (7 - (cells.length % 7)) % 7;
     for (let nextDay = 1; nextDay <= remaining; nextDay++) {
       cells.push(`
-        <div onclick="changeMonthAndSelect(1, ${nextDay})" class="min-h-[84px] p-2 rounded-xl bg-surface-container-low/20 opacity-45 flex flex-col justify-between cursor-pointer hover:opacity-75 transition-opacity">
-          <span class="font-label-sm text-xs text-on-surface-variant">${nextDay}</span>
-          <span class="text-[10px] text-on-surface-variant">${monthNames[(month + 1) % 12].slice(0, 3)}</span>
+        <div onclick="changeMonthAndSelect(1, ${nextDay})" class="min-h-[86px] p-2 rounded-xl bg-surface-container-low/30 opacity-60 flex flex-col justify-between cursor-pointer hover:opacity-90 transition-opacity">
+          <span class="font-label-sm text-xs text-on-surface-variant font-semibold">${nextDay}</span>
+          <span class="text-[10px] text-emerald-700 font-medium">${monthNames[(month + 1) % 12].slice(0, 3)} • Disp.</span>
         </div>
       `);
     }
@@ -512,7 +557,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
   function renderWeekView(container, titleEl) {
     const selDate = new Date(state.currentYear, state.currentMonthIndex, state.selectedDay);
-    const dayOfWeek = selDate.getDay(); // 0..6
+    const dayOfWeek = selDate.getDay();
     const sunday = new Date(selDate);
     sunday.setDate(selDate.getDate() - dayOfWeek);
     const saturday = new Date(sunday);
@@ -532,24 +577,39 @@ document.addEventListener('DOMContentLoaded', () => {
 
       const isToday = y === TODAY_YEAR && m === TODAY_MONTH && dayNum === TODAY_DAY;
       const isSelected = y === state.currentYear && m === state.currentMonthIndex && dayNum === state.selectedDay;
+      const past = isPastDate(y, m, dayNum);
       const dayInfo = getSlotsForDate(y, m, dayNum);
+      const full = !past && isDayFullyBooked(dayInfo);
+
+      if (past) {
+        cards.push(`
+          <div class="min-h-[175px] p-2.5 rounded-xl bg-slate-100/70 border border-slate-200 opacity-40 flex flex-col justify-between cursor-not-allowed select-none">
+            <div class="flex items-center justify-between border-b border-slate-200 pb-1.5 mb-1.5">
+              <span class="text-xs font-bold text-slate-400 line-through">${dayNamesShort[i]} ${dayNum}</span>
+            </div>
+            <div class="flex-1 flex items-center justify-center text-center">
+              <span class="text-[11px] font-semibold text-slate-400">Fecha Pasada<br/>No Disponible</span>
+            </div>
+          </div>
+        `);
+        continue;
+      }
 
       const shiftsHtml = dayInfo.slots.map(s => {
-        if (s.status === 'maintenance') {
-          return `<div class="p-1.5 rounded-lg bg-surface-container text-on-surface-variant text-[10px] font-medium">🔧 Sanitización</div>`;
-        }
         const badgeColor =
-          s.status === 'active'
+          full
+            ? 'bg-rose-200/80 text-rose-900 font-bold'
+            : s.status === 'active'
             ? 'bg-primary text-white font-bold'
             : s.status === 'confirmed' || s.status === 'completed'
             ? 'bg-blue-100 text-blue-800 font-semibold'
             : s.status === 'hold'
             ? 'bg-amber-100 text-amber-800 font-semibold'
-            : 'bg-emerald-50 text-emerald-700 font-medium';
+            : 'bg-emerald-100 text-emerald-800 font-semibold';
 
         const labelText = state.isOwner
           ? (s.status === 'open' ? `${s.shortTime} Disponible` : `${s.shortTime} ${s.title.split('•')[0]}`)
-          : (s.status === 'open' ? `${s.shortTime} Libre` : `${s.shortTime} ${s.status === 'hold' ? 'Apartado' : 'Reservado'}`);
+          : (s.status === 'open' ? `${s.shortTime} Libre` : `${s.shortTime} ${s.status === 'hold' ? 'Apartado' : 'Ocupado'}`);
 
         return `
           <div class="p-1.5 rounded-lg ${badgeColor} text-[10px] flex flex-col gap-0.5 truncate">
@@ -558,11 +618,17 @@ document.addEventListener('DOMContentLoaded', () => {
         `;
       }).join('');
 
+      const cardStyle = full
+        ? 'bg-rose-100/80 border-2 border-rose-300 opacity-85'
+        : isSelected
+        ? 'bg-primary-fixed/25 ring-2 ring-primary shadow-sm'
+        : 'bg-surface-container-low/50 hover:bg-surface-container-low';
+
       cards.push(`
-        <div onclick="selectExactDate(${y}, ${m}, ${dayNum})" class="min-h-[175px] p-2.5 rounded-xl ${isSelected ? 'bg-primary-fixed/25 ring-2 ring-primary shadow-sm' : 'bg-surface-container-low/50 hover:bg-surface-container-low'} flex flex-col justify-between cursor-pointer transition-all">
+        <div onclick="handleCalendarDayClick(${y}, ${m}, ${dayNum})" class="min-h-[175px] p-2.5 rounded-xl ${cardStyle} flex flex-col justify-between cursor-pointer transition-all">
           <div class="flex items-center justify-between border-b border-surface-container pb-1.5 mb-1.5">
-            <span class="text-xs font-bold ${isSelected || isToday ? 'text-primary' : 'text-on-surface'}">${dayNamesShort[i]} ${dayNum}</span>
-            ${isToday ? '<span class="px-1.5 py-0.5 rounded-full bg-primary text-white text-[9px] font-bold">HOY</span>' : ''}
+            <span class="text-xs font-bold ${full ? 'text-rose-800' : isSelected || isToday ? 'text-primary' : 'text-on-surface'}">${dayNamesShort[i]} ${dayNum}</span>
+            ${isToday ? '<span class="px-1.5 py-0.5 rounded-full bg-primary text-white text-[9px] font-bold">HOY</span>' : full ? '<span class="px-1.5 py-0.5 rounded-full bg-rose-600 text-white text-[9px] font-bold">LLENO</span>' : ''}
           </div>
           <div class="flex flex-col gap-1.5 flex-1 justify-center">
             ${shiftsHtml}
@@ -584,20 +650,6 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     const dayInfo = getSlotsForDate(state.currentYear, state.currentMonthIndex, state.selectedDay);
-    if (dayInfo.isMaintenance) {
-      container.innerHTML = `
-        <div class="p-6 rounded-2xl bg-surface-container-low text-center flex flex-col items-center gap-2">
-          <span class="material-symbols-outlined text-3xl text-primary">cleaning_services</span>
-          <h4 class="font-headline-sm font-bold text-on-surface">Jornada de Sanitización Profunda y Mantenimiento</h4>
-          <p class="text-xs text-on-surface-variant max-w-md">Los lunes sin eventos programados se dedican a la revisión mecánica del carrusel, limpieza con vapor del área suave y mantenimiento del mobiliario.</p>
-          <button onclick="openBookingModal('tarde', '${isoDate}')" class="mt-2 px-4 py-2 rounded-xl bg-primary-container text-on-primary-container text-xs font-bold hover:brightness-105">
-            + Agendar Evento Especial en este Día
-          </button>
-        </div>
-      `;
-      return;
-    }
-
     const [sMorning, sAfternoon, sNight] = dayInfo.slots;
 
     const buildTimelineRow = (slot, shiftTitle) => {
@@ -608,7 +660,7 @@ document.addEventListener('DOMContentLoaded', () => {
         ? 'bg-primary-fixed/25 border-primary'
         : slot.status === 'hold'
         ? 'bg-amber-50/70 border-amber-200'
-        : 'bg-blue-50/70 border-blue-200';
+        : 'bg-rose-50/70 border-rose-200';
 
       const displayTitle = state.isOwner
         ? slot.title
@@ -616,17 +668,17 @@ document.addEventListener('DOMContentLoaded', () => {
         ? shiftTitle + ' Disponible'
         : slot.status === 'hold'
         ? 'Horario Apartado (En Confirmación)'
-        : 'Horario Reservado';
+        : 'Horario Reservado (Ocupado)';
 
       const displaySub = state.isOwner
         ? (isFree ? 'Salón listo para nueva reservación' : `Anfitrión: ${slot.host} • Aforo: ${slot.guests} Invitados`)
-        : (isFree ? 'Disponible para paquete Fiesta Carrusel Mágico (hasta 80 invitados)' : 'Este turno ya se encuentra ocupado');
+        : (isFree ? 'Disponible para paquete Fiesta Carrusel Mágico (hasta 80 invitados)' : 'Este turno ya se encuentra reservado');
 
       const actionBtn = isFree
         ? `<button onclick="openBookingModal('${slot.slotKey}', '${isoDate}')" class="px-3.5 py-2 rounded-xl bg-emerald-600 text-white text-xs font-bold hover:bg-emerald-700 transition-colors">Reservar Turno</button>`
         : state.isOwner
         ? `<button onclick="selectReservationFromSlot(${slot.id_reservacion})" class="px-3.5 py-2 rounded-xl bg-primary text-white text-xs font-bold hover:brightness-105">Gestionar</button>`
-        : `<span class="px-3 py-1 rounded-lg bg-surface-container text-on-surface-variant text-xs font-semibold">No Disponible</span>`;
+        : `<span class="px-3 py-1 rounded-lg bg-rose-100 text-rose-800 text-xs font-bold">Ocupado</span>`;
 
       return `
         <div class="p-3.5 rounded-xl border ${bgClass} flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3">
@@ -662,27 +714,294 @@ document.addEventListener('DOMContentLoaded', () => {
   }
 
   /* ==========================================================================
-     NAVEGACIÓN DE FECHAS Y DÍAS DEL CALENDARIO
+     MANEJO DE CLIC EN DÍAS (BLOQUEO DE PASADOS + ALERTA EN DÍAS LLENOS)
+     ========================================================================== */
+  function handleCalendarDayClick(year, monthIdx, day) {
+    if (isPastDate(year, monthIdx, day)) {
+      // No permite seleccionar días antes de hoy
+      return;
+    }
+
+    state.currentYear = year;
+    state.currentMonthIndex = monthIdx;
+    state.selectedDay = day;
+
+    const dayInfo = getSlotsForDate(year, monthIdx, day);
+    const full = isDayFullyBooked(dayInfo);
+
+    renderCalendar();
+    renderDailySessions();
+
+    if (full) {
+      showToast(
+        `⚠️ Ya está todo reservado para el ${day} de ${monthNames[monthIdx]} (los 3 turnos están ocupados). Por favor elige otra fecha.`,
+        'error'
+      );
+    }
+  }
+  window.handleCalendarDayClick = handleCalendarDayClick;
+
+  /* ==========================================================================
+     MODAL DE CALENDARIO INTERACTIVO EN TIEMPO REAL (#modal-interactive-calendar)
+     ========================================================================== */
+  function openInteractiveCalendarModal() {
+    state.popupYear = state.currentYear;
+    state.popupMonthIndex = state.currentMonthIndex;
+    state.popupSelectedDay = isPastDate(state.currentYear, state.currentMonthIndex, state.selectedDay)
+      ? TODAY_DAY
+      : state.selectedDay;
+
+    renderPopupCalendar();
+    openModal('modal-interactive-calendar');
+  }
+  window.openInteractiveCalendarModal = openInteractiveCalendarModal;
+
+  function navigatePopupCalendar(delta) {
+    let newMonth = state.popupMonthIndex + delta;
+    let newYear = state.popupYear;
+    if (newMonth < 0) {
+      newMonth = 11;
+      newYear -= 1;
+    } else if (newMonth > 11) {
+      newMonth = 0;
+      newYear += 1;
+    }
+
+    // No permitir retroceder a meses anteriores al mes actual
+    if (newYear < TODAY_YEAR || (newYear === TODAY_YEAR && newMonth < TODAY_MONTH)) {
+      showToast('No es posible consultar ni reservar en meses pasados.', 'warning');
+      return;
+    }
+
+    state.popupYear = newYear;
+    state.popupMonthIndex = newMonth;
+    if (newYear === TODAY_YEAR && newMonth === TODAY_MONTH && state.popupSelectedDay < TODAY_DAY) {
+      state.popupSelectedDay = TODAY_DAY;
+    } else {
+      const maxD = new Date(newYear, newMonth + 1, 0).getDate();
+      if (state.popupSelectedDay > maxD) state.popupSelectedDay = 1;
+    }
+
+    renderPopupCalendar();
+  }
+  window.navigatePopupCalendar = navigatePopupCalendar;
+
+  function selectPopupDay(year, monthIdx, day) {
+    if (isPastDate(year, monthIdx, day)) return;
+
+    state.popupYear = year;
+    state.popupMonthIndex = monthIdx;
+    state.popupSelectedDay = day;
+
+    // Sincronizar también el calendario principal de atrás
+    state.currentYear = year;
+    state.currentMonthIndex = monthIdx;
+    state.selectedDay = day;
+
+    const dayInfo = getSlotsForDate(year, monthIdx, day);
+    if (isDayFullyBooked(dayInfo)) {
+      showToast(`⚠️ Ya está todo reservado para el ${day} de ${monthNames[monthIdx]}.`, 'error');
+    }
+
+    renderPopupCalendar();
+    renderCalendar();
+    renderDailySessions();
+  }
+  window.selectPopupDay = selectPopupDay;
+
+  function chooseSlotFromPopup(slotKey, isoDate) {
+    closeModal('modal-interactive-calendar');
+    openBookingModal(slotKey, isoDate);
+  }
+  window.chooseSlotFromPopup = chooseSlotFromPopup;
+
+  function renderPopupCalendar() {
+    const grid = document.getElementById('popup-calendar-grid');
+    const monthLabel = document.getElementById('popup-calendar-month-label');
+    const todayText = document.getElementById('popup-calendar-today-text');
+    const detailBox = document.getElementById('popup-calendar-day-detail');
+    if (!grid) return;
+
+    const todayWeekday = dayNamesFull[new Date(TODAY_YEAR, TODAY_MONTH, TODAY_DAY).getDay()];
+    if (todayText) {
+      todayText.textContent = `Hoy es ${todayWeekday} ${TODAY_DAY} de ${monthNames[TODAY_MONTH]} ${TODAY_YEAR} • Selecciona un día a partir de hoy`;
+    }
+    if (monthLabel) {
+      monthLabel.textContent = `${monthNames[state.popupMonthIndex]} ${state.popupYear}`;
+    }
+
+    const year = state.popupYear;
+    const month = state.popupMonthIndex;
+    const firstWeekday = new Date(year, month, 1).getDay();
+    const daysInMonth = new Date(year, month + 1, 0).getDate();
+
+    const cells = [];
+    for (let i = 0; i < firstWeekday; i++) {
+      cells.push(`<div class="h-16 rounded-xl bg-slate-50/50"></div>`);
+    }
+
+    for (let day = 1; day <= daysInMonth; day++) {
+      const isToday = year === TODAY_YEAR && month === TODAY_MONTH && day === TODAY_DAY;
+      const isSelected = day === state.popupSelectedDay;
+      const past = isPastDate(year, month, day);
+      const dayInfo = getSlotsForDate(year, month, day);
+      const full = !past && isDayFullyBooked(dayInfo);
+      const openCount = dayInfo.slots.filter(s => s.status === 'open').length;
+
+      if (past) {
+        // Día antes de hoy: Opaco y bloqueado (sin onclick)
+        cells.push(`
+          <div class="h-16 p-1.5 rounded-xl bg-slate-100 border border-slate-200/70 opacity-35 flex flex-col items-center justify-center cursor-not-allowed select-none">
+            <span class="text-xs font-bold text-slate-400 line-through">${day}</span>
+            <span class="text-[9px] text-slate-400">Pasado</span>
+          </div>
+        `);
+      } else if (full) {
+        // Día lleno (3/3 ocupados): En ROJO y opaco; al dar clic avisa que ya está todo reservado
+        cells.push(`
+          <div onclick="selectPopupDay(${year}, ${month}, ${day})" class="h-16 p-1.5 rounded-xl bg-rose-100/90 border-2 ${isSelected ? 'border-rose-700 ring-2 ring-rose-500' : 'border-rose-300'} opacity-85 flex flex-col items-center justify-between cursor-pointer hover:bg-rose-200/80 transition-all">
+            <div class="flex items-center gap-1">
+              <span class="text-xs font-extrabold text-rose-900">${day}</span>
+              ${isToday ? '<span class="px-1 rounded bg-rose-700 text-white text-[8px] font-bold">HOY</span>' : ''}
+            </div>
+            <span class="px-1.5 py-0.5 rounded-full bg-rose-600 text-white text-[9px] font-bold truncate max-w-full">🔴 Lleno</span>
+          </div>
+        `);
+      } else {
+        // Día disponible
+        const badgeClass =
+          openCount === 3
+            ? 'bg-emerald-100 text-emerald-800'
+            : 'bg-amber-100 text-amber-900';
+
+        const boxClass = isSelected
+          ? 'bg-primary-fixed/30 border-2 border-primary ring-2 ring-primary/40 shadow-sm'
+          : isToday
+          ? 'bg-primary-fixed/15 border-2 border-primary/60 hover:bg-primary-fixed/25'
+          : 'bg-surface-container-low/60 border border-emerald-200 hover:bg-emerald-50/70';
+
+        cells.push(`
+          <div onclick="selectPopupDay(${year}, ${month}, ${day})" class="h-16 p-1.5 rounded-xl ${boxClass} flex flex-col items-center justify-between cursor-pointer transition-all">
+            <div class="flex items-center gap-1">
+              <span class="text-xs font-bold ${isSelected || isToday ? 'text-primary' : 'text-on-surface'}">${day}</span>
+              ${isToday ? '<span class="px-1 rounded bg-primary text-white text-[8px] font-bold">HOY</span>' : ''}
+            </div>
+            <span class="px-1.5 py-0.5 rounded-full ${badgeClass} text-[9px] font-bold truncate max-w-full">
+              ${openCount} ${openCount === 1 ? 'Libre' : 'Libres'}
+            </span>
+          </div>
+        `);
+      }
+    }
+
+    grid.innerHTML = cells.join('');
+
+    // Renderizar el detalle inferior del día seleccionado en el modal
+    if (!detailBox) return;
+    const selDay = state.popupSelectedDay;
+    const selDateObj = new Date(year, month, selDay);
+    const selWeekday = dayNamesFull[selDateObj.getDay()];
+    const selIso = formatIsoDate(year, month, selDay);
+    const selInfo = getSlotsForDate(year, month, selDay);
+    const selFull = isDayFullyBooked(selInfo);
+
+    if (selFull) {
+      detailBox.className = 'mt-4 p-4 rounded-2xl bg-rose-50 border-2 border-rose-300 flex flex-col gap-2 text-center';
+      detailBox.innerHTML = `
+        <div class="flex items-center justify-center gap-2 text-rose-800 font-bold text-sm">
+          <span class="material-symbols-outlined text-xl text-rose-600">block</span>
+          <span>¡Ya está todo reservado para el ${selWeekday} ${selDay} de ${monthNames[month]} ${year}!</span>
+        </div>
+        <p class="text-xs text-rose-700">
+          Los 3 horarios del salón (Mañana, Tarde y Noche) ya se encuentran ocupados en esta fecha. Por favor selecciona otro día en verde o amarillo en el calendario.
+        </p>
+      `;
+    } else {
+      detailBox.className = 'mt-4 p-4 rounded-2xl bg-surface-container-low border border-surface-container flex flex-col gap-2.5';
+      const slotsButtons = selInfo.slots.map(s => {
+        const shiftName = s.slotKey === 'mañana' ? '☀️ Turno Mañana' : s.slotKey === 'tarde' ? '🎈 Turno Tarde' : '🌙 Turno Noche';
+        if (s.status === 'open') {
+          return `
+            <div class="p-2.5 rounded-xl bg-surface-container-lowest border border-emerald-200 flex items-center justify-between gap-2">
+              <div>
+                <span class="font-bold text-xs text-on-surface block">${shiftName}</span>
+                <span class="text-[11px] text-emerald-700 font-semibold">${s.time} • Disponible</span>
+              </div>
+              <button onclick="chooseSlotFromPopup('${s.slotKey}', '${selIso}')" class="px-3 py-1.5 rounded-lg bg-emerald-600 text-white text-xs font-bold hover:bg-emerald-700 transition-colors">
+                Elegir Turno
+              </button>
+            </div>
+          `;
+        } else {
+          return `
+            <div class="p-2.5 rounded-xl bg-rose-50/70 border border-rose-200 opacity-75 flex items-center justify-between gap-2">
+              <div>
+                <span class="font-bold text-xs text-rose-900 block line-through">${shiftName}</span>
+                <span class="text-[11px] text-rose-700 font-semibold">${s.time} • Ya Reservado</span>
+              </div>
+              <span class="px-2.5 py-1 rounded-lg bg-rose-200 text-rose-900 text-[10px] font-bold">Sin Cupo</span>
+            </div>
+          `;
+        }
+      }).join('');
+
+      detailBox.innerHTML = `
+        <div class="flex items-center justify-between">
+          <span class="font-bold text-xs text-on-surface">Horarios para el ${selWeekday} ${selDay} de ${monthNames[month]} ${year}:</span>
+          <span class="text-[11px] text-emerald-700 font-semibold">Selecciona un turno libre</span>
+        </div>
+        <div class="grid grid-cols-1 sm:grid-cols-3 gap-2">
+          ${slotsButtons}
+        </div>
+      `;
+    }
+  }
+
+  /* ==========================================================================
+     NAVEGACIÓN DE FECHAS Y DÍAS DEL CALENDARIO PRINCIPAL
      ========================================================================== */
   function navigateCalendar(delta) {
     if (state.viewMode === 'month') {
-      state.currentMonthIndex += delta;
-      if (state.currentMonthIndex < 0) {
-        state.currentMonthIndex = 11;
-        state.currentYear -= 1;
-      } else if (state.currentMonthIndex > 11) {
-        state.currentMonthIndex = 0;
-        state.currentYear += 1;
+      let targetMonth = state.currentMonthIndex + delta;
+      let targetYear = state.currentYear;
+      if (targetMonth < 0) {
+        targetMonth = 11;
+        targetYear -= 1;
+      } else if (targetMonth > 11) {
+        targetMonth = 0;
+        targetYear += 1;
       }
+
+      if (!state.isOwner && (targetYear < TODAY_YEAR || (targetYear === TODAY_YEAR && targetMonth < TODAY_MONTH))) {
+        showToast('No es posible reservar en meses pasados.', 'warning');
+        return;
+      }
+
+      state.currentYear = targetYear;
+      state.currentMonthIndex = targetMonth;
       const maxDays = new Date(state.currentYear, state.currentMonthIndex + 1, 0).getDate();
-      if (state.selectedDay > maxDays) state.selectedDay = maxDays;
+      if (state.currentYear === TODAY_YEAR && state.currentMonthIndex === TODAY_MONTH && state.selectedDay < TODAY_DAY) {
+        state.selectedDay = TODAY_DAY;
+      } else if (state.selectedDay > maxDays) {
+        state.selectedDay = maxDays;
+      }
     } else if (state.viewMode === 'week') {
       const d = new Date(state.currentYear, state.currentMonthIndex, state.selectedDay + delta * 7);
-      state.currentYear = d.getFullYear();
-      state.currentMonthIndex = d.getMonth();
-      state.selectedDay = d.getDate();
+      if (!state.isOwner && isPastDate(d.getFullYear(), d.getMonth(), d.getDate())) {
+        state.currentYear = TODAY_YEAR;
+        state.currentMonthIndex = TODAY_MONTH;
+        state.selectedDay = TODAY_DAY;
+      } else {
+        state.currentYear = d.getFullYear();
+        state.currentMonthIndex = d.getMonth();
+        state.selectedDay = d.getDate();
+      }
     } else {
       const d = new Date(state.currentYear, state.currentMonthIndex, state.selectedDay + delta);
+      if (!state.isOwner && isPastDate(d.getFullYear(), d.getMonth(), d.getDate())) {
+        showToast('No es posible seleccionar días pasados.', 'warning');
+        return;
+      }
       state.currentYear = d.getFullYear();
       state.currentMonthIndex = d.getMonth();
       state.selectedDay = d.getDate();
@@ -695,14 +1014,18 @@ document.addEventListener('DOMContentLoaded', () => {
   window.changeMonth = navigateCalendar;
 
   function changeMonthAndSelect(monthDelta, dayNum) {
-    state.currentMonthIndex += monthDelta;
-    if (state.currentMonthIndex < 0) {
-      state.currentMonthIndex = 11;
-      state.currentYear -= 1;
-    } else if (state.currentMonthIndex > 11) {
-      state.currentMonthIndex = 0;
-      state.currentYear += 1;
+    let targetMonth = state.currentMonthIndex + monthDelta;
+    let targetYear = state.currentYear;
+    if (targetMonth < 0) {
+      targetMonth = 11;
+      targetYear -= 1;
+    } else if (targetMonth > 11) {
+      targetMonth = 0;
+      targetYear += 1;
     }
+    if (isPastDate(targetYear, targetMonth, dayNum)) return;
+    state.currentYear = targetYear;
+    state.currentMonthIndex = targetMonth;
     state.selectedDay = dayNum;
     renderCalendar();
     renderDailySessions();
@@ -710,11 +1033,7 @@ document.addEventListener('DOMContentLoaded', () => {
   window.changeMonthAndSelect = changeMonthAndSelect;
 
   function selectExactDate(year, monthIdx, dayNum) {
-    state.currentYear = year;
-    state.currentMonthIndex = monthIdx;
-    state.selectedDay = dayNum;
-    renderCalendar();
-    renderDailySessions();
+    handleCalendarDayClick(year, monthIdx, dayNum);
   }
   window.selectExactDate = selectExactDate;
 
@@ -729,9 +1048,7 @@ document.addEventListener('DOMContentLoaded', () => {
   window.goToToday = goToToday;
 
   function selectCalendarDay(dayNumber) {
-    state.selectedDay = dayNumber;
-    renderCalendar();
-    renderDailySessions();
+    handleCalendarDayClick(state.currentYear, state.currentMonthIndex, dayNumber);
   }
   window.selectCalendarDay = selectCalendarDay;
 
@@ -765,8 +1082,14 @@ document.addEventListener('DOMContentLoaded', () => {
     if (dateTitle) {
       dateTitle.textContent = `${state.isOwner ? 'Sesiones' : 'Horarios'} del ${weekdayName} ${state.selectedDay} de ${monthNames[state.currentMonthIndex]} ${state.currentYear}`;
     }
+
+    const dayInfo = getSlotsForDate(state.currentYear, state.currentMonthIndex, state.selectedDay);
+    const full = isDayFullyBooked(dayInfo);
+
     if (dateSub) {
-      dateSub.textContent = state.isOwner
+      dateSub.textContent = full
+        ? '⚠️ Todos los turnos de este día ya se encuentran reservados'
+        : state.isOwner
         ? 'Turnos programados, estado de entrega y anfitriones responsables'
         : 'Consulta qué turnos están libres y reserva tu horario en línea';
     }
@@ -774,25 +1097,15 @@ document.addEventListener('DOMContentLoaded', () => {
     const sessionsContainer = document.getElementById('daily-sessions-container');
     if (!sessionsContainer) return;
 
-    const dayInfo = getSlotsForDate(state.currentYear, state.currentMonthIndex, state.selectedDay);
+    const fullBannerHtml = full
+      ? `<div class="p-3.5 rounded-xl bg-rose-100 border border-rose-300 text-rose-900 text-xs font-semibold flex items-center gap-2">
+           <span class="material-symbols-outlined text-lg text-rose-600">error</span>
+           <span>Ya está todo reservado para este día. Los 3 turnos (Mañana, Tarde y Noche) están ocupados; selecciona otra fecha en el calendario.</span>
+         </div>`
+      : '';
 
-    if (dayInfo.isMaintenance) {
-      sessionsContainer.innerHTML = `
-        <div class="p-6 rounded-2xl bg-surface-container-low text-center flex flex-col items-center justify-center gap-2">
-          <span class="material-symbols-outlined text-3xl text-on-surface-variant">cleaning_services</span>
-          <p class="font-headline-sm text-on-surface font-bold">Día de Mantenimiento y Sanitización General</p>
-          <p class="text-xs text-on-surface-variant">Los lunes realizamos limpieza profunda e inspección técnica del carrusel y juegos suaves.</p>
-          <button onclick="openBookingModal('tarde', '${isoDate}')" class="mt-2 px-4 py-2 rounded-xl bg-primary-container text-on-primary-container font-semibold text-xs shadow-xs hover:brightness-105">
-            Consultar Disponibilidad Especial
-          </button>
-        </div>
-      `;
-      renderDaySheetModal();
-      return;
-    }
-
-    sessionsContainer.innerHTML = dayInfo.slots.map(slot => {
-      // 1. Turno Libre (Verde) — Visible igual para Cliente y Dueño
+    const cardsHtml = dayInfo.slots.map(slot => {
+      // 1. Turno Libre (Verde)
       if (slot.status === 'open') {
         const sKey = slot.slotKey || 'noche';
         const shiftLabel = sKey === 'mañana' ? 'Mañana' : sKey === 'tarde' ? 'Tarde' : 'Noche';
@@ -821,33 +1134,32 @@ document.addEventListener('DOMContentLoaded', () => {
         `;
       }
 
-      // 2. Si está en VISTA CLIENTE: Ocultar nombres privados de niños y clientes en turnos ocupados
+      // 2. VISTA CLIENTE: Ocultar nombres privados en turnos ocupados
       if (!state.isOwner) {
-        const isHold = slot.status === 'hold';
         const shiftLabel = slot.slotKey === 'mañana' ? 'Mañana' : slot.slotKey === 'tarde' ? 'Tarde' : 'Noche';
         return `
-          <div class="p-space-md rounded-xl ${isHold ? 'bg-amber-50/60 border border-amber-200' : 'bg-surface-container-low'} flex flex-col md:flex-row items-start md:items-center justify-between gap-space-md">
+          <div class="p-space-md rounded-xl bg-rose-50/60 border border-rose-200 opacity-85 flex flex-col md:flex-row items-start md:items-center justify-between gap-space-md">
             <div class="flex items-start gap-space-md">
-              <div class="flex flex-col items-center justify-center w-20 py-1.5 rounded-lg ${isHold ? 'bg-amber-100 text-amber-800' : 'bg-surface-container text-on-surface-variant'} text-center">
+              <div class="flex flex-col items-center justify-center w-20 py-1.5 rounded-lg bg-rose-100 text-rose-800 text-center">
                 <span class="text-xs font-bold uppercase tracking-wider">${shiftLabel}</span>
                 <span class="font-label-sm text-[11px] font-semibold">${slot.time}</span>
               </div>
               <div class="flex flex-col">
                 <div class="flex items-center gap-2 flex-wrap">
-                  <span class="font-headline-sm text-headline-sm text-on-surface font-semibold">${isHold ? 'Horario Apartado (En Confirmación)' : 'Horario Reservado'}</span>
-                  <span class="px-2 py-0.5 rounded-full text-[10px] font-semibold ${isHold ? 'bg-amber-200 text-amber-900' : 'bg-blue-100 text-blue-800'}">${isHold ? 'Apartado' : 'Ocupado'}</span>
+                  <span class="font-headline-sm text-headline-sm text-rose-950 font-semibold">Horario Reservado</span>
+                  <span class="px-2 py-0.5 rounded-full text-[10px] font-bold bg-rose-200 text-rose-900">Ocupado</span>
                 </div>
-                <span class="text-xs text-on-surface-variant">Este horario ya no se encuentra disponible para nuevas reservaciones.</span>
+                <span class="text-xs text-rose-800/80">Este turno ya fue reservado y no se encuentra disponible.</span>
               </div>
             </div>
             <div class="flex items-center gap-2 self-end md:self-center">
-              <span class="px-3 py-1.5 rounded-lg bg-surface-container text-on-surface-variant text-xs font-semibold">No Disponible</span>
+              <span class="px-3 py-1.5 rounded-lg bg-rose-100 text-rose-800 text-xs font-bold">Sin Cupo</span>
             </div>
           </div>
         `;
       }
 
-      // 3. VISTA DUEÑO / ADMINISTRACIÓN (Muestra todos los datos operativos y botones de gestión)
+      // 3. VISTA DUEÑO / ADMINISTRACIÓN
       if (slot.status === 'completed') {
         return `
           <div class="p-space-md rounded-xl bg-surface-container-low flex flex-col md:flex-row items-start md:items-center justify-between gap-space-md">
@@ -908,7 +1220,6 @@ document.addEventListener('DOMContentLoaded', () => {
           </div>
         `;
       } else {
-        // Apartado pendiente de confirmación
         return `
           <div class="p-space-md rounded-xl bg-amber-50/70 border border-amber-200 flex flex-col md:flex-row items-start md:items-center justify-between gap-space-md">
             <div class="flex items-start gap-space-md">
@@ -937,6 +1248,7 @@ document.addEventListener('DOMContentLoaded', () => {
       }
     }).join('');
 
+    sessionsContainer.innerHTML = fullBannerHtml + cardsHtml;
     renderDaySheetModal();
   }
 
@@ -1149,6 +1461,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
     renderCalendar();
     renderDailySessions();
+    renderPopupCalendar();
     renderReglamentoModal();
     renderMobiliarioModal();
     renderDaySheetModal();
@@ -1352,7 +1665,7 @@ document.addEventListener('DOMContentLoaded', () => {
       toast.style.opacity = '0';
       toast.style.transform = 'translateY(10px) scale(0.95)';
       setTimeout(() => toast.remove(), 300);
-    }, 4000);
+    }, 4500);
   }
   window.showToast = showToast;
 
@@ -1393,7 +1706,7 @@ document.addEventListener('DOMContentLoaded', () => {
   });
 
   /* ==========================================================================
-     AFORO INTERACTIVO (EXCLUSIVO DUEÑO)
+     AFORO, CHECKLISTS Y DEPÓSITO (EXCLUSIVO DUEÑO)
      ========================================================================== */
   async function updateAforo(change) {
     if (!state.isOwner) return;
@@ -1428,9 +1741,6 @@ document.addEventListener('DOMContentLoaded', () => {
   }
   window.updateAforo = updateAforo;
 
-  /* ==========================================================================
-     CHECKLIST DE INSPECCIÓN DEL SALÓN (EXCLUSIVO DUEÑO)
-     ========================================================================== */
   function renderChecklist() {
     const list = state.checklists[state.activeChecklistTab];
     const container = document.getElementById('checklist-container');
@@ -1502,9 +1812,6 @@ document.addEventListener('DOMContentLoaded', () => {
   }
   window.toggleChecklistItem = toggleChecklistItem;
 
-  /* ==========================================================================
-     LIBERACIÓN Y RETENCIÓN DEL DEPÓSITO (EXCLUSIVO DUEÑO)
-     ========================================================================== */
   function confirmReleaseDeposit() {
     if (!state.isOwner) return;
     if (state.deposit.status === 'released') {
@@ -1573,18 +1880,41 @@ document.addEventListener('DOMContentLoaded', () => {
   window.selectReservationFromSlot = selectReservationFromSlot;
 
   /* ==========================================================================
-     FORMULARIO DE NUEVA RESERVACIÓN (PARA CLIENTES Y DUEÑO)
+     FORMULARIO DE NUEVA RESERVACIÓN EN TIEMPO REAL
      ========================================================================== */
   function openBookingModal(slot = '', dateStr = '') {
-    if (slot && document.getElementById('booking-slot')) {
-      document.getElementById('booking-slot').value = slot;
-    }
     const dateInput = document.getElementById('booking-date');
     if (dateInput) {
-      if (dateStr && /^\d{4}-\d{2}-\d{2}$/.test(dateStr)) {
-        dateInput.value = dateStr;
-      } else {
-        dateInput.value = formatIsoDate(state.currentYear, state.currentMonthIndex, state.selectedDay);
+      dateInput.min = TODAY_ISO;
+      let targetIso = dateStr && /^\d{4}-\d{2}-\d{2}$/.test(dateStr)
+        ? dateStr
+        : formatIsoDate(state.currentYear, state.currentMonthIndex, state.selectedDay);
+
+      const [yS, mS, dS] = targetIso.split('-').map(Number);
+      if (isPastDate(yS, mS - 1, dS)) {
+        targetIso = TODAY_ISO;
+      }
+
+      // Verificar si la fecha elegida ya está llena (3/3)
+      const [yCheck, mCheck, dCheck] = targetIso.split('-').map(Number);
+      const checkInfo = getSlotsForDate(yCheck, mCheck - 1, dCheck);
+      if (isDayFullyBooked(checkInfo)) {
+        showToast(`⚠️ Ya está todo reservado para el ${dCheck} de ${monthNames[mCheck - 1]}. Elige otro día en el calendario.`, 'error');
+      }
+
+      dateInput.value = targetIso;
+
+      // Si no se especificó turno, seleccionar automáticamente el primer turno libre de ese día
+      const slotSelect = document.getElementById('booking-slot');
+      if (slotSelect) {
+        if (slot) {
+          slotSelect.value = slot;
+        } else {
+          const firstOpen = checkInfo.slots.find(s => s.status === 'open');
+          if (firstOpen && firstOpen.slotKey) {
+            slotSelect.value = firstOpen.slotKey;
+          }
+        }
       }
     }
     openModal('modal-new-booking');
@@ -1599,7 +1929,7 @@ document.addEventListener('DOMContentLoaded', () => {
     const phone = document.getElementById('booking-phone')?.value?.trim() || '+52 444 000 0000';
     const email = document.getElementById('booking-email')?.value?.trim() || '';
     const guests = parseInt(document.getElementById('booking-guests')?.value || '50', 10);
-    const date = document.getElementById('booking-date')?.value || formatIsoDate(TODAY_YEAR, TODAY_MONTH, TODAY_DAY);
+    const date = document.getElementById('booking-date')?.value || TODAY_ISO;
     const slot = document.getElementById('booking-slot')?.value || 'tarde';
     const theme = document.getElementById('booking-theme')?.value?.trim() || 'Carnaval de Carrusel';
 
@@ -1608,21 +1938,31 @@ document.addEventListener('DOMContentLoaded', () => {
       return;
     }
 
-    // Verificar si el turno ya está ocupado en esa fecha
     const [yStr, mStr, dStr] = date.split('-');
     const yNum = parseInt(yStr, 10);
     const mIdx = parseInt(mStr, 10) - 1;
     const dNum = parseInt(dStr, 10);
+
+    if (isPastDate(yNum, mIdx, dNum)) {
+      showToast('No es posible reservar en fechas anteriores al día de hoy.', 'error');
+      return;
+    }
+
     const existingInfo = getSlotsForDate(yNum, mIdx, dNum);
+    if (isDayFullyBooked(existingInfo)) {
+      showToast(`⚠️ Ya está todo reservado para el ${dNum} de ${monthNames[mIdx]}. Por favor selecciona otro día.`, 'error');
+      return;
+    }
+
     const matchingSlot = existingInfo.slots.find(s => s.slotKey === slot);
     if (matchingSlot && matchingSlot.status !== 'open') {
-      showToast(`El turno de la ${slot} en esa fecha ya se encuentra ocupado. Por favor elige otro horario.`, 'warning');
+      const freeSlots = existingInfo.slots.filter(s => s.status === 'open').map(s => s.slotKey).join(' o ');
+      showToast(`El turno de la ${slot} ya está ocupado ese día. Turnos libres: ${freeSlots}.`, 'warning');
       return;
     }
 
     closeModal('modal-new-booking');
 
-    // Si reserva el dueño queda confirmada; si reserva un cliente entra como apartado pendiente o confirmado
     const payload = {
       festejado: childName,
       edad: age,
@@ -1633,62 +1973,72 @@ document.addEventListener('DOMContentLoaded', () => {
       turno: slot,
       tematica: theme,
       numero_invitados: guests,
-      estado: state.isOwner ? 'confirmada' : 'pendiente',
+      estado: 'confirmada',
       deposito: 350.00,
-      deposito_estado: state.isOwner ? 'pagado' : 'pendiente'
+      deposito_estado: 'pagado'
     };
 
-    const apiRes = await apiFetch('/reservaciones', {
-      method: 'POST',
-      body: JSON.stringify(payload)
+    // Actualizar en memoria inmediatamente para respuesta en tiempo real
+    const slotTimes = {
+      'mañana': ['09:30:00', '13:30:00'],
+      'tarde': ['15:00:00', '19:00:00'],
+      'noche': ['20:00:00', '23:30:00']
+    };
+    const [hIni, hFin] = slotTimes[slot] || ['15:00:00', '19:00:00'];
+    const tempId = state.dbData.reservaciones.length + 1;
+    state.dbData.reservaciones.push({
+      id_reservacion: tempId,
+      cliente_nombre: hostName,
+      cliente_telefono: phone,
+      fecha_evento: date,
+      hora_inicio: hIni,
+      hora_fin: hFin,
+      tipo_evento: `Cumpleaños #${age} de ${childName} • ${theme}`,
+      numero_invitados: guests,
+      estado: 'confirmada',
+      deposito: 350,
+      deposito_estado: 'pagado'
     });
 
     state.currentYear = yNum;
     state.currentMonthIndex = mIdx;
     state.selectedDay = dNum;
+    state.popupYear = yNum;
+    state.popupMonthIndex = mIdx;
+    state.popupSelectedDay = dNum;
 
+    renderCalendar();
+    renderDailySessions();
+    renderPopupCalendar();
+
+    // Comprobar si con esta reservación se llenó el día (3/3)
+    const updatedDayInfo = getSlotsForDate(yNum, mIdx, dNum);
+    const nowFull = isDayFullyBooked(updatedDayInfo);
+
+    if (nowFull) {
+      showToast(`¡Reservación confirmada! El día ${dNum} de ${monthNames[mIdx]} ahora se encuentra 100% lleno (en rojo).`, 'success');
+    } else {
+      showToast(`¡Reservación de ${childName} confirmada para el ${dNum} de ${monthNames[mIdx]} (turno ${slot})!`, 'success');
+    }
+
+    // Guardar en la base de datos en segundo plano y sincronizar
+    const apiRes = await apiFetch('/reservaciones', {
+      method: 'POST',
+      body: JSON.stringify(payload)
+    });
     if (apiRes && apiRes.id_reservacion) {
       if (state.isOwner) state.activeReservationId = apiRes.id_reservacion;
       await loadDashboardFromDatabase();
-    } else {
-      const slotTimes = {
-        'mañana': ['09:30:00', '13:30:00'],
-        'tarde': ['15:00:00', '19:00:00'],
-        'noche': ['20:00:00', '23:30:00']
-      };
-      const [hIni, hFin] = slotTimes[slot] || ['15:00:00', '19:00:00'];
-      state.dbData.reservaciones.push({
-        id_reservacion: state.dbData.reservaciones.length + 1,
-        cliente_nombre: hostName,
-        cliente_telefono: phone,
-        fecha_evento: date,
-        hora_inicio: hIni,
-        hora_fin: hFin,
-        tipo_evento: `Cumpleaños #${age} de ${childName} • ${theme}`,
-        numero_invitados: guests,
-        estado: payload.estado,
-        deposito: 350,
-        deposito_estado: payload.deposito_estado
-      });
-      renderCalendar();
-      renderDailySessions();
     }
 
     state.notifications.unshift({
       id: Date.now(),
-      title: 'Nueva Reservación Registrada',
+      title: 'Nueva Reservación Confirmada',
       text: `${childName} (${age} años) • Anfitrión: ${hostName} (${guests} inv. • Turno ${slot}).`,
       time: 'Justo ahora',
       unread: true
     });
     updateNotifBadge();
-
-    showToast(
-      state.isOwner
-        ? `¡Reservación de ${childName} confirmada para el ${dNum} de ${monthNames[mIdx]}!`
-        : `¡Tu solicitud para el ${dNum} de ${monthNames[mIdx]} (turno ${slot}) ha sido registrada con éxito!`,
-      'success'
-    );
   }
   window.submitNewBooking = submitNewBooking;
 
@@ -1808,7 +2158,7 @@ document.addEventListener('DOMContentLoaded', () => {
       if (path === 'home') {
         window.scrollTo({ top: 0, behavior: 'smooth' });
       } else if (path === 'availability-calendar') {
-        document.getElementById('calendar-section')?.scrollIntoView({ behavior: 'smooth' });
+        openInteractiveCalendarModal();
       } else if (path === 'rules-and-policies') {
         openDepositPolicyModal();
       } else if (path === 'checklists') {
@@ -1824,7 +2174,7 @@ document.addEventListener('DOMContentLoaded', () => {
     });
   });
 
-  // Inicializar interfaz
+  // Inicializar interfaz inmediatamente
   applyRoleUI();
   renderChecklist();
   updateNotifBadge();

@@ -10,7 +10,7 @@
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
   <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@500;600;700;800&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet"/>
   <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" rel="stylesheet"/>
-  <link rel="stylesheet" href="css/styles.css"/>
+  <link rel="stylesheet" href="css/styles.css?v=20261121_v5"/>
   <script src="https://cdn.tailwindcss.com"></script>
   <script id="tailwind-config">
     tailwind.config = {
@@ -219,6 +219,10 @@
 
           <!-- Botones de Acción Rápida para CLIENTE -->
           <div id="hero-actions-client" class="flex flex-wrap items-center gap-space-xs z-10 w-full lg:w-auto">
+            <button onclick="openInteractiveCalendarModal()" class="flex-1 sm:flex-none flex items-center justify-center gap-1.5 px-space-md py-2.5 rounded-xl bg-secondary-fixed text-on-secondary-container font-label-md text-label-md font-bold hover:brightness-95 transition-all shadow-sm" type="button">
+              <span class="material-symbols-outlined text-base">calendar_month</span>
+              <span>Abrir Calendario</span>
+            </button>
             <button onclick="openDepositPolicyModal()" class="flex-1 sm:flex-none flex items-center justify-center gap-1.5 px-space-md py-2.5 rounded-xl bg-surface-container-low text-on-surface font-label-md text-label-md hover:bg-surface-container transition-all shadow-sm" type="button">
               <span class="material-symbols-outlined text-base text-primary">gavel</span>
               <span>Reglas del Salón</span>
@@ -235,6 +239,10 @@
 
           <!-- Botones de Acción Rápida para DUEÑO / ADMINISTRACIÓN (Diseño del Cartel) -->
           <div id="hero-actions-owner" class="hidden flex-wrap items-center gap-space-xs z-10 w-full lg:w-auto">
+            <button onclick="openInteractiveCalendarModal()" class="flex-1 sm:flex-none flex items-center justify-center gap-1.5 px-space-md py-2.5 rounded-xl bg-secondary-fixed text-on-secondary-container font-label-md text-label-md font-bold hover:brightness-95 transition-all shadow-sm" type="button">
+              <span class="material-symbols-outlined text-base">calendar_month</span>
+              <span>Abrir Calendario</span>
+            </button>
             <button onclick="openDaySheetModal()" class="flex-1 sm:flex-none flex items-center justify-center gap-1.5 px-space-md py-2.5 rounded-xl bg-surface-container-low text-on-surface font-label-md text-label-md hover:bg-surface-container transition-all shadow-sm" type="button">
               <span class="material-symbols-outlined text-base">download</span>
               <span>Hoja del Día</span>
@@ -348,17 +356,21 @@
               
               <!-- Barra de Control del Calendario -->
               <div class="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-space-md">
-                <div class="flex items-center gap-space-sm">
+                <div class="flex items-center gap-space-sm flex-wrap">
                   <span id="calendar-month-title" class="font-headline-lg text-headline-lg text-on-surface font-bold">Noviembre 2026</span>
                   <div class="flex items-center gap-1 bg-surface-container-low p-1 rounded-xl">
                     <button onclick="navigateCalendar(-1)" aria-label="Anterior" class="w-8 h-8 rounded-lg flex items-center justify-center text-on-surface-variant hover:bg-surface-container transition-colors" type="button">
                       <span class="material-symbols-outlined text-lg">chevron_left</span>
                     </button>
-                    <button onclick="goToToday()" class="px-2.5 py-1 rounded-lg text-xs font-semibold text-on-surface bg-surface-container-lowest shadow-xs hover:brightness-95 transition-all" type="button">Hoy</button>
+                    <button onclick="goToToday()" class="px-2.5 py-1 rounded-lg text-xs font-semibold text-on-surface bg-surface-container-lowest shadow-xs hover:brightness-95 transition-all" type="button">Hoy (21 Nov)</button>
                     <button onclick="navigateCalendar(1)" aria-label="Siguiente" class="w-8 h-8 rounded-lg flex items-center justify-center text-on-surface-variant hover:bg-surface-container transition-colors" type="button">
                       <span class="material-symbols-outlined text-lg">chevron_right</span>
                     </button>
                   </div>
+                  <button onclick="openInteractiveCalendarModal()" class="px-3 py-1.5 rounded-xl bg-primary text-white text-xs font-bold shadow-xs hover:brightness-105 flex items-center gap-1 transition-all" type="button">
+                    <span class="material-symbols-outlined text-sm">calendar_month</span>
+                    <span>Abrir Calendario</span>
+                  </button>
                 </div>
 
                 <!-- Selector de Modo de Vista -->
@@ -373,15 +385,19 @@
               <div class="flex flex-wrap items-center gap-space-sm py-1">
                 <div class="flex items-center gap-1.5 px-3 py-1 rounded-full bg-emerald-50 text-emerald-800 text-xs font-medium">
                   <span class="w-2 h-2 rounded-full bg-emerald-500"></span>
-                  <span>Horario Disponible</span>
+                  <span>Disponible</span>
                 </div>
                 <div class="flex items-center gap-1.5 px-3 py-1 rounded-full bg-amber-50 text-amber-800 text-xs font-medium">
                   <span class="w-2 h-2 rounded-full bg-amber-500"></span>
-                  <span>Apartado (En Confirmación)</span>
+                  <span>Apartado / Parcial</span>
                 </div>
-                <div class="flex items-center gap-1.5 px-3 py-1 rounded-full bg-blue-50 text-blue-800 text-xs font-medium">
-                  <span class="w-2 h-2 rounded-full bg-blue-600"></span>
-                  <span>Reservado / Confirmado</span>
+                <div class="flex items-center gap-1.5 px-3 py-1 rounded-full bg-rose-100 text-rose-800 text-xs font-semibold">
+                  <span class="w-2 h-2 rounded-full bg-rose-600"></span>
+                  <span>Día Lleno (Todo Reservado)</span>
+                </div>
+                <div class="flex items-center gap-1.5 px-3 py-1 rounded-full bg-slate-100 text-slate-500 text-xs font-medium">
+                  <span class="w-2 h-2 rounded-full bg-slate-400"></span>
+                  <span>Fecha Pasada (No Disponible)</span>
                 </div>
               </div>
 
@@ -879,8 +895,14 @@
 
         <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
           <div>
-            <label class="block text-xs font-semibold text-on-surface mb-1">Fecha del Evento *</label>
-            <input id="booking-date" required type="date" value="2026-11-21" class="w-full px-3 py-2 rounded-xl bg-surface-container-low text-on-surface text-sm border border-transparent focus:border-primary focus:outline-none"/>
+            <div class="flex items-center justify-between mb-1">
+              <label class="block text-xs font-semibold text-on-surface">Fecha del Evento *</label>
+              <button type="button" onclick="openInteractiveCalendarModal()" class="text-[11px] font-bold text-primary hover:underline flex items-center gap-0.5">
+                <span class="material-symbols-outlined text-xs">calendar_month</span>
+                <span>Ver Calendario</span>
+              </button>
+            </div>
+            <input id="booking-date" required type="date" min="2026-11-21" value="2026-11-21" class="w-full px-3 py-2 rounded-xl bg-surface-container-low text-on-surface text-sm border border-transparent focus:border-primary focus:outline-none"/>
           </div>
           <div>
             <label class="block text-xs font-semibold text-on-surface mb-1">Turno Solicitado *</label>
@@ -1220,7 +1242,77 @@
     </div>
   </div>
 
+  <!-- 10. MODAL DE CALENDARIO INTERACTIVO DE DISPONIBILIDAD EN TIEMPO REAL -->
+  <div id="modal-interactive-calendar" class="modal-wrapper hidden fixed inset-0 z-50 modal-backdrop items-center justify-center p-4">
+    <div class="bg-surface-container-lowest w-full max-w-3xl rounded-2xl shadow-2xl border border-surface-container p-6 modal-enter max-h-[92vh] overflow-y-auto">
+      <div class="flex flex-col sm:flex-row items-start sm:items-center justify-between pb-4 border-b border-surface-container gap-3">
+        <div class="flex items-center gap-2.5">
+          <div class="w-10 h-10 rounded-xl bg-primary-fixed text-primary flex items-center justify-center">
+            <span class="material-symbols-outlined text-2xl">calendar_month</span>
+          </div>
+          <div>
+            <h3 class="font-headline-md text-headline-md font-bold text-on-surface">Calendario de Disponibilidad en Tiempo Real</h3>
+            <p id="popup-calendar-today-text" class="text-xs text-primary font-semibold">Hoy es Sábado 21 de Noviembre 2026 • Selecciona una fecha disponible</p>
+          </div>
+        </div>
+        <div class="flex items-center gap-2 self-end sm:self-center">
+          <div class="flex items-center gap-1 bg-surface-container-low p-1 rounded-xl">
+            <button onclick="navigatePopupCalendar(-1)" class="w-8 h-8 rounded-lg flex items-center justify-center text-on-surface-variant hover:bg-surface-container" type="button">
+              <span class="material-symbols-outlined text-lg">chevron_left</span>
+            </button>
+            <span id="popup-calendar-month-label" class="px-3 text-xs font-bold text-on-surface">Noviembre 2026</span>
+            <button onclick="navigatePopupCalendar(1)" class="w-8 h-8 rounded-lg flex items-center justify-center text-on-surface-variant hover:bg-surface-container" type="button">
+              <span class="material-symbols-outlined text-lg">chevron_right</span>
+            </button>
+          </div>
+          <button onclick="closeModal('modal-interactive-calendar')" class="p-1.5 rounded-lg text-on-surface-variant hover:bg-surface-container text-xl leading-none">&times;</button>
+        </div>
+      </div>
+
+      <!-- Leyenda del Calendario Modal -->
+      <div class="flex flex-wrap items-center gap-2 pt-3 pb-2 text-[11px]">
+        <span class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-emerald-50 text-emerald-800 font-semibold">
+          <span class="w-2 h-2 rounded-full bg-emerald-500"></span>
+          Disponible para Reservar
+        </span>
+        <span class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-amber-50 text-amber-800 font-semibold">
+          <span class="w-2 h-2 rounded-full bg-amber-500"></span>
+          Últimos Turnos
+        </span>
+        <span class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-rose-100 text-rose-800 font-bold">
+          <span class="w-2 h-2 rounded-full bg-rose-600"></span>
+          Todo Reservado (Sin Cupo)
+        </span>
+        <span class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-slate-100 text-slate-500 font-medium">
+          <span class="w-2 h-2 rounded-full bg-slate-400"></span>
+          Fecha Pasada (Bloqueada)
+        </span>
+      </div>
+
+      <!-- Cabecera de Días -->
+      <div class="grid grid-cols-7 gap-1.5 text-center text-xs font-bold text-on-surface-variant py-1">
+        <div>Dom</div>
+        <div>Lun</div>
+        <div>Mar</div>
+        <div>Mié</div>
+        <div>Jue</div>
+        <div>Vie</div>
+        <div>Sáb</div>
+      </div>
+
+      <!-- Cuadrícula de Días del Calendario Modal -->
+      <div id="popup-calendar-grid" class="grid grid-cols-7 gap-1.5">
+        <!-- Llenado dinámicamente -->
+      </div>
+
+      <!-- Panel inferior de Turnos del Día Seleccionado en el Modal -->
+      <div id="popup-calendar-day-detail" class="mt-4 p-4 rounded-2xl bg-surface-container-low border border-surface-container flex flex-col gap-2.5">
+        <!-- Muestra los 3 turnos del día elegido o alerta en rojo si está lleno -->
+      </div>
+    </div>
+  </div>
+
   <!-- SCRIPT PRINCIPAL INTERACTIVO -->
-  <script src="js/app.js"></script>
+  <script src="js/app.js?v=20261121_v5"></script>
 </body>
 </html>
