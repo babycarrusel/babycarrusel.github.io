@@ -1,11 +1,8 @@
 /**
- * Baby Carrusel - Sistema de Gestión del Salón de Eventos
- * Conectado en tiempo real a MariaDB (Docker en Raspberry Pi + Tailscale Funnel)
- * Equipo JOLIE - Núcleo General IV: Creatividad (UPSLP)
+ * Baby Carrusel - Sistema de Reservaciones y Centro de Operaciones
  */
 
 document.addEventListener('DOMContentLoaded', () => {
-  // Endpoints candidatos para conectar con la Raspberry Pi (Tailscale Funnel HTTPS, Tailscale VPN y Red Local)
   const API_CANDIDATES = [
     ...(window.location.hostname.includes('ts.net') || window.location.port === '8004'
       ? [`${window.location.origin}/babycarrusel/api`, `${window.location.origin}/api`]
@@ -17,14 +14,25 @@ document.addEventListener('DOMContentLoaded', () => {
 
   let activeApiBase = null;
 
-  // Estado de la aplicación (con respaldo inicial idéntico al cartel)
+  const now = new Date();
+  const TODAY_YEAR = now.getFullYear();
+  const TODAY_MONTH = now.getMonth();
+  const TODAY_DAY = now.getDate();
+
+  const monthNames = [
+    'Enero', 'Febrero', 'Marzo', 'Abril', 'Mayo', 'Junio',
+    'Julio', 'Agosto', 'Septiembre', 'Octubre', 'Noviembre', 'Diciembre'
+  ];
+  const dayNamesFull = ['Domingo', 'Lunes', 'Martes', 'Miércoles', 'Jueves', 'Viernes', 'Sábado'];
+  const dayNamesShort = ['Dom', 'Lun', 'Mar', 'Mié', 'Jue', 'Vie', 'Sáb'];
+
   const state = {
-    dbConnected: false,
+    isOwner: sessionStorage.getItem('bc_owner_logged') === '1',
     activeReservationId: 1,
-    currentYear: 2025,
-    currentMonthIndex: 9, // Octubre (0-indexed)
-    selectedDay: 25,
-    viewMode: 'month',
+    currentYear: TODAY_YEAR,
+    currentMonthIndex: TODAY_MONTH,
+    selectedDay: TODAY_DAY,
+    viewMode: 'month', // 'month' | 'week' | 'day'
     aforo: {
       current: 62,
       max: 80,
@@ -54,15 +62,27 @@ document.addEventListener('DOMContentLoaded', () => {
       ]
     },
     dbData: {
-      reservaciones: [],
+      reservaciones: [
+        { id_reservacion: 1, id_cliente: 1, cliente_nombre: 'Camila y Roberto Peña', cliente_telefono: '+52 444 849 1034', fecha_evento: '2026-11-21', hora_inicio: '15:00:00', hora_fin: '19:00:00', tipo_evento: 'Cumpleaños #4 de Lucas • Carnaval de Carrusel y Safari Mágico', numero_invitados: 62, estado: 'confirmada', deposito: 350, deposito_estado: 'pagado' },
+        { id_reservacion: 2, id_cliente: 2, cliente_nombre: 'Valeria Silva', cliente_telefono: '+52 444 219 4501', fecha_evento: '2026-11-21', hora_inicio: '09:30:00', hora_fin: '13:30:00', tipo_evento: 'Safari Mágico de Mía', numero_invitados: 45, estado: 'finalizada', deposito: 350, deposito_estado: 'devuelto' },
+        { id_reservacion: 3, id_cliente: 3, cliente_nombre: 'Familia Morales', cliente_telefono: '+52 444 310 8821', fecha_evento: '2026-11-15', hora_inicio: '09:30:00', hora_fin: '13:30:00', tipo_evento: 'Fiesta de Cumpleaños Mateo', numero_invitados: 40, estado: 'finalizada', deposito: 350, deposito_estado: 'devuelto' },
+        { id_reservacion: 4, id_cliente: 4, cliente_nombre: 'Lucía Mendoza', cliente_telefono: '+52 444 509 7712', fecha_evento: '2026-11-15', hora_inicio: '15:00:00', hora_fin: '19:00:00', tipo_evento: 'Cumpleaños #5 de Valeria', numero_invitados: 55, estado: 'finalizada', deposito: 350, deposito_estado: 'devuelto' },
+        { id_reservacion: 5, id_cliente: 5, cliente_nombre: 'Alejandro Cruz', cliente_telefono: '+52 444 618 9940', fecha_evento: '2026-11-17', hora_inicio: '09:30:00', hora_fin: '13:30:00', tipo_evento: 'Bautizo de Santiago', numero_invitados: 50, estado: 'pendiente', deposito: 350, deposito_estado: 'pendiente' },
+        { id_reservacion: 6, id_cliente: 6, cliente_nombre: 'Mariana Garza', cliente_telefono: '+52 444 720 1138', fecha_evento: '2026-11-18', hora_inicio: '15:00:00', hora_fin: '19:00:00', tipo_evento: 'Baby Shower de Valentina', numero_invitados: 60, estado: 'confirmada', deposito: 350, deposito_estado: 'pagado' },
+        { id_reservacion: 7, id_cliente: 7, cliente_nombre: 'Daniela Ríos', cliente_telefono: '+52 444 831 5560', fecha_evento: '2026-11-20', hora_inicio: '15:00:00', hora_fin: '19:00:00', tipo_evento: 'Cumpleaños #3 de Emma • Unicornios', numero_invitados: 65, estado: 'confirmada', deposito: 350, deposito_estado: 'pagado' },
+        { id_reservacion: 8, id_cliente: 8, cliente_nombre: 'Karla Gómez', cliente_telefono: '+52 444 942 6671', fecha_evento: '2026-11-20', hora_inicio: '20:00:00', hora_fin: '23:30:00', tipo_evento: 'Pijamada VIP de Sofía', numero_invitados: 30, estado: 'pendiente', deposito: 350, deposito_estado: 'pendiente' },
+        { id_reservacion: 9, id_cliente: 3, cliente_nombre: 'Familia Morales', cliente_telefono: '+52 444 310 8821', fecha_evento: '2026-11-22', hora_inicio: '15:00:00', hora_fin: '19:00:00', tipo_evento: 'Cumpleaños #2 de Leo • Dinosaurios', numero_invitados: 50, estado: 'confirmada', deposito: 350, deposito_estado: 'pagado' },
+        { id_reservacion: 10, id_cliente: 6, cliente_nombre: 'Mariana Garza', cliente_telefono: '+52 444 720 1138', fecha_evento: '2026-11-28', hora_inicio: '09:30:00', hora_fin: '13:30:00', tipo_evento: 'Cumpleaños #1 de Regina • Baby Splash', numero_invitados: 45, estado: 'confirmada', deposito: 350, deposito_estado: 'pagado' },
+        { id_reservacion: 11, id_cliente: 7, cliente_nombre: 'Daniela Ríos', cliente_telefono: '+52 444 831 5560', fecha_evento: '2026-11-28', hora_inicio: '15:00:00', hora_fin: '19:00:00', tipo_evento: 'Fiesta Sorpresa de Emiliano #6', numero_invitados: 70, estado: 'pendiente', deposito: 350, deposito_estado: 'pendiente' }
+      ],
       clientes: [],
       empleados: [
-        { id_empleado: 1, nombre: 'Heriberto García', puesto: 'Dueño del Salón (Propietario)', telefono: '+52 444 540 2978' },
+        { id_empleado: 1, nombre: 'Heriberto García', puesto: 'Propietario del Salón', telefono: '+52 444 540 2978' },
         { id_empleado: 2, nombre: 'Javier García Ramos', puesto: 'Administración y Reservaciones', telefono: '+52 444 540 2978' },
         { id_empleado: 3, nombre: 'Elena Rodríguez', puesto: 'Supervisión de Seguridad e Inspección', telefono: '+52 444 312 8901' },
         { id_empleado: 4, nombre: 'Carlos Méndez', puesto: 'Mantenimiento y Control de Mobiliario', telefono: '+52 444 621 4410' },
-        { id_empleado: 5, nombre: 'Sofía Torres', puesto: 'Limpieza Profunda y Sanitización Vapor/UV', telefono: '+52 444 789 3320' },
-        { id_empleado: 6, nombre: 'Equipo JOLIE (UPSLP)', puesto: 'Coordinación Operativa y Plataforma Digital', telefono: '+52 444 540 2978' }
+        { id_empleado: 5, nombre: 'Sofía Torres', puesto: 'Limpieza Profunda y Sanitización', telefono: '+52 444 789 3320' },
+        { id_empleado: 6, nombre: 'Jolie', puesto: 'Gerente de Turno y Coordinación', telefono: '+52 444 540 2978' }
       ],
       mobiliario: [
         { id_mobiliario: 1, nombre: 'Carrusel Mecánico Infantil (12 caballos)', cantidad: 1, estado: 'disponible', descripcion: 'Carrusel central motorizado con arneses de seguridad.' },
@@ -73,128 +93,43 @@ document.addEventListener('DOMContentLoaded', () => {
         { id_mobiliario: 6, nombre: 'Alberca de Pelotas con Sistema Vapor/UV', cantidad: 1, estado: 'disponible', descripcion: 'Alberca infantil con ciclo de sanitización UV.' }
       ],
       reglamento: [
-        { id_regla: 1, titulo: 'Garantía de Depósito Transparente ($350)', descripcion: 'Depósito 100% reembolsable en un máximo de 24 horas tras finalizar el evento e inspección post-evento sin daños ni retrasos mayores a 45 min (Corresponsabilidad ESS).' },
-        { id_regla: 2, titulo: 'Control de Aforo y Capacidad Máxima (80 Personas)', descripcion: 'Por normativa de Protección Civil y seguridad comunitaria (ODS 11), el cupo máximo estricto del salón es de 80 asistentes en total (niños + adultos).' },
-        { id_regla: 3, titulo: 'Calcetines Antideslizantes Obligatorios', descripcion: 'Todo niño y adulto que ingrese a las áreas de brincolines, alberca de pelotas, túnel oruga o carrusel debe usar calcetines antideslizantes.' },
-        { id_regla: 4, titulo: 'Alimentos y Bebidas Exclusivos en Comedor', descripcion: 'Exclusivamente permitidos en el área de mesas y comedor. Prohibido ingresar comida o líquidos a las zonas de juego suave y túneles.' },
-        { id_regla: 5, titulo: 'Límite Acústico (80 dB) y Bloqueo de Limpieza (2 hrs)', descripcion: 'El volumen no superará los 80 dB. Se programan 2 horas entre eventos para sanitización profunda y revisión del mobiliario (ODS 8 y ODS 12).' }
+        { id_regla: 1, titulo: 'Garantía de Depósito Reembolsable ($350)', descripcion: 'El depósito en garantía ($350.00) protege las instalaciones y el mobiliario. Es 100% reembolsable dentro de las 24 horas posteriores al evento tras verificar que no existan daños ni retrasos mayores a 45 minutos en la entrega del salón.' },
+        { id_regla: 2, titulo: 'Capacidad y Aforo Máximo (80 Personas)', descripcion: 'Por seguridad y normativa de Protección Civil, el cupo máximo permitido es de 80 asistentes en total (incluyendo niños y adultos acompañantes).' },
+        { id_regla: 3, titulo: 'Uso Obligatorio de Calcetines Antideslizantes', descripcion: 'Todo niño y adulto que ingrese al área de brincolines, alberca de pelotas, túnel oruga o carrusel deberá portar calcetines antideslizantes por higiene y seguridad.' },
+        { id_regla: 4, titulo: 'Alimentos y Bebidas Exclusivos en Área de Comedor', descripcion: 'Los alimentos, bebidas, pastel y dulces están permitidos únicamente en la zona de mesas y comedor. No se permite ingresar comida o líquidos a los juegos suaves.' },
+        { id_regla: 5, titulo: 'Nivel de Sonido Seguro (80 dB) y Puntualidad de Turnos', descripcion: 'Por bienestar infantil el sonido ambiental no supera los 80 dB. Entre cada turno se reservan de 90 a 120 minutos exclusivos para limpieza profunda y desinfección.' }
       ]
     },
     notifications: [
-      { id: 1, title: 'Aforo en Salón Principal', text: 'Se registraron 62 invitados para la fiesta de Lucas en MariaDB.', time: 'Hace 15 min', unread: true },
-      { id: 2, title: 'Inspección Pre-Evento Lista', text: 'Elena R. y Javier García completaron los 5 puntos de seguridad.', time: 'Hace 1 hora', unread: true },
-      { id: 3, title: 'Depósito de Seguridad Recibido', text: '$350.00 en custodia para la reserva #BC-2025-104.', time: 'Hace 3 horas', unread: true },
-      { id: 4, title: 'Recordatorio Sanitario (ODS 8 y 12)', text: 'Próxima inspección de salida programada para las 19:00 hrs.', time: 'Hace 4 horas', unread: false }
-    ],
-    calendarEvents: {
-      19: {
-        summary: '2 Eventos Agendados',
-        slots: [
-          { id_reservacion: 3, time: '09:30 - 13:30', title: 'Fiesta de Cumpleaños Mateo', host: 'Familia Morales', status: 'completed', statusLabel: 'Completado', guests: '40/80' },
-          { id_reservacion: 4, time: '15:00 - 19:00', title: 'Cumpleaños #5 de Valeria', host: 'Lucía Mendoza', status: 'completed', statusLabel: 'Completado', guests: '55/80' },
-          { time: '20:00 - 23:30', title: 'Horario Noche Libre', host: '-', status: 'open', statusLabel: 'Disponible', guests: '0/80', slotKey: 'noche' }
-        ]
-      },
-      20: {
-        summary: 'Mantenimiento General',
-        slots: [
-          { time: 'Todo el día', title: 'Mantenimiento y Sanitización Profunda (ODS 12)', host: 'Javier García y Equipo Técnico Baby Carrusel', status: 'maintenance', statusLabel: 'Mantenimiento', guests: '-' }
-        ]
-      },
-      21: {
-        summary: '1 Apartado + 2 Disponibles',
-        slots: [
-          { id_reservacion: 5, time: '10:00 - 14:00', title: 'Apartado Tentativo (Bautizo)', host: 'Alejandro Cruz', status: 'hold', statusLabel: 'Apartado Pendiente', guests: '50 est.' },
-          { time: '15:00 - 19:00', title: 'Horario Tarde Libre', host: '-', status: 'open', statusLabel: 'Disponible', guests: '0/80', slotKey: 'tarde' },
-          { time: '20:00 - 23:30', title: 'Horario Noche Libre', host: '-', status: 'open', statusLabel: 'Disponible', guests: '0/80', slotKey: 'noche' }
-        ]
-      },
-      22: {
-        summary: 'Baby Shower Confirmado',
-        slots: [
-          { time: '09:30 - 13:30', title: 'Horario Mañana Libre', host: '-', status: 'open', statusLabel: 'Disponible', guests: '0/80', slotKey: 'mañana' },
-          { id_reservacion: 6, time: '14:00 - 18:00', title: 'Baby Shower de Valentina', host: 'Mariana Garza', status: 'confirmed', statusLabel: 'Confirmado', guests: '60/80' },
-          { time: '20:00 - 23:30', title: 'Horario Noche Libre', host: '-', status: 'open', statusLabel: 'Disponible', guests: '0/80', slotKey: 'noche' }
-        ]
-      },
-      23: {
-        summary: 'Jornada Completa Disponible',
-        slots: [
-          { time: '09:30 - 13:30', title: 'Horario Mañana Libre', host: '-', status: 'open', statusLabel: 'Disponible', guests: '0/80', slotKey: 'mañana' },
-          { time: '15:00 - 19:00', title: 'Horario Tarde Libre', host: '-', status: 'open', statusLabel: 'Disponible', guests: '0/80', slotKey: 'tarde' },
-          { time: '20:00 - 23:30', title: 'Horario Noche Libre', host: '-', status: 'open', statusLabel: 'Disponible', guests: '0/80', slotKey: 'noche' }
-        ]
-      },
-      24: {
-        summary: '1 Confirmado + 1 En Espera',
-        slots: [
-          { time: '09:30 - 13:30', title: 'Horario Mañana Libre', host: '-', status: 'open', statusLabel: 'Disponible', guests: '0/80', slotKey: 'mañana' },
-          { id_reservacion: 7, time: '16:00 - 20:00', title: 'Cumpleaños #3 de Emma', host: 'Daniela Ríos', status: 'confirmed', statusLabel: 'Confirmado', guests: '65/80' },
-          { id_reservacion: 8, time: '20:30 - 23:30', title: 'Pijamada VIP (Apartado)', host: 'Karla Gómez', status: 'hold', statusLabel: 'Apartado Pendiente', guests: '30 est.' }
-        ]
-      },
-      25: {
-        summary: 'Jornada de Hoy (Activa)',
-        slots: [
-          { id_reservacion: 2, time: '09:30 - 13:30', title: 'Safari Mágico de Mía', host: 'Valeria Silva', status: 'completed', statusLabel: 'Completado e Inspeccionado', guests: '45/80', depositStatus: 'Liberado' },
-          { id_reservacion: 1, time: '15:00 - 19:00', title: 'Cumpleaños #4 de Lucas • Carnaval de Carrusel', host: 'Camila y Roberto Peña', status: 'active', statusLabel: 'En Curso (Activo)', guests: '62/80', depositStatus: '$350 en Garantía' },
-          { time: '20:00 - 23:30', title: 'Sesión Nocturna Disponible', host: '-', status: 'open', statusLabel: 'Disponible para Reservar', guests: '0/80', slotKey: 'noche' }
-        ]
-      }
-    }
+      { id: 1, title: 'Aforo en Salón Principal', text: 'Se registraron 62 invitados para la fiesta de Lucas.', time: 'Hace 15 min', unread: true },
+      { id: 2, title: 'Inspección Pre-Evento Lista', text: 'Elena R. completó el protocolo de seguridad del carrusel.', time: 'Hace 1 hora', unread: true },
+      { id: 3, title: 'Depósito de Seguridad Recibido', text: '$350.00 en custodia para la reserva #BC-2026-104.', time: 'Hace 3 horas', unread: true },
+      { id: 4, title: 'Recordatorio de Cierre', text: 'Inspección de salida programada para las 19:00 hrs.', time: 'Hace 4 horas', unread: false }
+    ]
   };
 
-  const monthNames = [
-    'Enero', 'Febrero', 'Marzo', 'Abril', 'Mayo', 'Junio',
-    'Julio', 'Agosto', 'Septiembre', 'Octubre', 'Noviembre', 'Diciembre'
-  ];
-
   /* ==========================================================================
-     CONEXIÓN CON API Y BASE DE DATOS MARIADB (RASPBERRY PI + TAILSCALE)
+     COMUNICACIÓN CON EL SERVIDOR (TRANSPARENTE PARA EL USUARIO)
      ========================================================================== */
-  function setDbBadge(connected, label) {
-    const badge = document.getElementById('db-status-badge');
-    const dot = document.getElementById('db-status-dot');
-    const text = document.getElementById('db-status-text');
-    if (!badge || !dot || !text) return;
-
-    if (connected) {
-      badge.className = 'inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full text-[11px] font-semibold bg-emerald-100 text-emerald-800 hover:bg-emerald-200 transition-colors cursor-pointer';
-      dot.className = 'w-2 h-2 rounded-full bg-emerald-600 animate-pulse';
-      text.textContent = label || '🗄️ BD MariaDB Conectada (Tailscale)';
-    } else {
-      badge.className = 'inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full text-[11px] font-semibold bg-amber-100 text-amber-800 hover:bg-amber-200 transition-colors cursor-pointer';
-      dot.className = 'w-2 h-2 rounded-full bg-amber-600';
-      text.textContent = label || 'Modo Local (Sin conexión a Raspberry)';
-    }
-  }
-
   async function apiFetch(path, options = {}) {
     if (!activeApiBase) {
       for (const candidate of API_CANDIDATES) {
         try {
           const ctrl = new AbortController();
-          const timer = setTimeout(() => ctrl.abort(), 3500);
+          const timer = setTimeout(() => ctrl.abort(), 3000);
           const res = await fetch(`${candidate}/health`, { signal: ctrl.signal });
           clearTimeout(timer);
           if (res.ok) {
             activeApiBase = candidate;
-            state.dbConnected = true;
-            const isTailscale = candidate.includes('ts.net') || candidate.includes('100.111');
-            setDbBadge(true, isTailscale ? '🗄️ BD MariaDB • Tailscale Activo' : '🗄️ BD MariaDB • Raspberry LAN');
             break;
           }
         } catch (_) {
-          // Intentar siguiente candidato
+          // Probar siguiente candidato
         }
       }
     }
 
-    if (!activeApiBase) {
-      state.dbConnected = false;
-      setDbBadge(false);
-      return null;
-    }
+    if (!activeApiBase) return null;
 
     try {
       const res = await fetch(`${activeApiBase}${path}`, {
@@ -207,149 +142,811 @@ document.addEventListener('DOMContentLoaded', () => {
       }
       return await res.json();
     } catch (err) {
-      console.warn('Error en petición API:', err);
+      console.warn('Aviso de red:', err);
       return null;
     }
   }
 
-  function buildCalendarFromDatabase(reservaciones) {
-    // Reiniciar días base (manteniendo el lunes 20 de octubre como mantenimiento)
-    const newCal = {
-      20: {
-        summary: 'Mantenimiento General',
+  /* ==========================================================================
+     GESTIÓN DE ROLES: VISTA CLIENTE vs. VISTA DUEÑO (Jolie / Babycarrusel1234)
+     ========================================================================== */
+  function applyRoleUI() {
+    const isOwner = state.isOwner;
+
+    const btnLogin = document.getElementById('btn-open-login');
+    const ownerHeader = document.getElementById('owner-header-controls');
+    const navChecklists = document.getElementById('nav-link-checklists');
+
+    const heroTitle = document.getElementById('hero-main-title');
+    const heroBadgeLive = document.getElementById('hero-badge-live');
+    const heroBadgeParty = document.getElementById('hero-badge-party');
+    const heroSubtitle = document.getElementById('hero-subtitle');
+    const heroActionsClient = document.getElementById('hero-actions-client');
+    const heroActionsOwner = document.getElementById('hero-actions-owner');
+
+    const kpiGrid = document.getElementById('owner-kpi-grid');
+    const clientPanel = document.getElementById('client-side-panel');
+    const ownerPanel = document.getElementById('owner-side-panel');
+    const ownerRuleForm = document.getElementById('owner-add-rule-form');
+
+    if (isOwner) {
+      if (btnLogin) btnLogin.classList.add('hidden');
+      if (ownerHeader) {
+        ownerHeader.classList.remove('hidden');
+        ownerHeader.classList.add('flex');
+      }
+      if (navChecklists) navChecklists.classList.remove('hidden');
+
+      if (heroTitle) heroTitle.textContent = 'Centro de Operaciones Baby Carrusel';
+      if (heroBadgeLive) heroBadgeLive.textContent = 'En Vivo';
+      if (heroBadgeParty) heroBadgeParty.textContent = '✨ Modo Fiesta Activo';
+      if (heroSubtitle) heroSubtitle.textContent = 'Celebraciones mágicas, gestión sin esfuerzo del salón y logística segura para los más pequeños.';
+      if (heroActionsClient) heroActionsClient.classList.add('hidden');
+      if (heroActionsOwner) {
+        heroActionsOwner.classList.remove('hidden');
+        heroActionsOwner.classList.add('flex');
+      }
+
+      if (kpiGrid) {
+        kpiGrid.classList.remove('hidden');
+        kpiGrid.classList.add('grid');
+      }
+      if (clientPanel) clientPanel.classList.add('hidden');
+      if (ownerPanel) {
+        ownerPanel.classList.remove('hidden');
+        ownerPanel.classList.add('flex');
+      }
+      if (ownerRuleForm) {
+        ownerRuleForm.classList.remove('hidden');
+        ownerRuleForm.classList.add('flex');
+      }
+    } else {
+      if (btnLogin) btnLogin.classList.remove('hidden');
+      if (ownerHeader) {
+        ownerHeader.classList.add('hidden');
+        ownerHeader.classList.remove('flex');
+      }
+      if (navChecklists) navChecklists.classList.add('hidden');
+
+      if (heroTitle) heroTitle.textContent = 'Salón de Eventos Infantiles Baby Carrusel';
+      if (heroBadgeLive) heroBadgeLive.textContent = 'Agenda Abierta';
+      if (heroBadgeParty) heroBadgeParty.textContent = '✨ Fiestas & Celebraciones';
+      if (heroSubtitle) heroSubtitle.textContent = 'Consulta fechas disponibles, conoce nuestras instalaciones y reserva el día ideal para la fiesta de tus pequeños.';
+      if (heroActionsClient) heroActionsClient.classList.remove('hidden');
+      if (heroActionsOwner) {
+        heroActionsOwner.classList.add('hidden');
+        heroActionsOwner.classList.remove('flex');
+      }
+
+      if (kpiGrid) {
+        kpiGrid.classList.add('hidden');
+        kpiGrid.classList.remove('grid');
+      }
+      if (clientPanel) clientPanel.classList.remove('hidden');
+      if (ownerPanel) {
+        ownerPanel.classList.add('hidden');
+        ownerPanel.classList.remove('flex');
+      }
+      if (ownerRuleForm) {
+        ownerRuleForm.classList.add('hidden');
+        ownerRuleForm.classList.remove('flex');
+      }
+    }
+
+    renderCalendar();
+    renderDailySessions();
+  }
+
+  function openAdminLoginModal() {
+    if (state.isOwner) {
+      showToast('Sesión de administración activa como Jolie.');
+      return;
+    }
+    const errEl = document.getElementById('admin-login-error');
+    if (errEl) errEl.classList.add('hidden');
+    openModal('modal-admin-login');
+    setTimeout(() => document.getElementById('admin-login-user')?.focus(), 100);
+  }
+  window.openAdminLoginModal = openAdminLoginModal;
+
+  async function submitAdminLogin(e) {
+    if (e) e.preventDefault();
+    const user = document.getElementById('admin-login-user')?.value?.trim() || '';
+    const pass = document.getElementById('admin-login-pass')?.value || '';
+    const errEl = document.getElementById('admin-login-error');
+
+    if (user.toLowerCase() === 'jolie' && pass === 'Babycarrusel1234') {
+      state.isOwner = true;
+      sessionStorage.setItem('bc_owner_logged', '1');
+      if (errEl) errEl.classList.add('hidden');
+      closeModal('modal-admin-login');
+      applyRoleUI();
+      showToast('¡Bienvenida, Jolie! Panel de Operaciones activado.', 'success');
+      // Notificar al servidor opcionalmente
+      apiFetch('/auth/login', {
+        method: 'POST',
+        body: JSON.stringify({ username: user, password: pass })
+      });
+    } else {
+      if (errEl) errEl.classList.remove('hidden');
+    }
+  }
+  window.submitAdminLogin = submitAdminLogin;
+
+  function logoutAdmin() {
+    state.isOwner = false;
+    sessionStorage.removeItem('bc_owner_logged');
+    applyRoleUI();
+    showToast('Sesión cerrada. Mostrando Vista de Cliente.', 'info');
+  }
+  window.logoutAdmin = logoutAdmin;
+
+  /* ==========================================================================
+     UTILIDADES DE FECHAS Y TURNOS DEL CALENDARIO REAL
+     ========================================================================== */
+  function formatIsoDate(year, monthIdx, day) {
+    return `${year}-${String(monthIdx + 1).padStart(2, '0')}-${String(day).padStart(2, '0')}`;
+  }
+
+  function getSlotsForDate(year, monthIdx, day) {
+    const isoDate = formatIsoDate(year, monthIdx, day);
+    const dateObj = new Date(year, monthIdx, day);
+    const weekday = dateObj.getDay(); // 0 = Dom, 1 = Lun ...
+
+    const dayRes = state.dbData.reservaciones.filter(
+      r => r.fecha_evento === isoDate && r.estado !== 'cancelada'
+    );
+
+    // Lunes sin reservaciones = Día de Mantenimiento Preventivo y Sanitización
+    if (weekday === 1 && dayRes.length === 0) {
+      return {
+        isMaintenance: true,
         slots: [
-          { time: 'Todo el día', title: 'Mantenimiento y Sanitización Profunda (ODS 12)', host: 'Javier García y Equipo Técnico Baby Carrusel', status: 'maintenance', statusLabel: 'Mantenimiento', guests: '-' }
-        ]
-      }
-    };
-
-    // Filtrar reservaciones del mes y año seleccionados
-    const monthStr = String(state.currentMonthIndex + 1).padStart(2, '0');
-    const yearPrefix = `${state.currentYear}-${monthStr}-`;
-
-    const byDay = {};
-    reservaciones.forEach(r => {
-      if (r.fecha_evento && r.fecha_evento.startsWith(yearPrefix)) {
-        const dayNum = parseInt(r.fecha_evento.split('-')[2], 10);
-        byDay[dayNum] = byDay[dayNum] || [];
-        byDay[dayNum].push(r);
-      }
-    });
-
-    // Para todos los días con eventos o los días de la semana visible (19..31)
-    const daysToBuild = new Set([19, 21, 22, 23, 24, 25, ...Object.keys(byDay).map(Number)]);
-    daysToBuild.forEach(dayNum => {
-      if (dayNum === 20 && state.currentMonthIndex === 9 && state.currentYear === 2025 && !byDay[20]) {
-        return;
-      }
-      const dayRes = byDay[dayNum] || [];
-      const standardShifts = [
-        { key: 'mañana', label: 'Horario Mañana Libre', defaultTime: '09:30 - 13:30', matchHour: h => h < 14 },
-        { key: 'tarde', label: 'Horario Tarde Libre', defaultTime: '15:00 - 19:00', matchHour: h => h >= 14 && h < 19 },
-        { key: 'noche', label: 'Horario Noche Libre', defaultTime: '20:00 - 23:30', matchHour: h => h >= 19 }
-      ];
-
-      const slots = [];
-      const usedResIds = new Set();
-
-      standardShifts.forEach(shift => {
-        const found = dayRes.find(r => {
-          if (usedResIds.has(r.id_reservacion)) return false;
-          const hour = parseInt((r.hora_inicio || '15:00').split(':')[0], 10);
-          return shift.matchHour(hour);
-        });
-
-        if (found) {
-          usedResIds.add(found.id_reservacion);
-          const hIni = (found.hora_inicio || '15:00').slice(0, 5);
-          const hFin = (found.hora_fin || '19:00').slice(0, 5);
-          let uiStatus = 'confirmed';
-          let uiLabel = 'Confirmado';
-          if (found.id_reservacion === state.activeReservationId || (dayNum === 25 && hIni === '15:00' && found.estado === 'confirmada')) {
-            uiStatus = 'active';
-            uiLabel = 'En Curso (Activo)';
-          } else if (found.estado === 'finalizada') {
-            uiStatus = 'completed';
-            uiLabel = 'Completado e Inspeccionado';
-          } else if (found.estado === 'pendiente') {
-            uiStatus = 'hold';
-            uiLabel = 'Apartado Pendiente';
-          } else if (found.estado === 'cancelada') {
-            uiStatus = 'hold';
-            uiLabel = 'Cancelado';
+          {
+            time: 'Todo el día',
+            title: 'Mantenimiento Preventivo y Sanitización Profunda',
+            host: 'Equipo Técnico Baby Carrusel',
+            status: 'maintenance',
+            statusLabel: 'Mantenimiento',
+            guests: '-'
           }
+        ]
+      };
+    }
 
-          slots.push({
-            id_reservacion: found.id_reservacion,
-            time: `${hIni} - ${hFin}`,
-            title: found.tipo_evento || 'Evento Infantil',
-            host: found.cliente_nombre || 'Anfitrión',
-            phone: found.cliente_telefono || '+52 444 540 2978',
-            status: uiStatus,
-            statusLabel: uiLabel,
-            guests: `${found.numero_invitados}/80`,
-            numero_invitados: found.numero_invitados,
-            deposito: found.deposito,
-            deposito_estado: found.deposito_estado
-          });
-        } else {
-          slots.push({
-            time: shift.defaultTime,
-            title: dayNum === 25 && shift.key === 'noche' ? 'Sesión Nocturna Disponible' : shift.label,
-            host: '-',
-            status: 'open',
-            statusLabel: 'Disponible',
-            guests: '0/80',
-            slotKey: shift.key
-          });
-        }
+    const standardShifts = [
+      { key: 'mañana', label: 'Horario Mañana Disponible', shortLabel: '09:30 Mañana', defaultTime: '09:30 - 13:30', matchHour: h => h < 14 },
+      { key: 'tarde', label: 'Horario Tarde Disponible', shortLabel: '15:00 Tarde', defaultTime: '15:00 - 19:00', matchHour: h => h >= 14 && h < 19 },
+      { key: 'noche', label: 'Horario Noche Disponible', shortLabel: '20:00 Noche', defaultTime: '20:00 - 23:30', matchHour: h => h >= 19 }
+    ];
+
+    const usedIds = new Set();
+    const isTodayDate = year === TODAY_YEAR && monthIdx === TODAY_MONTH && day === TODAY_DAY;
+
+    const slots = standardShifts.map(shift => {
+      const found = dayRes.find(r => {
+        if (usedIds.has(r.id_reservacion)) return false;
+        const hour = parseInt((r.hora_inicio || '15:00').split(':')[0], 10);
+        return shift.matchHour(hour);
       });
 
-      newCal[dayNum] = {
-        summary: `${dayRes.length} Eventos en BD`,
-        slots
+      if (found) {
+        usedIds.add(found.id_reservacion);
+        const hIni = (found.hora_inicio || '15:00').slice(0, 5);
+        const hFin = (found.hora_fin || '19:00').slice(0, 5);
+
+        let uiStatus = 'confirmed';
+        let uiLabel = 'Confirmado';
+
+        if ((isTodayDate && shift.key === 'tarde' && found.estado === 'confirmada') || found.id_reservacion === state.activeReservationId && isTodayDate) {
+          uiStatus = 'active';
+          uiLabel = 'En Curso (Activo)';
+        } else if (found.estado === 'finalizada') {
+          uiStatus = 'completed';
+          uiLabel = 'Completado';
+        } else if (found.estado === 'pendiente') {
+          uiStatus = 'hold';
+          uiLabel = 'Apartado (En Confirmación)';
+        }
+
+        return {
+          id_reservacion: found.id_reservacion,
+          slotKey: shift.key,
+          shortTime: hIni,
+          time: `${hIni} - ${hFin}`,
+          title: found.tipo_evento || 'Celebración Infantil',
+          host: found.cliente_nombre || 'Cliente Registrado',
+          phone: found.cliente_telefono || '+52 444 540 2978',
+          status: uiStatus,
+          statusLabel: uiLabel,
+          guests: `${found.numero_invitados}/80`,
+          numero_invitados: found.numero_invitados,
+          deposito: found.deposito,
+          deposito_estado: found.deposito_estado,
+          estado_db: found.estado
+        };
+      }
+
+      return {
+        slotKey: shift.key,
+        shortTime: shift.defaultTime.split(' - ')[0],
+        time: shift.defaultTime,
+        title: shift.label,
+        host: '-',
+        status: 'open',
+        statusLabel: 'Disponible',
+        guests: '0/80'
       };
     });
 
-    state.calendarEvents = newCal;
-    updateCalendarCellBadges();
+    return {
+      isMaintenance: false,
+      slots
+    };
   }
 
-  function updateCalendarCellBadges() {
-    [19, 20, 21, 22, 23, 24, 25].forEach(dayNum => {
-      const cell = document.querySelector(`[data-day="${dayNum}"]`);
-      if (!cell) return;
-      const badgeContainer = cell.querySelector('div.flex.flex-col.gap-1');
-      if (!badgeContainer) return;
+  /* ==========================================================================
+     RENDERIZADO REAL DE LAS 3 VISTAS DEL CALENDARIO (MENSUAL, SEMANAL, DIARIO)
+     ========================================================================== */
+  function renderCalendar() {
+    const titleEl = document.getElementById('calendar-month-title');
+    const weekdaysHeader = document.getElementById('calendar-weekdays-header');
+    const gridContainer = document.getElementById('calendar-grid-container');
+    if (!gridContainer) return;
 
-      if (dayNum === 20) return; // Mantenimiento fijo
-      const dayData = state.calendarEvents[dayNum];
-      if (!dayData || !dayData.slots) return;
+    if (state.viewMode === 'month') {
+      if (titleEl) titleEl.textContent = `${monthNames[state.currentMonthIndex]} ${state.currentYear}`;
+      if (weekdaysHeader) weekdaysHeader.classList.remove('hidden');
+      gridContainer.className = 'grid grid-cols-7 gap-2';
+      renderMonthView(gridContainer);
+    } else if (state.viewMode === 'week') {
+      if (weekdaysHeader) weekdaysHeader.classList.remove('hidden');
+      gridContainer.className = 'grid grid-cols-1 sm:grid-cols-7 gap-2';
+      renderWeekView(gridContainer, titleEl);
+    } else {
+      if (weekdaysHeader) weekdaysHeader.classList.add('hidden');
+      gridContainer.className = 'flex flex-col gap-2.5';
+      renderDayFloorView(gridContainer, titleEl);
+    }
+  }
 
-      const badgesHtml = dayData.slots.map(s => {
-        const shortTime = s.time.split(' - ')[0];
-        if (s.status === 'active') {
-          const shortName = s.title.split('•')[0].replace('Cumpleaños #4 de ', '').trim();
-          return `<span class="px-1.5 py-0.5 rounded text-[10px] font-bold bg-primary text-white truncate shadow-xs">${shortTime} ${shortName} ★</span>`;
-        } else if (s.status === 'completed' || s.status === 'confirmed') {
-          const shortName = s.title.split('•')[0].replace('Cumpleaños ', '').replace('Fiesta de ', '').trim();
-          return `<span class="px-1.5 py-0.5 rounded text-[10px] font-semibold bg-blue-100 text-blue-800 truncate">${shortTime} ${shortName} ✓</span>`;
-        } else if (s.status === 'hold') {
-          return `<span class="px-1.5 py-0.5 rounded text-[10px] font-medium bg-amber-50 text-amber-700 truncate">${shortTime} Apart.</span>`;
-        } else {
-          return `<span class="px-1.5 py-0.5 rounded text-[10px] font-medium bg-emerald-50 text-emerald-700 truncate">${shortTime} Disp.</span>`;
+  function renderDayCellBadges(dayInfo) {
+    if (dayInfo.isMaintenance) {
+      return `<span class="px-1.5 py-0.5 rounded text-[10px] font-medium bg-surface-container text-on-surface-variant truncate">Sanitización</span>`;
+    }
+
+    if (!state.isOwner) {
+      // Vista limpia para el CLIENTE: muestra cuántos turnos están libres sin exponer datos privados
+      const openCount = dayInfo.slots.filter(s => s.status === 'open').length;
+      const holdCount = dayInfo.slots.filter(s => s.status === 'hold').length;
+      if (openCount === 3) {
+        return `<span class="px-1.5 py-0.5 rounded text-[10px] font-medium bg-emerald-50 text-emerald-700 truncate">3 Turnos Libres</span>`;
+      } else if (openCount > 0) {
+        return `
+          <span class="px-1.5 py-0.5 rounded text-[10px] font-semibold bg-emerald-50 text-emerald-700 truncate">${openCount} ${openCount === 1 ? 'Turno Libre' : 'Turnos Libres'}</span>
+          <span class="px-1.5 py-0.5 rounded text-[10px] font-medium ${holdCount > 0 ? 'bg-amber-50 text-amber-700' : 'bg-blue-50 text-blue-700'} truncate">${3 - openCount} Reservado${3 - openCount > 1 ? 's' : ''}</span>
+        `;
+      } else {
+        return `<span class="px-1.5 py-0.5 rounded text-[10px] font-semibold bg-blue-100 text-blue-800 truncate">Fecha Completa</span>`;
+      }
+    }
+
+    // Vista detallada para DUEÑO / ADMINISTRACIÓN (idéntica al cartel)
+    return dayInfo.slots.map(s => {
+      if (s.status === 'active') {
+        const shortTitle = s.title.split('•')[0].replace('Cumpleaños #4 de ', '').replace('Cumpleaños ', '').trim();
+        return `<span class="px-1.5 py-0.5 rounded text-[10px] font-bold bg-primary text-white truncate shadow-xs">${s.shortTime} ${shortTitle} ★</span>`;
+      } else if (s.status === 'completed' || s.status === 'confirmed') {
+        const shortTitle = s.title.split('•')[0].replace('Cumpleaños ', '').replace('Fiesta de ', '').trim();
+        return `<span class="px-1.5 py-0.5 rounded text-[10px] font-semibold bg-blue-100 text-blue-800 truncate">${s.shortTime} ${shortTitle} ✓</span>`;
+      } else if (s.status === 'hold') {
+        return `<span class="px-1.5 py-0.5 rounded text-[10px] font-medium bg-amber-50 text-amber-700 truncate">${s.shortTime} Apartado</span>`;
+      } else {
+        return `<span class="px-1.5 py-0.5 rounded text-[10px] font-medium bg-emerald-50 text-emerald-700 truncate">${s.shortTime} Disp.</span>`;
+      }
+    }).join('');
+  }
+
+  function renderMonthView(container) {
+    const year = state.currentYear;
+    const month = state.currentMonthIndex;
+    const firstWeekday = new Date(year, month, 1).getDay(); // 0 (Dom) .. 6 (Sáb)
+    const daysInMonth = new Date(year, month + 1, 0).getDate();
+    const prevMonthDays = new Date(year, month, 0).getDate();
+
+    const cells = [];
+
+    // Celdas de relleno del mes anterior
+    for (let i = firstWeekday - 1; i >= 0; i--) {
+      const prevDay = prevMonthDays - i;
+      cells.push(`
+        <div onclick="changeMonthAndSelect(-1, ${prevDay})" class="min-h-[84px] p-2 rounded-xl bg-surface-container-low/20 opacity-45 flex flex-col justify-between cursor-pointer hover:opacity-75 transition-opacity">
+          <span class="font-label-sm text-xs text-on-surface-variant">${prevDay}</span>
+          <span class="text-[10px] text-on-surface-variant">${monthNames[(month + 11) % 12].slice(0, 3)}</span>
+        </div>
+      `);
+    }
+
+    // Días reales del mes actual
+    for (let day = 1; day <= daysInMonth; day++) {
+      const isToday = year === TODAY_YEAR && month === TODAY_MONTH && day === TODAY_DAY;
+      const isSelected = day === state.selectedDay;
+      const dayInfo = getSlotsForDate(year, month, day);
+
+      const cellClasses = isSelected
+        ? 'min-h-[92px] p-2 rounded-xl bg-primary-fixed/25 ring-2 ring-primary shadow-sm flex flex-col justify-between relative cursor-pointer transition-all'
+        : isToday
+        ? 'min-h-[92px] p-2 rounded-xl bg-primary-fixed/15 ring-1 ring-primary/50 flex flex-col justify-between relative cursor-pointer hover:bg-primary-fixed/25 transition-all'
+        : 'min-h-[92px] p-2 rounded-xl bg-surface-container-low/40 flex flex-col justify-between cursor-pointer hover:bg-surface-container-low transition-colors';
+
+      const headerHtml = isToday
+        ? `<div class="flex items-center justify-between">
+             <span class="font-label-sm text-xs font-bold text-primary">${day} HOY</span>
+             <span class="w-2 h-2 rounded-full bg-primary animate-ping"></span>
+           </div>`
+        : `<span class="font-label-sm text-xs ${isSelected ? 'font-bold text-primary' : 'text-on-surface-variant font-semibold'}">${day}</span>`;
+
+      cells.push(`
+        <div onclick="selectCalendarDay(${day})" data-day="${day}" class="${cellClasses}">
+          ${headerHtml}
+          <div class="flex flex-col gap-1 mt-1">
+            ${renderDayCellBadges(dayInfo)}
+          </div>
+        </div>
+      `);
+    }
+
+    // Celdas de relleno del mes siguiente para completar fila de 7
+    const remaining = (7 - (cells.length % 7)) % 7;
+    for (let nextDay = 1; nextDay <= remaining; nextDay++) {
+      cells.push(`
+        <div onclick="changeMonthAndSelect(1, ${nextDay})" class="min-h-[84px] p-2 rounded-xl bg-surface-container-low/20 opacity-45 flex flex-col justify-between cursor-pointer hover:opacity-75 transition-opacity">
+          <span class="font-label-sm text-xs text-on-surface-variant">${nextDay}</span>
+          <span class="text-[10px] text-on-surface-variant">${monthNames[(month + 1) % 12].slice(0, 3)}</span>
+        </div>
+      `);
+    }
+
+    container.innerHTML = cells.join('');
+  }
+
+  function renderWeekView(container, titleEl) {
+    const selDate = new Date(state.currentYear, state.currentMonthIndex, state.selectedDay);
+    const dayOfWeek = selDate.getDay(); // 0..6
+    const sunday = new Date(selDate);
+    sunday.setDate(selDate.getDate() - dayOfWeek);
+    const saturday = new Date(sunday);
+    saturday.setDate(sunday.getDate() + 6);
+
+    if (titleEl) {
+      titleEl.textContent = `Semana del ${sunday.getDate()} de ${monthNames[sunday.getMonth()]} al ${saturday.getDate()} de ${monthNames[saturday.getMonth()]} ${saturday.getFullYear()}`;
+    }
+
+    const cards = [];
+    for (let i = 0; i < 7; i++) {
+      const d = new Date(sunday);
+      d.setDate(sunday.getDate() + i);
+      const y = d.getFullYear();
+      const m = d.getMonth();
+      const dayNum = d.getDate();
+
+      const isToday = y === TODAY_YEAR && m === TODAY_MONTH && dayNum === TODAY_DAY;
+      const isSelected = y === state.currentYear && m === state.currentMonthIndex && dayNum === state.selectedDay;
+      const dayInfo = getSlotsForDate(y, m, dayNum);
+
+      const shiftsHtml = dayInfo.slots.map(s => {
+        if (s.status === 'maintenance') {
+          return `<div class="p-1.5 rounded-lg bg-surface-container text-on-surface-variant text-[10px] font-medium">🔧 Sanitización</div>`;
         }
+        const badgeColor =
+          s.status === 'active'
+            ? 'bg-primary text-white font-bold'
+            : s.status === 'confirmed' || s.status === 'completed'
+            ? 'bg-blue-100 text-blue-800 font-semibold'
+            : s.status === 'hold'
+            ? 'bg-amber-100 text-amber-800 font-semibold'
+            : 'bg-emerald-50 text-emerald-700 font-medium';
+
+        const labelText = state.isOwner
+          ? (s.status === 'open' ? `${s.shortTime} Disponible` : `${s.shortTime} ${s.title.split('•')[0]}`)
+          : (s.status === 'open' ? `${s.shortTime} Libre` : `${s.shortTime} ${s.status === 'hold' ? 'Apartado' : 'Reservado'}`);
+
+        return `
+          <div class="p-1.5 rounded-lg ${badgeColor} text-[10px] flex flex-col gap-0.5 truncate">
+            <span class="truncate">${labelText}</span>
+          </div>
+        `;
       }).join('');
 
-      badgeContainer.innerHTML = badgesHtml;
-    });
+      cards.push(`
+        <div onclick="selectExactDate(${y}, ${m}, ${dayNum})" class="min-h-[175px] p-2.5 rounded-xl ${isSelected ? 'bg-primary-fixed/25 ring-2 ring-primary shadow-sm' : 'bg-surface-container-low/50 hover:bg-surface-container-low'} flex flex-col justify-between cursor-pointer transition-all">
+          <div class="flex items-center justify-between border-b border-surface-container pb-1.5 mb-1.5">
+            <span class="text-xs font-bold ${isSelected || isToday ? 'text-primary' : 'text-on-surface'}">${dayNamesShort[i]} ${dayNum}</span>
+            ${isToday ? '<span class="px-1.5 py-0.5 rounded-full bg-primary text-white text-[9px] font-bold">HOY</span>' : ''}
+          </div>
+          <div class="flex flex-col gap-1.5 flex-1 justify-center">
+            ${shiftsHtml}
+          </div>
+        </div>
+      `);
+    }
+
+    container.innerHTML = cards.join('');
   }
 
+  function renderDayFloorView(container, titleEl) {
+    const selDate = new Date(state.currentYear, state.currentMonthIndex, state.selectedDay);
+    const weekdayName = dayNamesFull[selDate.getDay()];
+    const isoDate = formatIsoDate(state.currentYear, state.currentMonthIndex, state.selectedDay);
+
+    if (titleEl) {
+      titleEl.textContent = `Piso Diario • ${weekdayName} ${state.selectedDay} de ${monthNames[state.currentMonthIndex]} ${state.currentYear}`;
+    }
+
+    const dayInfo = getSlotsForDate(state.currentYear, state.currentMonthIndex, state.selectedDay);
+    if (dayInfo.isMaintenance) {
+      container.innerHTML = `
+        <div class="p-6 rounded-2xl bg-surface-container-low text-center flex flex-col items-center gap-2">
+          <span class="material-symbols-outlined text-3xl text-primary">cleaning_services</span>
+          <h4 class="font-headline-sm font-bold text-on-surface">Jornada de Sanitización Profunda y Mantenimiento</h4>
+          <p class="text-xs text-on-surface-variant max-w-md">Los lunes sin eventos programados se dedican a la revisión mecánica del carrusel, limpieza con vapor del área suave y mantenimiento del mobiliario.</p>
+          <button onclick="openBookingModal('tarde', '${isoDate}')" class="mt-2 px-4 py-2 rounded-xl bg-primary-container text-on-primary-container text-xs font-bold hover:brightness-105">
+            + Agendar Evento Especial en este Día
+          </button>
+        </div>
+      `;
+      return;
+    }
+
+    const [sMorning, sAfternoon, sNight] = dayInfo.slots;
+
+    const buildTimelineRow = (slot, shiftTitle) => {
+      const isFree = slot.status === 'open';
+      const bgClass = isFree
+        ? 'bg-emerald-50/70 border-emerald-200'
+        : slot.status === 'active'
+        ? 'bg-primary-fixed/25 border-primary'
+        : slot.status === 'hold'
+        ? 'bg-amber-50/70 border-amber-200'
+        : 'bg-blue-50/70 border-blue-200';
+
+      const displayTitle = state.isOwner
+        ? slot.title
+        : isFree
+        ? shiftTitle + ' Disponible'
+        : slot.status === 'hold'
+        ? 'Horario Apartado (En Confirmación)'
+        : 'Horario Reservado';
+
+      const displaySub = state.isOwner
+        ? (isFree ? 'Salón listo para nueva reservación' : `Anfitrión: ${slot.host} • Aforo: ${slot.guests} Invitados`)
+        : (isFree ? 'Disponible para paquete Fiesta Carrusel Mágico (hasta 80 invitados)' : 'Este turno ya se encuentra ocupado');
+
+      const actionBtn = isFree
+        ? `<button onclick="openBookingModal('${slot.slotKey}', '${isoDate}')" class="px-3.5 py-2 rounded-xl bg-emerald-600 text-white text-xs font-bold hover:bg-emerald-700 transition-colors">Reservar Turno</button>`
+        : state.isOwner
+        ? `<button onclick="selectReservationFromSlot(${slot.id_reservacion})" class="px-3.5 py-2 rounded-xl bg-primary text-white text-xs font-bold hover:brightness-105">Gestionar</button>`
+        : `<span class="px-3 py-1 rounded-lg bg-surface-container text-on-surface-variant text-xs font-semibold">No Disponible</span>`;
+
+      return `
+        <div class="p-3.5 rounded-xl border ${bgClass} flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3">
+          <div class="flex items-center gap-3">
+            <span class="px-2.5 py-1.5 rounded-lg bg-surface-container-lowest font-bold text-xs text-on-surface shadow-2xs whitespace-nowrap">${slot.time}</span>
+            <div class="flex flex-col">
+              <span class="font-bold text-sm text-on-surface">${displayTitle}</span>
+              <span class="text-xs text-on-surface-variant">${displaySub}</span>
+            </div>
+          </div>
+          ${actionBtn}
+        </div>
+      `;
+    };
+
+    container.innerHTML = `
+      <div class="p-2.5 rounded-xl bg-surface-container-low/60 flex items-center justify-between text-xs text-on-surface-variant">
+        <span class="font-semibold">08:30 - 09:30 hrs • Apertura, Sanitización con Vapor e Inspección Previa</span>
+        <span class="text-emerald-700 font-bold">Protocolo Diario ✓</span>
+      </div>
+      ${buildTimelineRow(sMorning, 'Turno Mañana')}
+      <div class="p-2.5 rounded-xl bg-surface-container-low/60 flex items-center justify-between text-xs text-on-surface-variant">
+        <span class="font-semibold">13:30 - 15:00 hrs • Bloqueo de Limpieza Profunda, Desinfección y Revisión de Mobiliario</span>
+        <span class="text-secondary font-bold">90 min Preparación</span>
+      </div>
+      ${buildTimelineRow(sAfternoon, 'Turno Tarde')}
+      <div class="p-2.5 rounded-xl bg-surface-container-low/60 flex items-center justify-between text-xs text-on-surface-variant">
+        <span class="font-semibold">19:00 - 20:00 hrs • Inspección de Entrega y Preparación Nocturna</span>
+        <span class="text-secondary font-bold">60 min Preparación</span>
+      </div>
+      ${buildTimelineRow(sNight, 'Turno Noche')}
+    `;
+  }
+
+  /* ==========================================================================
+     NAVEGACIÓN DE FECHAS Y DÍAS DEL CALENDARIO
+     ========================================================================== */
+  function navigateCalendar(delta) {
+    if (state.viewMode === 'month') {
+      state.currentMonthIndex += delta;
+      if (state.currentMonthIndex < 0) {
+        state.currentMonthIndex = 11;
+        state.currentYear -= 1;
+      } else if (state.currentMonthIndex > 11) {
+        state.currentMonthIndex = 0;
+        state.currentYear += 1;
+      }
+      const maxDays = new Date(state.currentYear, state.currentMonthIndex + 1, 0).getDate();
+      if (state.selectedDay > maxDays) state.selectedDay = maxDays;
+    } else if (state.viewMode === 'week') {
+      const d = new Date(state.currentYear, state.currentMonthIndex, state.selectedDay + delta * 7);
+      state.currentYear = d.getFullYear();
+      state.currentMonthIndex = d.getMonth();
+      state.selectedDay = d.getDate();
+    } else {
+      const d = new Date(state.currentYear, state.currentMonthIndex, state.selectedDay + delta);
+      state.currentYear = d.getFullYear();
+      state.currentMonthIndex = d.getMonth();
+      state.selectedDay = d.getDate();
+    }
+
+    renderCalendar();
+    renderDailySessions();
+  }
+  window.navigateCalendar = navigateCalendar;
+  window.changeMonth = navigateCalendar;
+
+  function changeMonthAndSelect(monthDelta, dayNum) {
+    state.currentMonthIndex += monthDelta;
+    if (state.currentMonthIndex < 0) {
+      state.currentMonthIndex = 11;
+      state.currentYear -= 1;
+    } else if (state.currentMonthIndex > 11) {
+      state.currentMonthIndex = 0;
+      state.currentYear += 1;
+    }
+    state.selectedDay = dayNum;
+    renderCalendar();
+    renderDailySessions();
+  }
+  window.changeMonthAndSelect = changeMonthAndSelect;
+
+  function selectExactDate(year, monthIdx, dayNum) {
+    state.currentYear = year;
+    state.currentMonthIndex = monthIdx;
+    state.selectedDay = dayNum;
+    renderCalendar();
+    renderDailySessions();
+  }
+  window.selectExactDate = selectExactDate;
+
+  function goToToday() {
+    state.currentYear = TODAY_YEAR;
+    state.currentMonthIndex = TODAY_MONTH;
+    state.selectedDay = TODAY_DAY;
+    renderCalendar();
+    renderDailySessions();
+    showToast(`Mostrando hoy: ${TODAY_DAY} de ${monthNames[TODAY_MONTH]} ${TODAY_YEAR}.`);
+  }
+  window.goToToday = goToToday;
+
+  function selectCalendarDay(dayNumber) {
+    state.selectedDay = dayNumber;
+    renderCalendar();
+    renderDailySessions();
+  }
+  window.selectCalendarDay = selectCalendarDay;
+
+  function setCalendarView(mode) {
+    state.viewMode = mode;
+    const btnMonth = document.getElementById('view-mode-month');
+    const btnWeek = document.getElementById('view-mode-week');
+    const btnDay = document.getElementById('view-mode-day');
+
+    const activeClasses = 'px-3 py-1.5 rounded-lg text-xs font-semibold bg-surface-container-lowest text-on-surface shadow-xs';
+    const inactiveClasses = 'px-3 py-1.5 rounded-lg text-xs font-semibold text-on-surface-variant hover:text-on-surface';
+
+    if (btnMonth) btnMonth.className = mode === 'month' ? activeClasses : inactiveClasses;
+    if (btnWeek) btnWeek.className = mode === 'week' ? activeClasses : inactiveClasses;
+    if (btnDay) btnDay.className = mode === 'day' ? activeClasses : inactiveClasses;
+
+    renderCalendar();
+  }
+  window.setCalendarView = setCalendarView;
+
+  /* ==========================================================================
+     DESGLOSE DE HORARIOS / SESIONES DEL DÍA SELECCIONADO
+     ========================================================================== */
+  function renderDailySessions() {
+    const selDate = new Date(state.currentYear, state.currentMonthIndex, state.selectedDay);
+    const weekdayName = dayNamesFull[selDate.getDay()];
+    const isoDate = formatIsoDate(state.currentYear, state.currentMonthIndex, state.selectedDay);
+
+    const dateTitle = document.getElementById('selected-day-title');
+    const dateSub = document.getElementById('selected-day-subtitle');
+    if (dateTitle) {
+      dateTitle.textContent = `${state.isOwner ? 'Sesiones' : 'Horarios'} del ${weekdayName} ${state.selectedDay} de ${monthNames[state.currentMonthIndex]} ${state.currentYear}`;
+    }
+    if (dateSub) {
+      dateSub.textContent = state.isOwner
+        ? 'Turnos programados, estado de entrega y anfitriones responsables'
+        : 'Consulta qué turnos están libres y reserva tu horario en línea';
+    }
+
+    const sessionsContainer = document.getElementById('daily-sessions-container');
+    if (!sessionsContainer) return;
+
+    const dayInfo = getSlotsForDate(state.currentYear, state.currentMonthIndex, state.selectedDay);
+
+    if (dayInfo.isMaintenance) {
+      sessionsContainer.innerHTML = `
+        <div class="p-6 rounded-2xl bg-surface-container-low text-center flex flex-col items-center justify-center gap-2">
+          <span class="material-symbols-outlined text-3xl text-on-surface-variant">cleaning_services</span>
+          <p class="font-headline-sm text-on-surface font-bold">Día de Mantenimiento y Sanitización General</p>
+          <p class="text-xs text-on-surface-variant">Los lunes realizamos limpieza profunda e inspección técnica del carrusel y juegos suaves.</p>
+          <button onclick="openBookingModal('tarde', '${isoDate}')" class="mt-2 px-4 py-2 rounded-xl bg-primary-container text-on-primary-container font-semibold text-xs shadow-xs hover:brightness-105">
+            Consultar Disponibilidad Especial
+          </button>
+        </div>
+      `;
+      renderDaySheetModal();
+      return;
+    }
+
+    sessionsContainer.innerHTML = dayInfo.slots.map(slot => {
+      // 1. Turno Libre (Verde) — Visible igual para Cliente y Dueño
+      if (slot.status === 'open') {
+        const sKey = slot.slotKey || 'noche';
+        const shiftLabel = sKey === 'mañana' ? 'Mañana' : sKey === 'tarde' ? 'Tarde' : 'Noche';
+        return `
+          <div class="p-space-md rounded-xl bg-emerald-50/60 border border-emerald-100 flex flex-col md:flex-row items-start md:items-center justify-between gap-space-md">
+            <div class="flex items-start gap-space-md">
+              <div class="flex flex-col items-center justify-center w-20 py-1.5 rounded-lg bg-emerald-100 text-emerald-800 text-center">
+                <span class="text-xs font-bold uppercase tracking-wider">${shiftLabel}</span>
+                <span class="font-label-sm text-[11px] font-semibold">${slot.time}</span>
+              </div>
+              <div class="flex flex-col">
+                <div class="flex items-center gap-2 flex-wrap">
+                  <span class="font-headline-sm text-headline-sm text-emerald-950 font-semibold">${slot.title}</span>
+                  <span class="px-2 py-0.5 rounded-full text-[10px] font-semibold bg-emerald-200 text-emerald-900">Disponible</span>
+                </div>
+                <span class="text-xs text-emerald-800/80">Salón completo, carrusel mecánico, brincolines y comedor infantil (Cupo máx. 80 personas)</span>
+              </div>
+            </div>
+            <div class="flex items-center gap-2 self-end md:self-center">
+              <button onclick="openBookingModal('${sKey}', '${isoDate}')" class="px-3.5 py-2 rounded-lg bg-emerald-600 text-white text-xs font-semibold hover:bg-emerald-700 transition-colors shadow-xs flex items-center gap-1" type="button">
+                <span class="material-symbols-outlined text-sm">add_circle</span>
+                <span>Reservar Horario</span>
+              </button>
+            </div>
+          </div>
+        `;
+      }
+
+      // 2. Si está en VISTA CLIENTE: Ocultar nombres privados de niños y clientes en turnos ocupados
+      if (!state.isOwner) {
+        const isHold = slot.status === 'hold';
+        const shiftLabel = slot.slotKey === 'mañana' ? 'Mañana' : slot.slotKey === 'tarde' ? 'Tarde' : 'Noche';
+        return `
+          <div class="p-space-md rounded-xl ${isHold ? 'bg-amber-50/60 border border-amber-200' : 'bg-surface-container-low'} flex flex-col md:flex-row items-start md:items-center justify-between gap-space-md">
+            <div class="flex items-start gap-space-md">
+              <div class="flex flex-col items-center justify-center w-20 py-1.5 rounded-lg ${isHold ? 'bg-amber-100 text-amber-800' : 'bg-surface-container text-on-surface-variant'} text-center">
+                <span class="text-xs font-bold uppercase tracking-wider">${shiftLabel}</span>
+                <span class="font-label-sm text-[11px] font-semibold">${slot.time}</span>
+              </div>
+              <div class="flex flex-col">
+                <div class="flex items-center gap-2 flex-wrap">
+                  <span class="font-headline-sm text-headline-sm text-on-surface font-semibold">${isHold ? 'Horario Apartado (En Confirmación)' : 'Horario Reservado'}</span>
+                  <span class="px-2 py-0.5 rounded-full text-[10px] font-semibold ${isHold ? 'bg-amber-200 text-amber-900' : 'bg-blue-100 text-blue-800'}">${isHold ? 'Apartado' : 'Ocupado'}</span>
+                </div>
+                <span class="text-xs text-on-surface-variant">Este horario ya no se encuentra disponible para nuevas reservaciones.</span>
+              </div>
+            </div>
+            <div class="flex items-center gap-2 self-end md:self-center">
+              <span class="px-3 py-1.5 rounded-lg bg-surface-container text-on-surface-variant text-xs font-semibold">No Disponible</span>
+            </div>
+          </div>
+        `;
+      }
+
+      // 3. VISTA DUEÑO / ADMINISTRACIÓN (Muestra todos los datos operativos y botones de gestión)
+      if (slot.status === 'completed') {
+        return `
+          <div class="p-space-md rounded-xl bg-surface-container-low flex flex-col md:flex-row items-start md:items-center justify-between gap-space-md">
+            <div class="flex items-start gap-space-md">
+              <div class="flex flex-col items-center justify-center w-20 py-1.5 rounded-lg bg-surface-container text-on-surface-variant text-center">
+                <span class="text-xs font-bold uppercase tracking-wider">Finalizado</span>
+                <span class="font-label-sm text-[11px] text-on-surface font-semibold">${slot.time}</span>
+              </div>
+              <div class="flex flex-col">
+                <div class="flex items-center gap-2 flex-wrap">
+                  <span class="font-headline-sm text-headline-sm text-on-surface">${slot.title}</span>
+                  <span class="px-2 py-0.5 rounded-full text-[10px] font-semibold bg-blue-100 text-blue-800">${slot.statusLabel}</span>
+                </div>
+                <span class="text-xs text-on-surface-variant">Anfitrión: ${slot.host} • ${slot.guests} Invitados • Depósito $350 Reembolsado</span>
+              </div>
+            </div>
+            <div class="flex items-center gap-2 self-end md:self-center">
+              <span class="text-xs font-semibold text-emerald-700 bg-emerald-50 px-2.5 py-1 rounded-lg flex items-center gap-1">
+                <span class="material-symbols-outlined text-sm">check_circle</span>
+                <span>Depósito Liberado</span>
+              </span>
+              <button onclick="selectReservationFromSlot(${slot.id_reservacion})" title="Gestionar Evento" class="p-1.5 rounded-lg bg-surface-container text-on-surface hover:bg-surface-variant transition-colors" type="button">
+                <span class="material-symbols-outlined text-sm">tune</span>
+              </button>
+            </div>
+          </div>
+        `;
+      } else if (slot.status === 'active' || slot.status === 'confirmed') {
+        const isCurrentActive = slot.status === 'active';
+        return `
+          <div class="p-space-md rounded-xl ${isCurrentActive ? 'bg-primary-fixed/20' : 'bg-blue-50/60 border border-blue-100'} shadow-sm flex flex-col md:flex-row items-start md:items-center justify-between gap-space-md relative overflow-hidden">
+            <div class="absolute left-0 top-0 bottom-0 w-1.5 ${isCurrentActive ? 'bg-primary' : 'bg-blue-600'}"></div>
+            <div class="flex items-start gap-space-md pl-1">
+              <div class="flex flex-col items-center justify-center w-20 py-1.5 rounded-lg ${isCurrentActive ? 'bg-primary text-white' : 'bg-blue-600 text-white'} text-center shadow-xs">
+                <span class="text-xs font-bold uppercase tracking-wider">${isCurrentActive ? 'Activo' : 'Confirmado'}</span>
+                <span class="font-label-sm text-[11px] font-semibold">${slot.time}</span>
+              </div>
+              <div class="flex flex-col">
+                <div class="flex items-center gap-2 flex-wrap">
+                  <span class="font-headline-sm text-headline-sm text-on-surface font-bold">${slot.title}</span>
+                  <span class="px-2.5 py-0.5 rounded-full text-[11px] font-bold ${isCurrentActive ? 'bg-primary text-white' : 'bg-blue-100 text-blue-800'} flex items-center gap-1">
+                    ${isCurrentActive ? '<span class="w-1.5 h-1.5 rounded-full bg-white animate-ping"></span>En Progreso Ahora' : 'Confirmado ✓'}
+                  </span>
+                </div>
+                <span id="${isCurrentActive ? 'slot-host-info' : ''}" class="text-xs text-on-surface-variant mt-0.5">Anfitrión: ${slot.host} • ${slot.guests} Invitados Máx • Gran Salón + Carrusel Activo</span>
+              </div>
+            </div>
+            <div class="flex items-center gap-space-xs self-end md:self-center">
+              <div class="text-right mr-2 hidden sm:block">
+                <span class="text-[11px] font-semibold text-on-surface-variant block">Depósito en Garantía</span>
+                <span class="text-xs font-bold text-on-surface">$350.00 en Custodia</span>
+              </div>
+              <button onclick="selectReservationFromSlot(${slot.id_reservacion || 1})" class="px-3.5 py-2 rounded-lg bg-primary text-white text-xs font-semibold shadow-xs hover:brightness-105 flex items-center gap-1 transition-all" type="button">
+                <span class="material-symbols-outlined text-sm">tune</span>
+                <span>Gestionar</span>
+              </button>
+            </div>
+          </div>
+        `;
+      } else {
+        // Apartado pendiente de confirmación
+        return `
+          <div class="p-space-md rounded-xl bg-amber-50/70 border border-amber-200 flex flex-col md:flex-row items-start md:items-center justify-between gap-space-md">
+            <div class="flex items-start gap-space-md">
+              <div class="flex flex-col items-center justify-center w-20 py-1.5 rounded-lg bg-amber-100 text-amber-800 text-center">
+                <span class="text-xs font-bold uppercase tracking-wider">Apartado</span>
+                <span class="font-label-sm text-[11px] font-semibold">${slot.time}</span>
+              </div>
+              <div class="flex flex-col">
+                <div class="flex items-center gap-2 flex-wrap">
+                  <span class="font-headline-sm text-headline-sm text-amber-950 font-semibold">${slot.title}</span>
+                  <span class="px-2 py-0.5 rounded-full text-[10px] font-semibold bg-amber-200 text-amber-900">Pendiente de Pago</span>
+                </div>
+                <span class="text-xs text-amber-800/80">Cliente: ${slot.host} (${slot.phone || ''}) • ${slot.guests} Invitados</span>
+              </div>
+            </div>
+            <div class="flex items-center gap-2 self-end md:self-center">
+              <button onclick="quickConfirmReservation(${slot.id_reservacion})" class="px-3 py-1.5 rounded-lg bg-emerald-600 text-white text-xs font-bold hover:bg-emerald-700 transition-colors shadow-xs">
+                Confirmar Pago
+              </button>
+              <button onclick="selectReservationFromSlot(${slot.id_reservacion})" class="px-3 py-1.5 rounded-lg bg-amber-600 text-white text-xs font-semibold hover:bg-amber-700 transition-colors shadow-xs">
+                Gestionar
+              </button>
+            </div>
+          </div>
+        `;
+      }
+    }).join('');
+
+    renderDaySheetModal();
+  }
+
+  /* ==========================================================================
+     SINCRONIZACIÓN DE FICHA DESTACADA (MODO DUEÑO)
+     ========================================================================== */
   function syncSpotlightReservation(resObj) {
     if (!resObj) return;
     state.activeReservationId = resObj.id_reservacion;
 
-    // Aforo
     const totalGuests = parseInt(resObj.numero_invitados || 62, 10);
     const childrenCount = Math.round(totalGuests * 0.61);
     const adultsCount = totalGuests - childrenCount;
@@ -357,7 +954,6 @@ document.addEventListener('DOMContentLoaded', () => {
     state.aforo.children = childrenCount;
     state.aforo.adults = adultsCount;
 
-    // Depósito
     state.deposit.amount = parseFloat(resObj.deposito || 350.0);
     if (resObj.deposito_estado === 'devuelto') {
       state.deposit.status = 'released';
@@ -367,7 +963,6 @@ document.addEventListener('DOMContentLoaded', () => {
       state.deposit.status = 'held';
     }
 
-    // Textos de la tarjeta destacada
     const parts = (resObj.tipo_evento || 'Cumpleaños #4 de Lucas • Carnaval de Carrusel y Safari Mágico').split('•');
     const mainTitle = parts[0].trim();
     const themeText = parts[1] ? `Temática: ${parts[1].trim()}` : 'Temática: Carnaval de Carrusel y Safari Mágico';
@@ -379,7 +974,7 @@ document.addEventListener('DOMContentLoaded', () => {
     const hostNameEl = document.getElementById('spotlight-host-name');
     const hostPhoneEl = document.getElementById('spotlight-host-phone');
 
-    if (codeEl) codeEl.textContent = `#BC-2025-${103 + resObj.id_reservacion}`;
+    if (codeEl) codeEl.textContent = `#BC-2026-${103 + resObj.id_reservacion}`;
     if (titleEl) titleEl.textContent = mainTitle;
     if (themeEl) themeEl.textContent = themeText;
 
@@ -395,7 +990,6 @@ document.addEventListener('DOMContentLoaded', () => {
     if (hostNameEl) hostNameEl.textContent = hostName;
     if (hostPhoneEl) hostPhoneEl.textContent = `${resObj.cliente_telefono || '+52 444 849 1034'} • Salón Principal`;
 
-    // Actualizar Modal de Contacto y Modal Gestionar
     const cInit = document.getElementById('contact-host-initials');
     const cName = document.getElementById('contact-host-name');
     const cEvent = document.getElementById('contact-host-event');
@@ -409,7 +1003,7 @@ document.addEventListener('DOMContentLoaded', () => {
     if (cEvent) cEvent.textContent = `${mainTitle} (${resObj.fecha_evento})`;
     if (cWa) {
       const msg = encodeURIComponent(
-        `Hola ${hostName}, te saludamos del Salón Baby Carrusel (C. 5 de Mayo 1940, SLP). Confirmamos tu evento "${mainTitle}" con aforo registrado de ${totalGuests}/80 invitados y depósito en garantía reembolsable de $350.00.`
+        `Hola ${hostName}, te saludamos del Salón Baby Carrusel (C. 5 de Mayo 1940, San Luis Potosí). Confirmamos tu evento "${mainTitle}" con cupo máximo de 80 invitados y depósito en garantía reembolsable de $350.00.`
       );
       cWa.href = `https://wa.me/${cleanPhone}?text=${msg}`;
     }
@@ -418,16 +1012,12 @@ document.addEventListener('DOMContentLoaded', () => {
 
     const mTitle = document.getElementById('manage-slot-title');
     const mSub = document.getElementById('manage-slot-subtitle');
-    if (mTitle) mTitle.textContent = `${mainTitle} (#BC-2025-${103 + resObj.id_reservacion})`;
+    if (mTitle) mTitle.textContent = `${mainTitle} (#BC-2026-${103 + resObj.id_reservacion})`;
     if (mSub) mSub.textContent = `Turno ${(resObj.hora_inicio || '15:00').slice(0, 5)} a ${(resObj.hora_fin || '19:00').slice(0, 5)} hrs • Anfitrión: ${hostName}`;
 
-    // Actualizar UI de Aforo
     renderAforoUI();
-
-    // Actualizar UI de Depósito
     renderDepositUI(resObj);
 
-    // Actualizar Checklists de esta reservación desde la BD
     if (resObj.checklists) {
       const preChk = resObj.checklists.pre_evento;
       const postChk = resObj.checklists.post_evento;
@@ -513,7 +1103,7 @@ document.addEventListener('DOMContentLoaded', () => {
             <span class="material-symbols-outlined text-lg text-rose-700">report_problem</span>
             <span class="text-xs font-semibold">Depósito de Garantía:</span>
           </div>
-          <span class="text-xs font-bold text-rose-800">${obs.includes('RETENCIÓN') ? obs.split('.')[0] : 'Retención Aplicada en BD'}</span>
+          <span class="text-xs font-bold text-rose-800">${obs.includes('RETENCIÓN') ? obs.split('.')[0] : 'Retención Aplicada'}</span>
         `;
       }
     } else {
@@ -540,20 +1130,15 @@ document.addEventListener('DOMContentLoaded', () => {
 
   async function loadDashboardFromDatabase() {
     const data = await apiFetch('/dashboard');
-    if (!data || data.status !== 'ok') {
-      renderReglamentoModal();
-      renderMobiliarioModal();
-      renderDaySheetModal();
-      return;
+    if (data && data.status === 'ok') {
+      if (data.reservaciones && data.reservaciones.length > 0) {
+        state.dbData.reservaciones = data.reservaciones;
+      }
+      if (data.clientes) state.dbData.clientes = data.clientes;
+      if (data.empleados && data.empleados.length > 0) state.dbData.empleados = data.empleados;
+      if (data.mobiliario && data.mobiliario.length > 0) state.dbData.mobiliario = data.mobiliario;
+      if (data.reglamento && data.reglamento.length > 0) state.dbData.reglamento = data.reglamento;
     }
-
-    state.dbData.reservaciones = data.reservaciones || [];
-    state.dbData.clientes = data.clientes || [];
-    state.dbData.empleados = data.empleados || state.dbData.empleados;
-    state.dbData.mobiliario = data.mobiliario || state.dbData.mobiliario;
-    state.dbData.reglamento = data.reglamento || state.dbData.reglamento;
-
-    buildCalendarFromDatabase(state.dbData.reservaciones);
 
     const activeRes =
       state.dbData.reservaciones.find(r => r.id_reservacion === state.activeReservationId) ||
@@ -562,14 +1147,15 @@ document.addEventListener('DOMContentLoaded', () => {
       syncSpotlightReservation(activeRes);
     }
 
-    selectCalendarDay(state.selectedDay);
+    renderCalendar();
+    renderDailySessions();
     renderReglamentoModal();
     renderMobiliarioModal();
     renderDaySheetModal();
   }
 
   /* ==========================================================================
-     RENDERIZADO DE TABLAS ADICIONALES (REGLAMENTO, MOBILIARIO, EMPLEADOS)
+     MODALES DE REGLAMENTO, MOBILIARIO, HOJA DEL DÍA Y GESTIÓN
      ========================================================================== */
   function renderReglamentoModal() {
     const container = document.getElementById('db-reglamento-list');
@@ -587,6 +1173,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
   async function submitNewRule(e) {
     if (e) e.preventDefault();
+    if (!state.isOwner) return;
     const titleEl = document.getElementById('new-rule-title');
     const descEl = document.getElementById('new-rule-desc');
     const titulo = titleEl?.value?.trim();
@@ -598,17 +1185,17 @@ document.addEventListener('DOMContentLoaded', () => {
       body: JSON.stringify({ titulo, descripcion, activo: 1 })
     });
 
-    if (res && res.id_regla) {
-      state.dbData.reglamento.push({ id_regla: res.id_regla, titulo, descripcion, activo: 1 });
-      showToast(`Regla #${res.id_regla} guardada en tabla "reglamento" (MariaDB).`, 'success');
-    } else {
-      state.dbData.reglamento.push({ id_regla: Date.now(), titulo, descripcion, activo: 1 });
-      showToast('Regla agregada localmente.', 'info');
-    }
+    state.dbData.reglamento.push({
+      id_regla: res?.id_regla || Date.now(),
+      titulo,
+      descripcion,
+      activo: 1
+    });
 
     if (titleEl) titleEl.value = '';
     if (descEl) descEl.value = '';
     renderReglamentoModal();
+    showToast('Nueva norma publicada en el reglamento del salón.', 'success');
   }
   window.submitNewRule = submitNewRule;
 
@@ -632,8 +1219,8 @@ document.addEventListener('DOMContentLoaded', () => {
           </div>
           <select onchange="changeMobiliarioEstado(${m.id_mobiliario}, this.value)" class="px-2 py-1 rounded-lg text-[11px] font-bold ${badgeClass} border-none focus:outline-none cursor-pointer">
             <option value="disponible" ${m.estado === 'disponible' ? 'selected' : ''}>Disponible ✓</option>
-            <option value="en_mantenimiento" ${m.estado === 'en_mantenimiento' ? 'selected' : ''}>Mantenimiento 🔧</option>
-            <option value="fuera_de_servicio" ${m.estado === 'fuera_de_servicio' ? 'selected' : ''}>Fuera Servicio ⚠️</option>
+            <option value="en_mantenimiento" ${m.estado === 'en_mantenimiento' ? 'selected' : ''}>En Mantenimiento 🔧</option>
+            <option value="fuera_de_servicio" ${m.estado === 'fuera_de_servicio' ? 'selected' : ''}>Fuera de Servicio ⚠️</option>
           </select>
         </div>
       `;
@@ -645,19 +1232,22 @@ document.addEventListener('DOMContentLoaded', () => {
     if (item) item.estado = nuevoEstado;
     renderMobiliarioModal();
 
-    const res = await apiFetch(`/mobiliario/${idMobiliario}`, {
+    await apiFetch(`/mobiliario/${idMobiliario}`, {
       method: 'PATCH',
       body: JSON.stringify({ estado: nuevoEstado })
     });
-    if (res) {
-      showToast(`Mobiliario #${idMobiliario} actualizado a "${nuevoEstado}" en MariaDB.`);
-    } else {
-      showToast(`Estado de mobiliario cambiado a "${nuevoEstado}".`, 'info');
-    }
+    showToast(`Estado de mobiliario actualizado.`);
   }
   window.changeMobiliarioEstado = changeMobiliarioEstado;
 
   function renderDaySheetModal() {
+    const selDate = new Date(state.currentYear, state.currentMonthIndex, state.selectedDay);
+    const weekdayName = dayNamesFull[selDate.getDay()];
+    const subEl = document.getElementById('day-sheet-date-subtitle');
+    if (subEl) {
+      subEl.textContent = `${weekdayName} ${state.selectedDay} de ${monthNames[state.currentMonthIndex]} ${state.currentYear} • Salón Baby Carrusel`;
+    }
+
     const empContainer = document.getElementById('day-sheet-empleados');
     if (empContainer) {
       empContainer.innerHTML = state.dbData.empleados.map(e => `
@@ -672,12 +1262,12 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     const turnosContainer = document.getElementById('day-sheet-turnos');
-    const dayData = state.calendarEvents[state.selectedDay];
-    if (turnosContainer && dayData && dayData.slots) {
-      turnosContainer.innerHTML = dayData.slots.map((s, idx) => `
+    const dayInfo = getSlotsForDate(state.currentYear, state.currentMonthIndex, state.selectedDay);
+    if (turnosContainer && dayInfo && dayInfo.slots) {
+      turnosContainer.innerHTML = dayInfo.slots.map((s, idx) => `
         <div class="p-2 rounded ${s.status === 'active' ? 'bg-primary-fixed/30 border border-primary/30' : 'bg-surface-container-low'} flex justify-between items-center">
           <div>
-            <strong>Turno ${idx + 1} (${s.time}):</strong> ${s.title} • ${s.host} • ${s.guests} Invitados
+            <strong>Turno ${idx + 1} (${s.time}):</strong> ${s.title} ${s.host !== '-' ? `• ${s.host} • ${s.guests} Invitados` : ''}
           </div>
           <span class="${s.status === 'active' ? 'text-primary' : s.status === 'completed' ? 'text-emerald-700' : 'text-blue-700'} font-bold">${s.statusLabel}</span>
         </div>
@@ -685,19 +1275,49 @@ document.addEventListener('DOMContentLoaded', () => {
     }
   }
 
-  async function resetDemoDatabase() {
-    const res = await apiFetch('/reset-demo', { method: 'POST' });
-    if (res) {
-      await loadDashboardFromDatabase();
-      showToast('Datos de demostración restaurados en MariaDB (Raspberry Pi).', 'success');
-    } else {
-      showToast('No se pudo contactar la BD para restaurar.', 'warning');
+  async function quickConfirmReservation(idReservacion) {
+    const resObj = state.dbData.reservaciones.find(r => r.id_reservacion === idReservacion);
+    if (resObj) {
+      resObj.estado = 'confirmada';
+      resObj.deposito_estado = 'pagado';
     }
+    await apiFetch(`/reservaciones/${idReservacion}/estado`, {
+      method: 'PATCH',
+      body: JSON.stringify({ estado: 'confirmada', deposito_estado: 'pagado' })
+    });
+    await loadDashboardFromDatabase();
+    showToast('Reservación y depósito confirmados.', 'success');
+  }
+  window.quickConfirmReservation = quickConfirmReservation;
+
+  async function changeReservationStatus(nuevoEstado) {
+    const id = state.activeReservationId;
+    const resObj = state.dbData.reservaciones.find(r => r.id_reservacion === id);
+    if (resObj) {
+      resObj.estado = nuevoEstado;
+    }
+    await apiFetch(`/reservaciones/${id}/estado`, {
+      method: 'PATCH',
+      body: JSON.stringify({
+        estado: nuevoEstado,
+        ...(nuevoEstado === 'confirmada' ? { deposito_estado: 'pagado' } : {})
+      })
+    });
+    closeModal('modal-manage-slot');
+    await loadDashboardFromDatabase();
+    showToast(`Estado de la reservación actualizado a "${nuevoEstado}".`, 'success');
+  }
+  window.changeReservationStatus = changeReservationStatus;
+
+  async function resetDemoDatabase() {
+    await apiFetch('/reset-demo', { method: 'POST' });
+    await loadDashboardFromDatabase();
+    showToast('Valores del turno activo restaurados.', 'success');
   }
   window.resetDemoDatabase = resetDemoDatabase;
 
   /* ==========================================================================
-     SISTEMA DE TOASTS FLOTANTES
+     SISTEMA DE TOASTS Y MODALES
      ========================================================================== */
   function showToast(message, type = 'success') {
     let container = document.getElementById('toast-container');
@@ -736,9 +1356,6 @@ document.addEventListener('DOMContentLoaded', () => {
   }
   window.showToast = showToast;
 
-  /* ==========================================================================
-     SISTEMA DE MODALES
-     ========================================================================== */
   function openModal(modalId) {
     const modal = document.getElementById(modalId);
     if (!modal) return;
@@ -776,13 +1393,14 @@ document.addEventListener('DOMContentLoaded', () => {
   });
 
   /* ==========================================================================
-     AFORO INTERACTIVO (SINCRONIZADO CON MARIADB)
+     AFORO INTERACTIVO (EXCLUSIVO DUEÑO)
      ========================================================================== */
   async function updateAforo(change) {
+    if (!state.isOwner) return;
     const newTotal = state.aforo.current + change;
     if (newTotal < 0) return;
     if (newTotal > state.aforo.max) {
-      showToast(`¡Alerta de Protección Civil! Capacidad máxima del salón alcanzada (${state.aforo.max} personas).`, 'warning');
+      showToast(`Capacidad máxima del salón alcanzada (${state.aforo.max} personas).`, 'warning');
       return;
     }
 
@@ -795,33 +1413,23 @@ document.addEventListener('DOMContentLoaded', () => {
 
     renderAforoUI();
 
-    const slotHostInfo = document.getElementById('slot-host-info');
     const currentRes = state.dbData.reservaciones.find(r => r.id_reservacion === state.activeReservationId);
-    const hostName = currentRes?.cliente_nombre || 'Camila & Roberto Peña';
-    if (slotHostInfo) {
-      slotHostInfo.textContent = `Anfitrión: ${hostName} • ${state.aforo.current} registrados de 80 Máx • Gran Salón + Carrusel Activo`;
-    }
-
-    // Persistir en MariaDB
-    const apiRes = await apiFetch(`/reservaciones/${state.activeReservationId}/aforo`, {
-      method: 'PATCH',
-      body: JSON.stringify({ numero_invitados: state.aforo.current })
-    });
-
     if (currentRes) {
       currentRes.numero_invitados = state.aforo.current;
     }
 
-    if (apiRes) {
-      showToast(`Aforo guardado en MariaDB: ${state.aforo.current}/80 invitados.`);
-    } else {
-      showToast(`Aforo actualizado: ${state.aforo.current} personas en salón.`);
-    }
+    await apiFetch(`/reservaciones/${state.activeReservationId}/aforo`, {
+      method: 'PATCH',
+      body: JSON.stringify({ numero_invitados: state.aforo.current })
+    });
+
+    renderDailySessions();
+    showToast(`Aforo actualizado: ${state.aforo.current} invitados en salón.`);
   }
   window.updateAforo = updateAforo;
 
   /* ==========================================================================
-     CHECKLIST DE INSPECCIÓN DEL SALÓN (SINCRONIZADO CON MARIADB)
+     CHECKLIST DE INSPECCIÓN DEL SALÓN (EXCLUSIVO DUEÑO)
      ========================================================================== */
   function renderChecklist() {
     const list = state.checklists[state.activeChecklistTab];
@@ -874,29 +1482,31 @@ document.addEventListener('DOMContentLoaded', () => {
   window.setChecklistTab = setChecklistTab;
 
   async function toggleChecklistItem(tab, id) {
+    if (!state.isOwner) return;
     const item = state.checklists[tab].find(i => i.id === id);
     if (!item) return;
     item.completed = !item.completed;
     item.estado = item.completed ? 'bueno' : 'pendiente';
     renderChecklist();
 
-    const apiRes = await apiFetch(`/checklist-detalles/${id}`, {
+    await apiFetch(`/checklist-detalles/${id}`, {
       method: 'PATCH',
       body: JSON.stringify({ estado: item.estado })
     });
 
     if (item.completed) {
-      showToast(`Verificado en BD: ${item.title}`);
+      showToast(`Punto verificado: ${item.title}`);
     } else {
-      showToast(`Marcado como pendiente en BD: ${item.title}`, 'info');
+      showToast(`Marcado como pendiente: ${item.title}`, 'info');
     }
   }
   window.toggleChecklistItem = toggleChecklistItem;
 
   /* ==========================================================================
-     LIBERACIÓN Y GESTIÓN DEL DEPÓSITO (SINCRONIZADO CON MARIADB)
+     LIBERACIÓN Y RETENCIÓN DEL DEPÓSITO (EXCLUSIVO DUEÑO)
      ========================================================================== */
   function confirmReleaseDeposit() {
+    if (!state.isOwner) return;
     if (state.deposit.status === 'released') {
       showToast('El depósito de $350.00 ya ha sido liberado anteriormente.', 'info');
       return;
@@ -906,6 +1516,7 @@ document.addEventListener('DOMContentLoaded', () => {
   window.confirmReleaseDeposit = confirmReleaseDeposit;
 
   async function executeReleaseDeposit() {
+    if (!state.isOwner) return;
     state.deposit.status = 'released';
     closeModal('modal-confirm-deposit');
 
@@ -915,12 +1526,13 @@ document.addEventListener('DOMContentLoaded', () => {
     });
 
     renderDepositUI();
-    showToast('¡Depósito de $350.00 liberado y registrado como "devuelto" en MariaDB!', 'success');
+    showToast('¡Depósito de $350.00 liberado satisfactoriamente al anfitrión!', 'success');
   }
   window.executeReleaseDeposit = executeReleaseDeposit;
 
   async function submitIncidentReport(e) {
     if (e) e.preventDefault();
+    if (!state.isOwner) return;
     const reason = document.getElementById('incident-reason')?.value || 'Deducción operativa';
     const amount = document.getElementById('incident-amount')?.value || '50';
     const notes = document.getElementById('incident-notes')?.value || '';
@@ -946,240 +1558,22 @@ document.addEventListener('DOMContentLoaded', () => {
     });
 
     await loadDashboardFromDatabase();
-    showToast(`Incidencia guardada en MariaDB: -$${amount} por ${reason}. Remanente: $${balance}`, 'warning');
+    showToast(`Incidencia registrada: -$${amount} por ${reason}. Remanente: $${balance}`, 'warning');
   }
   window.submitIncidentReport = submitIncidentReport;
 
-  /* ==========================================================================
-     CALENDARIO Y SESIONES DEL DÍA
-     ========================================================================== */
-  function renderCalendarMonth() {
-    const monthTitle = document.getElementById('calendar-month-title');
-    if (monthTitle) {
-      monthTitle.textContent = `${monthNames[state.currentMonthIndex]} ${state.currentYear}`;
-    }
-    if (state.dbData.reservaciones.length > 0) {
-      buildCalendarFromDatabase(state.dbData.reservaciones);
-    }
-  }
-
-  function changeMonth(delta) {
-    state.currentMonthIndex += delta;
-    if (state.currentMonthIndex < 0) {
-      state.currentMonthIndex = 11;
-      state.currentYear -= 1;
-    } else if (state.currentMonthIndex > 11) {
-      state.currentMonthIndex = 0;
-      state.currentYear += 1;
-    }
-    renderCalendarMonth();
-    selectCalendarDay(state.selectedDay);
-    showToast(`Mostrando ${monthNames[state.currentMonthIndex]} de ${state.currentYear}`);
-  }
-  window.changeMonth = changeMonth;
-
-  function goToToday() {
-    state.currentYear = 2025;
-    state.currentMonthIndex = 9; // Octubre
-    state.selectedDay = 25;
-    renderCalendarMonth();
-    selectCalendarDay(25);
-    showToast('Mostrando la jornada de Hoy (Sábado 25 de Octubre).');
-  }
-  window.goToToday = goToToday;
-
   function selectReservationFromSlot(idReservacion) {
+    if (!state.isOwner) return;
     const resObj = state.dbData.reservaciones.find(r => r.id_reservacion === idReservacion);
     if (resObj) {
       syncSpotlightReservation(resObj);
-      openManageSlotModal();
-    } else {
-      openManageSlotModal();
     }
+    openManageSlotModal();
   }
   window.selectReservationFromSlot = selectReservationFromSlot;
 
-  function selectCalendarDay(dayNumber) {
-    state.selectedDay = dayNumber;
-
-    document.querySelectorAll('[data-day]').forEach(cell => {
-      const cellDay = parseInt(cell.getAttribute('data-day'), 10);
-      if (cellDay === dayNumber) {
-        cell.classList.add('ring-2', 'ring-primary', 'bg-primary-fixed/30', 'shadow-sm');
-        cell.classList.remove('bg-surface-container-low/40');
-      } else {
-        cell.classList.remove('ring-2', 'ring-primary', 'bg-primary-fixed/30', 'shadow-sm');
-        cell.classList.add('bg-surface-container-low/40');
-      }
-    });
-
-    const dateTitle = document.getElementById('selected-day-title');
-    if (dateTitle) {
-      dateTitle.textContent = `Sesiones del Día ${dayNumber} de ${monthNames[state.currentMonthIndex]} ${state.currentYear}`;
-    }
-
-    const eventData = state.calendarEvents[dayNumber];
-    const sessionsContainer = document.getElementById('daily-sessions-container');
-    if (!sessionsContainer) return;
-
-    const isoDate = `${state.currentYear}-${String(state.currentMonthIndex + 1).padStart(2, '0')}-${String(dayNumber).padStart(2, '0')}`;
-
-    if (!eventData || !eventData.slots || eventData.slots.length === 0) {
-      sessionsContainer.innerHTML = `
-        <div class="p-6 rounded-2xl bg-surface-container-low text-center flex flex-col items-center justify-center gap-2">
-          <span class="material-symbols-outlined text-4xl text-on-surface-variant">event_available</span>
-          <p class="font-headline-sm text-on-surface">No hay sesiones registradas para este día.</p>
-          <p class="text-xs text-on-surface-variant">Todos los turnos se encuentran disponibles para agendar en MariaDB.</p>
-          <button onclick="openBookingModal('tarde', '${isoDate}')" class="mt-2 px-4 py-2 rounded-xl bg-primary-container text-on-primary-container font-semibold text-xs shadow-xs hover:brightness-105">
-            + Agendar Fiesta en esta Fecha
-          </button>
-        </div>
-      `;
-      renderDaySheetModal();
-      return;
-    }
-
-    sessionsContainer.innerHTML = eventData.slots.map(slot => {
-      if (slot.status === 'completed') {
-        return `
-          <div class="p-space-md rounded-xl bg-surface-container-low flex flex-col md:flex-row items-start md:items-center justify-between gap-space-md">
-            <div class="flex items-start gap-space-md">
-              <div class="flex flex-col items-center justify-center w-20 py-1.5 rounded-lg bg-surface-container text-on-surface-variant text-center">
-                <span class="text-xs font-bold uppercase tracking-wider">Finalizado</span>
-                <span class="font-label-sm text-[11px] text-on-surface font-semibold">${slot.time}</span>
-              </div>
-              <div class="flex flex-col">
-                <div class="flex items-center gap-2 flex-wrap">
-                  <span class="font-headline-sm text-headline-sm text-on-surface">${slot.title}</span>
-                  <span class="px-2 py-0.5 rounded-full text-[10px] font-semibold bg-blue-100 text-blue-800">${slot.statusLabel}</span>
-                </div>
-                <span class="text-xs text-on-surface-variant">Anfitrión: ${slot.host} • ${slot.guests} Invitados • Depósito $350 Reembolsado</span>
-              </div>
-            </div>
-            <div class="flex items-center gap-2 self-end md:self-center">
-              <span class="text-xs font-semibold text-emerald-700 bg-emerald-50 px-2.5 py-1 rounded-lg flex items-center gap-1">
-                <span class="material-symbols-outlined text-sm">check_circle</span>
-                <span>Depósito Liberado</span>
-              </span>
-              <button onclick="openDaySheetModal()" title="Ver Ficha Operativa" class="p-1.5 rounded-lg bg-surface-container text-on-surface hover:bg-surface-variant transition-colors" type="button">
-                <span class="material-symbols-outlined text-sm">receipt_long</span>
-              </button>
-            </div>
-          </div>
-        `;
-      } else if (slot.status === 'active' || slot.status === 'confirmed') {
-        const isCurrentActive = slot.status === 'active';
-        return `
-          <div class="p-space-md rounded-xl ${isCurrentActive ? 'bg-primary-fixed/20' : 'bg-blue-50/60 border border-blue-100'} shadow-sm flex flex-col md:flex-row items-start md:items-center justify-between gap-space-md relative overflow-hidden">
-            <div class="absolute left-0 top-0 bottom-0 w-1.5 ${isCurrentActive ? 'bg-primary' : 'bg-blue-600'}"></div>
-            <div class="flex items-start gap-space-md pl-1">
-              <div class="flex flex-col items-center justify-center w-20 py-1.5 rounded-lg ${isCurrentActive ? 'bg-primary text-white' : 'bg-blue-600 text-white'} text-center shadow-xs">
-                <span class="text-xs font-bold uppercase tracking-wider">${isCurrentActive ? 'Activo' : 'Confirmado'}</span>
-                <span class="font-label-sm text-[11px] font-semibold">${slot.time}</span>
-              </div>
-              <div class="flex flex-col">
-                <div class="flex items-center gap-2 flex-wrap">
-                  <span class="font-headline-sm text-headline-sm text-on-surface font-bold">${slot.title}</span>
-                  <span class="px-2.5 py-0.5 rounded-full text-[11px] font-bold ${isCurrentActive ? 'bg-primary text-white' : 'bg-blue-100 text-blue-800'} flex items-center gap-1">
-                    ${isCurrentActive ? '<span class="w-1.5 h-1.5 rounded-full bg-white animate-ping"></span>En Progreso Ahora' : 'Confirmado en BD ✓'}
-                  </span>
-                </div>
-                <span id="${isCurrentActive ? 'slot-host-info' : ''}" class="text-xs text-on-surface-variant mt-0.5">Anfitrión: ${slot.host} • ${slot.guests} Invitados Máx • Gran Salón + Carrusel Activo</span>
-              </div>
-            </div>
-            <div class="flex items-center gap-space-xs self-end md:self-center">
-              <div class="text-right mr-2 hidden sm:block">
-                <span class="text-[11px] font-semibold text-on-surface-variant block">Depósito en Garantía</span>
-                <span class="text-xs font-bold text-on-surface">$350.00 (${slot.deposito_estado || 'pagado'})</span>
-              </div>
-              <button onclick="selectReservationFromSlot(${slot.id_reservacion || 1})" class="px-3.5 py-2 rounded-lg bg-primary text-white text-xs font-semibold shadow-xs hover:brightness-105 flex items-center gap-1 transition-all" type="button">
-                <span class="material-symbols-outlined text-sm">tune</span>
-                <span>Gestionar</span>
-              </button>
-            </div>
-          </div>
-        `;
-      } else if (slot.status === 'open') {
-        const sKey = slot.slotKey || 'noche';
-        return `
-          <div class="p-space-md rounded-xl bg-emerald-50/60 border border-emerald-100 flex flex-col md:flex-row items-start md:items-center justify-between gap-space-md">
-            <div class="flex items-start gap-space-md">
-              <div class="flex flex-col items-center justify-center w-20 py-1.5 rounded-lg bg-emerald-100 text-emerald-800 text-center">
-                <span class="text-xs font-bold uppercase tracking-wider">Turno</span>
-                <span class="font-label-sm text-[11px] font-semibold">${slot.time}</span>
-              </div>
-              <div class="flex flex-col">
-                <div class="flex items-center gap-2 flex-wrap">
-                  <span class="font-headline-sm text-headline-sm text-emerald-950 font-semibold">${slot.title}</span>
-                  <span class="px-2 py-0.5 rounded-full text-[10px] font-semibold bg-emerald-200 text-emerald-900">Disponible Inmediato</span>
-                </div>
-                <span class="text-xs text-emerald-800/80">Disponible para Fiestas Privadas, Cumpleaños o Pijamada de Gala (2 hrs bloqueo limpieza)</span>
-              </div>
-            </div>
-            <div class="flex items-center gap-2 self-end md:self-center">
-              <button onclick="openBookingModal('${sKey}', '${isoDate}')" class="px-3.5 py-2 rounded-lg bg-emerald-600 text-white text-xs font-semibold hover:bg-emerald-700 transition-colors shadow-xs flex items-center gap-1" type="button">
-                <span class="material-symbols-outlined text-sm">add_circle</span>
-                <span>Reservar Horario</span>
-              </button>
-            </div>
-          </div>
-        `;
-      } else {
-        return `
-          <div class="p-space-md rounded-xl bg-amber-50/70 border border-amber-200 flex flex-col md:flex-row items-start md:items-center justify-between gap-space-md">
-            <div class="flex items-start gap-space-md">
-              <div class="flex flex-col items-center justify-center w-20 py-1.5 rounded-lg bg-amber-100 text-amber-800 text-center">
-                <span class="text-xs font-bold uppercase tracking-wider">Turno</span>
-                <span class="font-label-sm text-[11px] font-semibold">${slot.time}</span>
-              </div>
-              <div class="flex flex-col">
-                <div class="flex items-center gap-2">
-                  <span class="font-headline-sm text-headline-sm text-amber-950 font-semibold">${slot.title}</span>
-                  <span class="px-2 py-0.5 rounded-full text-[10px] font-semibold bg-amber-200 text-amber-900">${slot.statusLabel}</span>
-                </div>
-                <span class="text-xs text-amber-800/80">Responsable: ${slot.host} • ${slot.guests}</span>
-              </div>
-            </div>
-            <div class="flex items-center gap-2 self-end md:self-center">
-              ${slot.id_reservacion ? `
-              <button onclick="selectReservationFromSlot(${slot.id_reservacion})" class="px-3 py-1.5 rounded-lg bg-amber-600 text-white text-xs font-semibold hover:bg-amber-700 transition-colors shadow-xs">
-                Gestionar Apartado
-              </button>` : ''}
-            </div>
-          </div>
-        `;
-      }
-    }).join('');
-
-    renderDaySheetModal();
-  }
-  window.selectCalendarDay = selectCalendarDay;
-
-  function setCalendarView(mode) {
-    state.viewMode = mode;
-    const btnMonth = document.getElementById('view-mode-month');
-    const btnWeek = document.getElementById('view-mode-week');
-    const btnDay = document.getElementById('view-mode-day');
-
-    const activeClasses = 'px-3 py-1.5 rounded-lg text-xs font-semibold bg-surface-container-lowest text-on-surface shadow-xs';
-    const inactiveClasses = 'px-3 py-1.5 rounded-lg text-xs font-semibold text-on-surface-variant hover:text-on-surface';
-
-    if (btnMonth) btnMonth.className = mode === 'month' ? activeClasses : inactiveClasses;
-    if (btnWeek) btnWeek.className = mode === 'week' ? activeClasses : inactiveClasses;
-    if (btnDay) btnDay.className = mode === 'day' ? activeClasses : inactiveClasses;
-
-    if (mode === 'month') {
-      showToast('Vista de Calendario Mensual activada.');
-    } else if (mode === 'week') {
-      showToast('Vista de Horario Semanal: 19 al 25 de Octubre.');
-    } else {
-      showToast('Vista de Piso Diario: Operaciones del Sábado 25.');
-    }
-  }
-  window.setCalendarView = setCalendarView;
-
   /* ==========================================================================
-     FORMULARIO DE NUEVA RESERVACIÓN (INSERTA EN CLIENTES Y RESERVACIONES BD)
+     FORMULARIO DE NUEVA RESERVACIÓN (PARA CLIENTES Y DUEÑO)
      ========================================================================== */
   function openBookingModal(slot = '', dateStr = '') {
     if (slot && document.getElementById('booking-slot')) {
@@ -1190,8 +1584,7 @@ document.addEventListener('DOMContentLoaded', () => {
       if (dateStr && /^\d{4}-\d{2}-\d{2}$/.test(dateStr)) {
         dateInput.value = dateStr;
       } else {
-        const iso = `${state.currentYear}-${String(state.currentMonthIndex + 1).padStart(2, '0')}-${String(state.selectedDay).padStart(2, '0')}`;
-        dateInput.value = iso;
+        dateInput.value = formatIsoDate(state.currentYear, state.currentMonthIndex, state.selectedDay);
       }
     }
     openModal('modal-new-booking');
@@ -1200,23 +1593,36 @@ document.addEventListener('DOMContentLoaded', () => {
 
   async function submitNewBooking(e) {
     if (e) e.preventDefault();
-    const childName = document.getElementById('booking-child')?.value?.trim() || 'Nuevo Festejado';
+    const childName = document.getElementById('booking-child')?.value?.trim() || 'Festejado';
     const age = document.getElementById('booking-age')?.value || '4';
     const hostName = document.getElementById('booking-host')?.value?.trim() || 'Anfitrión';
     const phone = document.getElementById('booking-phone')?.value?.trim() || '+52 444 000 0000';
     const email = document.getElementById('booking-email')?.value?.trim() || '';
     const guests = parseInt(document.getElementById('booking-guests')?.value || '50', 10);
-    const date = document.getElementById('booking-date')?.value || '2025-10-25';
-    const slot = document.getElementById('booking-slot')?.value || 'noche';
+    const date = document.getElementById('booking-date')?.value || formatIsoDate(TODAY_YEAR, TODAY_MONTH, TODAY_DAY);
+    const slot = document.getElementById('booking-slot')?.value || 'tarde';
     const theme = document.getElementById('booking-theme')?.value?.trim() || 'Carnaval de Carrusel';
 
     if (guests > 80) {
-      showToast('El cupo máximo permitido por Protección Civil es de 80 invitados.', 'warning');
+      showToast('El cupo máximo permitido en el salón es de 80 personas.', 'warning');
+      return;
+    }
+
+    // Verificar si el turno ya está ocupado en esa fecha
+    const [yStr, mStr, dStr] = date.split('-');
+    const yNum = parseInt(yStr, 10);
+    const mIdx = parseInt(mStr, 10) - 1;
+    const dNum = parseInt(dStr, 10);
+    const existingInfo = getSlotsForDate(yNum, mIdx, dNum);
+    const matchingSlot = existingInfo.slots.find(s => s.slotKey === slot);
+    if (matchingSlot && matchingSlot.status !== 'open') {
+      showToast(`El turno de la ${slot} en esa fecha ya se encuentra ocupado. Por favor elige otro horario.`, 'warning');
       return;
     }
 
     closeModal('modal-new-booking');
 
+    // Si reserva el dueño queda confirmada; si reserva un cliente entra como apartado pendiente o confirmado
     const payload = {
       festejado: childName,
       edad: age,
@@ -1227,9 +1633,9 @@ document.addEventListener('DOMContentLoaded', () => {
       turno: slot,
       tematica: theme,
       numero_invitados: guests,
-      estado: 'confirmada',
+      estado: state.isOwner ? 'confirmada' : 'pendiente',
       deposito: 350.00,
-      deposito_estado: 'pagado'
+      deposito_estado: state.isOwner ? 'pagado' : 'pendiente'
     };
 
     const apiRes = await apiFetch('/reservaciones', {
@@ -1237,33 +1643,57 @@ document.addEventListener('DOMContentLoaded', () => {
       body: JSON.stringify(payload)
     });
 
+    state.currentYear = yNum;
+    state.currentMonthIndex = mIdx;
+    state.selectedDay = dNum;
+
     if (apiRes && apiRes.id_reservacion) {
-      state.activeReservationId = apiRes.id_reservacion;
-      const parts = date.split('-');
-      if (parts.length === 3) {
-        state.currentYear = parseInt(parts[0], 10);
-        state.currentMonthIndex = parseInt(parts[1], 10) - 1;
-        state.selectedDay = parseInt(parts[2], 10);
-      }
+      if (state.isOwner) state.activeReservationId = apiRes.id_reservacion;
       await loadDashboardFromDatabase();
-      showToast(`¡Reservación #BC-2025-${103 + apiRes.id_reservacion} de ${childName} guardada en MariaDB!`, 'success');
     } else {
-      showToast(`¡Fiesta de ${childName} registrada para el ${date}!`, 'success');
+      const slotTimes = {
+        'mañana': ['09:30:00', '13:30:00'],
+        'tarde': ['15:00:00', '19:00:00'],
+        'noche': ['20:00:00', '23:30:00']
+      };
+      const [hIni, hFin] = slotTimes[slot] || ['15:00:00', '19:00:00'];
+      state.dbData.reservaciones.push({
+        id_reservacion: state.dbData.reservaciones.length + 1,
+        cliente_nombre: hostName,
+        cliente_telefono: phone,
+        fecha_evento: date,
+        hora_inicio: hIni,
+        hora_fin: hFin,
+        tipo_evento: `Cumpleaños #${age} de ${childName} • ${theme}`,
+        numero_invitados: guests,
+        estado: payload.estado,
+        deposito: 350,
+        deposito_estado: payload.deposito_estado
+      });
+      renderCalendar();
+      renderDailySessions();
     }
 
     state.notifications.unshift({
       id: Date.now(),
-      title: '¡Nueva Reservación en MariaDB!',
+      title: 'Nueva Reservación Registrada',
       text: `${childName} (${age} años) • Anfitrión: ${hostName} (${guests} inv. • Turno ${slot}).`,
       time: 'Justo ahora',
       unread: true
     });
     updateNotifBadge();
+
+    showToast(
+      state.isOwner
+        ? `¡Reservación de ${childName} confirmada para el ${dNum} de ${monthNames[mIdx]}!`
+        : `¡Tu solicitud para el ${dNum} de ${monthNames[mIdx]} (turno ${slot}) ha sido registrada con éxito!`,
+      'success'
+    );
   }
   window.submitNewBooking = submitNewBooking;
 
   /* ==========================================================================
-     NOTIFICACIONES
+     NOTIFICACIONES, GALERÍA Y NAVEGACIÓN
      ========================================================================== */
   function toggleNotifications() {
     const popover = document.getElementById('notif-popover');
@@ -1292,7 +1722,7 @@ document.addEventListener('DOMContentLoaded', () => {
     state.notifications.forEach(n => n.unread = false);
     updateNotifBadge();
     renderNotificationsList();
-    showToast('Todas las notificaciones marcadas como leídas.');
+    showToast('Notificaciones marcadas como leídas.');
   }
   window.markAllNotificationsRead = markAllNotificationsRead;
 
@@ -1308,9 +1738,6 @@ document.addEventListener('DOMContentLoaded', () => {
     }
   }
 
-  /* ==========================================================================
-     LIGHTBOX DE GALERÍA Y MAPA DEL SALÓN
-     ========================================================================== */
   function openGalleryLightbox(imgSrc, title, subtitle) {
     const imgEl = document.getElementById('lightbox-img');
     const titleEl = document.getElementById('lightbox-title');
@@ -1330,12 +1757,17 @@ document.addEventListener('DOMContentLoaded', () => {
   window.openVenueMapModal = openVenueMapModal;
 
   function openDaySheetModal() {
+    if (!state.isOwner) {
+      openAdminLoginModal();
+      return;
+    }
     renderDaySheetModal();
     openModal('modal-day-sheet');
   }
   window.openDaySheetModal = openDaySheetModal;
 
   function openContactHostModal() {
+    if (!state.isOwner) return;
     openModal('modal-contact-host');
   }
   window.openContactHostModal = openContactHostModal;
@@ -1347,6 +1779,10 @@ document.addEventListener('DOMContentLoaded', () => {
   window.openDepositPolicyModal = openDepositPolicyModal;
 
   function openManageSlotModal() {
+    if (!state.isOwner) {
+      openAdminLoginModal();
+      return;
+    }
     renderMobiliarioModal();
     openModal('modal-manage-slot');
   }
@@ -1357,26 +1793,22 @@ document.addEventListener('DOMContentLoaded', () => {
   }
   window.printDaySheet = printDaySheet;
 
-  /* ==========================================================================
-     NAVEGACIÓN SUPERIOR
-     ========================================================================== */
   document.querySelectorAll('nav a[data-path]').forEach(link => {
     link.addEventListener('click', (e) => {
       e.preventDefault();
       const path = link.getAttribute('data-path');
 
       document.querySelectorAll('nav a[data-path]').forEach(l => {
-        l.className = 'px-space-md py-space-sm font-label-lg text-label-lg text-on-surface-variant hover:text-on-surface transition-colors rounded-xl';
+        if (!l.classList.contains('hidden')) {
+          l.className = 'px-space-md py-space-sm font-label-lg text-label-lg text-on-surface-variant hover:text-on-surface transition-colors rounded-xl';
+        }
       });
       link.className = 'px-space-md py-space-sm transition-colors bg-primary-container text-on-primary-container font-semibold rounded-xl';
 
       if (path === 'home') {
         window.scrollTo({ top: 0, behavior: 'smooth' });
-        showToast('Vista de Inicio.');
       } else if (path === 'availability-calendar') {
-        const calSection = document.getElementById('calendar-section');
-        if (calSection) calSection.scrollIntoView({ behavior: 'smooth' });
-        showToast('Navegando a Calendario de Disponibilidad.');
+        document.getElementById('calendar-section')?.scrollIntoView({ behavior: 'smooth' });
       } else if (path === 'rules-and-policies') {
         openDepositPolicyModal();
       } else if (path === 'checklists') {
@@ -1386,24 +1818,15 @@ document.addEventListener('DOMContentLoaded', () => {
           checkSection.classList.add('ring-4', 'ring-primary-container');
           setTimeout(() => checkSection.classList.remove('ring-4', 'ring-primary-container'), 1500);
         }
-        showToast('Navegando a Listas de Verificación.');
       } else if (path === 'booking') {
         openBookingModal();
       }
     });
   });
 
-  document.querySelectorAll('a[data-path="booking"], button[data-path="booking"]').forEach(btn => {
-    btn.addEventListener('click', (e) => {
-      e.preventDefault();
-      openBookingModal();
-    });
-  });
-
-  // Inicializar interfaz inmediatamente y luego sincronizar con MariaDB en la Raspberry Pi
+  // Inicializar interfaz
+  applyRoleUI();
   renderChecklist();
-  renderCalendarMonth();
-  selectCalendarDay(25);
   updateNotifBadge();
   loadDashboardFromDatabase();
 });

@@ -4,7 +4,7 @@
   <meta charset="utf-8"/>
   <meta content="width=device-width, initial-scale=1.0" name="viewport"/>
   <meta content="web_standard" name="shell-type"/>
-  <title>Baby Carrusel | Centro de Operaciones y Reservaciones</title>
+  <title>Baby Carrusel | Salón de Eventos Infantiles y Reservaciones</title>
   <link rel="icon" type="image/png" href="assets/images/logo.png"/>
   <link rel="preconnect" href="https://fonts.googleapis.com"/>
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
@@ -121,7 +121,7 @@
         <a aria-current="page" class="px-space-md py-space-sm transition-colors bg-primary-container text-on-primary-container font-semibold rounded-xl" data-path="home" href="#">Inicio</a>
         <a class="px-space-md py-space-sm font-label-lg text-label-lg text-on-surface-variant hover:text-on-surface transition-colors rounded-xl" data-path="availability-calendar" href="#">Calendario de Disponibilidad</a>
         <a class="px-space-md py-space-sm font-label-lg text-label-lg text-on-surface-variant hover:text-on-surface transition-colors rounded-xl" data-path="rules-and-policies" href="#">Reglas &amp; Políticas</a>
-        <a class="px-space-md py-space-sm font-label-lg text-label-lg text-on-surface-variant hover:text-on-surface transition-colors rounded-xl" data-path="checklists" href="#">Listas de Verificación</a>
+        <a id="nav-link-checklists" class="hidden px-space-md py-space-sm font-label-lg text-label-lg text-on-surface-variant hover:text-on-surface transition-colors rounded-xl" data-path="checklists" href="#">Listas de Verificación</a>
         <a class="px-space-md py-space-sm font-label-lg text-label-lg text-on-surface-variant hover:text-on-surface transition-colors rounded-xl" data-path="booking" href="#">Reservaciones</a>
       </nav>
 
@@ -132,37 +132,49 @@
           <span>Nueva Reservación</span>
         </button>
 
-        <!-- Campana de Notificaciones -->
-        <div class="relative">
-          <button onclick="toggleNotifications()" aria-label="Notificaciones" class="relative p-2 rounded-xl text-on-surface-variant hover:bg-surface-container hover:text-on-surface transition-colors" type="button">
-            <span class="material-symbols-outlined text-2xl">notifications</span>
-            <span id="notif-badge" class="absolute top-2 right-2 w-2.5 h-2.5 rounded-full bg-primary ring-2 ring-surface animate-pulse"></span>
-          </button>
+        <!-- Botón Acceso Personal (Visible cuando está en Vista Cliente) -->
+        <button id="btn-open-login" onclick="openAdminLoginModal()" class="flex items-center gap-1.5 px-3.5 py-2.5 rounded-xl bg-surface-container-low text-on-surface font-label-md text-xs font-semibold hover:bg-surface-container transition-colors border border-surface-container" type="button">
+          <span class="material-symbols-outlined text-base text-primary">lock</span>
+          <span>Acceso Personal</span>
+        </button>
 
-          <!-- Popover de Notificaciones -->
-          <div id="notif-popover" class="hidden absolute right-0 mt-2 w-80 sm:w-96 bg-surface-container-lowest rounded-2xl shadow-xl border border-surface-container p-4 z-50 modal-enter">
-            <div class="flex items-center justify-between pb-3 border-b border-surface-container">
-              <span class="font-headline-sm text-sm font-bold text-on-surface flex items-center gap-1.5">
-                <span class="material-symbols-outlined text-primary text-lg">notifications_active</span>
-                Centro de Notificaciones
-              </span>
-              <button onclick="markAllNotificationsRead()" class="text-[11px] text-primary hover:underline font-semibold">Marcar leídas</button>
-            </div>
-            <div id="notif-items-list" class="flex flex-col gap-2 pt-3 max-h-80 overflow-y-auto">
-              <!-- Renderizado dinámicamente con JavaScript -->
+        <!-- Controles exclusivos de Dueño / Gerente (Ocultos para Clientes) -->
+        <div id="owner-header-controls" class="hidden items-center gap-space-md">
+          <!-- Campana de Notificaciones -->
+          <div class="relative">
+            <button onclick="toggleNotifications()" aria-label="Notificaciones" class="relative p-2 rounded-xl text-on-surface-variant hover:bg-surface-container hover:text-on-surface transition-colors" type="button">
+              <span class="material-symbols-outlined text-2xl">notifications</span>
+              <span id="notif-badge" class="absolute top-2 right-2 w-2.5 h-2.5 rounded-full bg-primary ring-2 ring-surface animate-pulse"></span>
+            </button>
+
+            <!-- Popover de Notificaciones -->
+            <div id="notif-popover" class="hidden absolute right-0 mt-2 w-80 sm:w-96 bg-surface-container-lowest rounded-2xl shadow-xl border border-surface-container p-4 z-50 modal-enter">
+              <div class="flex items-center justify-between pb-3 border-b border-surface-container">
+                <span class="font-headline-sm text-sm font-bold text-on-surface flex items-center gap-1.5">
+                  <span class="material-symbols-outlined text-primary text-lg">notifications_active</span>
+                  Centro de Notificaciones
+                </span>
+                <button onclick="markAllNotificationsRead()" class="text-[11px] text-primary hover:underline font-semibold">Marcar leídas</button>
+              </div>
+              <div id="notif-items-list" class="flex flex-col gap-2 pt-3 max-h-80 overflow-y-auto">
+                <!-- Renderizado dinámicamente -->
+              </div>
             </div>
           </div>
-        </div>
 
-        <!-- Perfil del Responsable -->
-        <div class="flex items-center gap-space-sm pl-2">
-          <img alt="Logo Equipo Jolie" class="w-9 h-9 rounded-full object-contain bg-white ring-2 ring-primary-fixed" src="assets/images/logo.png" onerror="this.onerror=null; this.src='assets/images/avatar.svg';"/>
-          <div class="hidden md:flex flex-col text-left">
-            <div class="flex items-center gap-1.5">
-              <span class="font-label-md text-label-md font-bold text-on-surface leading-tight tracking-wide">JOLIE</span>
-              <span class="material-symbols-outlined text-xs text-primary">verified</span>
+          <!-- Perfil del Responsable (JOLIE) -->
+          <div class="flex items-center gap-space-sm pl-2">
+            <img alt="Logo Equipo Jolie" class="w-9 h-9 rounded-full object-contain bg-white ring-2 ring-primary-fixed" src="assets/images/logo.png" onerror="this.onerror=null; this.src='assets/images/avatar.svg';"/>
+            <div class="hidden md:flex flex-col text-left">
+              <div class="flex items-center gap-1.5">
+                <span class="font-label-md text-label-md font-bold text-on-surface leading-tight tracking-wide">JOLIE</span>
+                <span class="material-symbols-outlined text-xs text-primary">verified</span>
+              </div>
+              <span class="font-label-sm text-[10px] text-primary font-bold uppercase tracking-wider leading-none">Gerente de Turno ✨</span>
             </div>
-            <span class="font-label-sm text-[10px] text-primary font-bold uppercase tracking-wider leading-none">Gerente de Turno ✨</span>
+            <button onclick="logoutAdmin()" title="Salir a Vista de Cliente" class="ml-1 p-1.5 rounded-lg bg-surface-container-low text-on-surface-variant hover:text-error hover:bg-error-container/40 transition-colors text-xs flex items-center" type="button">
+              <span class="material-symbols-outlined text-base">logout</span>
+            </button>
           </div>
         </div>
       </div>
@@ -177,7 +189,7 @@
       <div class="w-full px-margin py-space-lg flex flex-col gap-space-lg">
         
         <!-- =====================================================================
-             HERO / BARRA PRINCIPAL DEL CENTRO DE OPERACIONES
+             HERO / BARRA PRINCIPAL
              ===================================================================== -->
         <div class="flex flex-col lg:flex-row items-start lg:items-center justify-between gap-space-md bg-surface-container-lowest p-space-lg rounded-2xl shadow-sm relative overflow-hidden">
           <div class="absolute -top-12 -right-12 w-48 h-48 bg-primary-container/20 rounded-full blur-2xl pointer-events-none"></div>
@@ -188,29 +200,41 @@
             <div class="flex flex-col">
               <div class="flex items-center gap-2 flex-wrap">
                 <h1 class="font-headline-xl text-headline-xl text-on-surface tracking-tight flex items-center gap-2">
-                  <span>Centro de Operaciones Baby Carrusel</span>
+                  <span id="hero-main-title">Salón de Eventos Infantiles Baby Carrusel</span>
                   <span class="text-2xl">🎠🎈</span>
                 </h1>
                 <span class="inline-flex items-center gap-1 px-2.5 py-1 rounded-full text-xs font-bold bg-primary-container text-on-primary-container uppercase tracking-wider shadow-xs">
                   <span class="w-2 h-2 rounded-full bg-primary animate-pulse"></span>
-                  En Vivo
+                  <span id="hero-badge-live">Agenda Abierta</span>
                 </span>
-                <span class="inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-[11px] font-semibold bg-amber-100 text-amber-800">
-                  ✨ Modo Fiesta Activo
+                <span id="hero-badge-party" class="inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-[11px] font-semibold bg-amber-100 text-amber-800">
+                  ✨ Fiestas &amp; Celebraciones
                 </span>
-                <button id="db-status-badge" onclick="openManageSlotModal()" title="Ver estado de Base de Datos MariaDB (Raspberry Pi + Tailscale)" class="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full text-[11px] font-semibold bg-emerald-100 text-emerald-800 hover:bg-emerald-200 transition-colors cursor-pointer" type="button">
-                  <span id="db-status-dot" class="w-2 h-2 rounded-full bg-emerald-600 animate-pulse"></span>
-                  <span id="db-status-text">BD MariaDB • Sincronizando</span>
-                </button>
               </div>
-              <p class="font-body-md text-body-md text-on-surface-variant mt-1">
-                Celebraciones mágicas, gestión sin esfuerzo del salón y logística segura para los más pequeños.
+              <p id="hero-subtitle" class="font-body-md text-body-md text-on-surface-variant mt-1">
+                Consulta fechas disponibles, conoce nuestras instalaciones y reserva el día ideal para la fiesta de tus pequeños.
               </p>
             </div>
           </div>
 
-          <!-- Botones de Acción Rápida -->
-          <div class="flex flex-wrap items-center gap-space-xs z-10 w-full lg:w-auto">
+          <!-- Botones de Acción Rápida para CLIENTE -->
+          <div id="hero-actions-client" class="flex flex-wrap items-center gap-space-xs z-10 w-full lg:w-auto">
+            <button onclick="openDepositPolicyModal()" class="flex-1 sm:flex-none flex items-center justify-center gap-1.5 px-space-md py-2.5 rounded-xl bg-surface-container-low text-on-surface font-label-md text-label-md hover:bg-surface-container transition-all shadow-sm" type="button">
+              <span class="material-symbols-outlined text-base text-primary">gavel</span>
+              <span>Reglas del Salón</span>
+            </button>
+            <a href="https://wa.me/524445402978?text=Hola,%20me%20gustar%C3%ADa%20pedir%20informes%20para%20reservar%20una%20fecha%20en%20Sal%C3%B3n%20Baby%20Carrusel." target="_blank" class="flex-1 sm:flex-none flex items-center justify-center gap-1.5 px-space-md py-2.5 rounded-xl bg-surface-container-low text-on-surface font-label-md text-label-md hover:bg-surface-container transition-all shadow-sm">
+              <span class="material-symbols-outlined text-base text-emerald-600">chat</span>
+              <span>WhatsApp del Salón</span>
+            </a>
+            <button onclick="openBookingModal()" class="flex-1 sm:flex-none flex items-center justify-center gap-1.5 px-space-md py-2.5 rounded-xl bg-primary-container text-on-primary-container font-label-md text-label-md hover:brightness-105 transition-all shadow-sm" type="button">
+              <span class="material-symbols-outlined text-base">add_circle</span>
+              <span>Reservar Fecha</span>
+            </button>
+          </div>
+
+          <!-- Botones de Acción Rápida para DUEÑO / ADMINISTRACIÓN (Diseño del Cartel) -->
+          <div id="hero-actions-owner" class="hidden flex-wrap items-center gap-space-xs z-10 w-full lg:w-auto">
             <button onclick="openDaySheetModal()" class="flex-1 sm:flex-none flex items-center justify-center gap-1.5 px-space-md py-2.5 rounded-xl bg-surface-container-low text-on-surface font-label-md text-label-md hover:bg-surface-container transition-all shadow-sm" type="button">
               <span class="material-symbols-outlined text-base">download</span>
               <span>Hoja del Día</span>
@@ -227,9 +251,9 @@
         </div>
 
         <!-- =====================================================================
-             TARJETAS DE MÉTRICAS EN VIVO (KPIS)
+             TARJETAS DE MÉTRICAS EN VIVO (KPIS - EXCLUSIVAS DE VISTA DUEÑO)
              ===================================================================== -->
-        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-space-md">
+        <div id="owner-kpi-grid" class="hidden grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-space-md">
           <!-- Métrica 1 -->
           <div class="bg-surface-container-lowest p-space-md rounded-2xl shadow-sm flex items-center gap-space-md hover:shadow-md transition-shadow">
             <div class="w-12 h-12 rounded-xl bg-primary/10 text-primary flex items-center justify-center flex-shrink-0">
@@ -237,7 +261,7 @@
             </div>
             <div class="flex flex-col min-w-0">
               <span class="font-label-sm text-label-sm text-on-surface-variant uppercase tracking-wider truncate">Estado de Hoy</span>
-              <span class="font-headline-sm text-headline-sm text-on-surface truncate">Cumpleaños #4 de Lucas</span>
+              <span id="kpi-today-event" class="font-headline-sm text-headline-sm text-on-surface truncate">Cumpleaños #4 de Lucas</span>
               <span class="font-label-sm text-label-sm text-primary font-semibold flex items-center gap-1">
                 <span class="w-2 h-2 rounded-full bg-primary animate-pulse"></span>
                 Activo en Salón Principal
@@ -325,13 +349,13 @@
               <!-- Barra de Control del Calendario -->
               <div class="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-space-md">
                 <div class="flex items-center gap-space-sm">
-                  <span id="calendar-month-title" class="font-headline-lg text-headline-lg text-on-surface font-bold">Octubre 2025</span>
+                  <span id="calendar-month-title" class="font-headline-lg text-headline-lg text-on-surface font-bold">Noviembre 2026</span>
                   <div class="flex items-center gap-1 bg-surface-container-low p-1 rounded-xl">
-                    <button onclick="changeMonth(-1)" aria-label="Mes Anterior" class="w-8 h-8 rounded-lg flex items-center justify-center text-on-surface-variant hover:bg-surface-container transition-colors" type="button">
+                    <button onclick="navigateCalendar(-1)" aria-label="Anterior" class="w-8 h-8 rounded-lg flex items-center justify-center text-on-surface-variant hover:bg-surface-container transition-colors" type="button">
                       <span class="material-symbols-outlined text-lg">chevron_left</span>
                     </button>
                     <button onclick="goToToday()" class="px-2.5 py-1 rounded-lg text-xs font-semibold text-on-surface bg-surface-container-lowest shadow-xs hover:brightness-95 transition-all" type="button">Hoy</button>
-                    <button onclick="changeMonth(1)" aria-label="Mes Siguiente" class="w-8 h-8 rounded-lg flex items-center justify-center text-on-surface-variant hover:bg-surface-container transition-colors" type="button">
+                    <button onclick="navigateCalendar(1)" aria-label="Siguiente" class="w-8 h-8 rounded-lg flex items-center justify-center text-on-surface-variant hover:bg-surface-container transition-colors" type="button">
                       <span class="material-symbols-outlined text-lg">chevron_right</span>
                     </button>
                   </div>
@@ -353,16 +377,16 @@
                 </div>
                 <div class="flex items-center gap-1.5 px-3 py-1 rounded-full bg-amber-50 text-amber-800 text-xs font-medium">
                   <span class="w-2 h-2 rounded-full bg-amber-500"></span>
-                  <span>Apartado (Pendiente de Pago)</span>
+                  <span>Apartado (En Confirmación)</span>
                 </div>
                 <div class="flex items-center gap-1.5 px-3 py-1 rounded-full bg-blue-50 text-blue-800 text-xs font-medium">
                   <span class="w-2 h-2 rounded-full bg-blue-600"></span>
-                  <span>Confirmado &amp; Depósito Pagado</span>
+                  <span>Reservado / Confirmado</span>
                 </div>
               </div>
 
               <!-- Cabecera de Días de la Semana -->
-              <div class="grid grid-cols-7 gap-1 text-center font-label-md text-label-md text-on-surface-variant font-semibold">
+              <div id="calendar-weekdays-header" class="grid grid-cols-7 gap-1 text-center font-label-md text-label-md text-on-surface-variant font-semibold">
                 <div class="py-1">Dom</div>
                 <div class="py-1">Lun</div>
                 <div class="py-1">Mar</div>
@@ -372,85 +396,23 @@
                 <div class="py-1">Sáb</div>
               </div>
 
-              <!-- Matriz de Días del Calendario (Semana de Ejemplo) -->
-              <div class="grid grid-cols-7 gap-2">
-                <!-- Dom 19 -->
-                <div onclick="selectCalendarDay(19)" data-day="19" class="min-h-[96px] p-2 rounded-xl bg-surface-container-low/40 flex flex-col justify-between cursor-pointer hover:bg-surface-container-low transition-colors">
-                  <span class="font-label-sm text-label-sm text-on-surface-variant font-semibold">19</span>
-                  <div class="flex flex-col gap-1">
-                    <span class="px-1.5 py-0.5 rounded text-[10px] font-medium bg-emerald-50 text-emerald-700 truncate">10:00 AM Disp.</span>
-                    <span class="px-1.5 py-0.5 rounded text-[10px] font-medium bg-blue-50 text-blue-700 truncate">15:00 PM Conf.</span>
-                  </div>
-                </div>
-
-                <!-- Lun 20 -->
-                <div onclick="selectCalendarDay(20)" data-day="20" class="min-h-[96px] p-2 rounded-xl bg-surface-container-low/40 flex flex-col justify-between cursor-pointer hover:bg-surface-container-low transition-colors">
-                  <span class="font-label-sm text-label-sm text-on-surface-variant font-semibold">20</span>
-                  <div class="flex flex-col gap-1">
-                    <span class="px-1.5 py-0.5 rounded text-[10px] font-medium bg-surface-container text-on-surface-variant truncate">Mantenimiento</span>
-                  </div>
-                </div>
-
-                <!-- Mar 21 -->
-                <div onclick="selectCalendarDay(21)" data-day="21" class="min-h-[96px] p-2 rounded-xl bg-surface-container-low/40 flex flex-col justify-between cursor-pointer hover:bg-surface-container-low transition-colors">
-                  <span class="font-label-sm text-label-sm text-on-surface-variant font-semibold">21</span>
-                  <div class="flex flex-col gap-1">
-                    <span class="px-1.5 py-0.5 rounded text-[10px] font-medium bg-amber-50 text-amber-700 truncate">10:00 AM Apart.</span>
-                    <span class="px-1.5 py-0.5 rounded text-[10px] font-medium bg-emerald-50 text-emerald-700 truncate">15:00 PM Disp.</span>
-                  </div>
-                </div>
-
-                <!-- Mié 22 -->
-                <div onclick="selectCalendarDay(22)" data-day="22" class="min-h-[96px] p-2 rounded-xl bg-surface-container-low/40 flex flex-col justify-between cursor-pointer hover:bg-surface-container-low transition-colors">
-                  <span class="font-label-sm text-label-sm text-on-surface-variant font-semibold">22</span>
-                  <div class="flex flex-col gap-1">
-                    <span class="px-1.5 py-0.5 rounded text-[10px] font-medium bg-blue-50 text-blue-700 truncate">14:00 PM Baby Shower</span>
-                  </div>
-                </div>
-
-                <!-- Jue 23 -->
-                <div onclick="selectCalendarDay(23)" data-day="23" class="min-h-[96px] p-2 rounded-xl bg-surface-container-low/40 flex flex-col justify-between cursor-pointer hover:bg-surface-container-low transition-colors">
-                  <span class="font-label-sm text-label-sm text-on-surface-variant font-semibold">23</span>
-                  <div class="flex flex-col gap-1">
-                    <span class="px-1.5 py-0.5 rounded text-[10px] font-medium bg-emerald-50 text-emerald-700 truncate">Día Completo Disp.</span>
-                  </div>
-                </div>
-
-                <!-- Vie 24 -->
-                <div onclick="selectCalendarDay(24)" data-day="24" class="min-h-[96px] p-2 rounded-xl bg-surface-container-low/40 flex flex-col justify-between cursor-pointer hover:bg-surface-container-low transition-colors">
-                  <span class="font-label-sm text-label-sm text-on-surface-variant font-semibold">24</span>
-                  <div class="flex flex-col gap-1">
-                    <span class="px-1.5 py-0.5 rounded text-[10px] font-medium bg-blue-50 text-blue-700 truncate">16:00 PM Emma 3°</span>
-                    <span class="px-1.5 py-0.5 rounded text-[10px] font-medium bg-amber-50 text-amber-700 truncate">20:30 PM Apart.</span>
-                  </div>
-                </div>
-
-                <!-- Sáb 25 (Día Activo Seleccionado) -->
-                <div onclick="selectCalendarDay(25)" data-day="25" class="min-h-[96px] p-2 rounded-xl bg-primary-fixed/20 ring-2 ring-primary shadow-sm flex flex-col justify-between relative cursor-pointer">
-                  <div class="flex items-center justify-between">
-                    <span class="font-label-sm text-label-sm font-bold text-primary">25 HOY</span>
-                    <span class="w-2 h-2 rounded-full bg-primary animate-ping"></span>
-                  </div>
-                  <div class="flex flex-col gap-1 mt-1">
-                    <span class="px-1.5 py-0.5 rounded text-[10px] font-semibold bg-blue-100 text-blue-800 truncate">09:30 Mía S. ✓</span>
-                    <span class="px-1.5 py-0.5 rounded text-[10px] font-bold bg-primary text-white truncate shadow-xs">15:00 Lucas P. ★</span>
-                    <span class="px-1.5 py-0.5 rounded text-[10px] font-semibold bg-emerald-100 text-emerald-800 truncate">20:00 Noche Disp.</span>
-                  </div>
-                </div>
+              <!-- Contenedor Dinámico del Calendario (Mensual / Semanal / Diario) -->
+              <div id="calendar-grid-container" class="grid grid-cols-7 gap-2">
+                <!-- Renderizado dinámicamente por js/app.js -->
               </div>
             </div>
 
-            <!-- DESGLOSE OPERATIVO DE SESIONES DEL DÍA SELECCIONADO -->
+            <!-- DESGLOSE DE HORARIOS / SESIONES DEL DÍA SELECCIONADO -->
             <div class="bg-surface-container-lowest p-space-lg rounded-2xl shadow-sm flex flex-col gap-space-md">
               <div class="flex items-center justify-between">
                 <div class="flex items-center gap-2">
                   <span class="text-2xl">🎪</span>
                   <div>
-                    <h2 id="selected-day-title" class="font-headline-sm text-headline-sm text-on-surface font-bold">Sesiones del Sábado 25 de Octubre 2025</h2>
-                    <p class="font-body-sm text-body-sm text-on-surface-variant">Turnos programados, estado de entrega y anfitriones responsables</p>
+                    <h2 id="selected-day-title" class="font-headline-sm text-headline-sm text-on-surface font-bold">Horarios del Sábado 21 de Noviembre 2026</h2>
+                    <p id="selected-day-subtitle" class="font-body-sm text-body-sm text-on-surface-variant">Selecciona un turno disponible para reservar tu evento</p>
                   </div>
                 </div>
-                <span class="text-xs font-semibold px-3 py-1 rounded-full bg-surface-container text-on-surface-variant">3 Turnos Operativos</span>
+                <span class="text-xs font-semibold px-3 py-1 rounded-full bg-surface-container text-on-surface-variant">3 Turnos por Día</span>
               </div>
 
               <!-- Contenedor dinámico de turnos del día -->
@@ -466,7 +428,7 @@
                   <span class="text-2xl">🎠</span>
                   <div>
                     <h2 class="font-headline-sm text-headline-sm text-on-surface font-bold">Instalaciones del Salón &amp; Área de Carrusel</h2>
-                    <p class="font-body-sm text-body-sm text-on-surface-variant">Áreas físicas en vivo, zonas sanitizadas y ambientación infantil</p>
+                    <p class="font-body-sm text-body-sm text-on-surface-variant">Áreas físicas, zonas sanitizadas y ambientación infantil</p>
                   </div>
                 </div>
                 <button onclick="openVenueMapModal()" class="font-label-sm text-label-sm text-secondary font-semibold hover:underline flex items-center gap-1" type="button">
@@ -533,135 +495,247 @@
 
           <!-- COLUMNA DERECHA: 35% (lg:col-span-4) -->
           <div class="lg:col-span-4 flex flex-col gap-space-lg">
-            
-            <!-- FICHA DE RESERVACIÓN DESTACADA -->
-            <div class="bg-surface-container-lowest p-space-lg rounded-2xl shadow-sm flex flex-col gap-space-md relative overflow-hidden">
-              <div class="flex items-center justify-between">
-                <span class="font-label-sm text-label-sm text-on-surface-variant uppercase tracking-wider font-semibold">Reservación en Curso</span>
-                <span id="spotlight-code" class="px-2.5 py-0.5 rounded-full text-xs font-bold bg-primary text-white">#BC-2025-104</span>
-              </div>
 
-              <div class="flex flex-col gap-1">
-                <div class="flex items-center gap-2 flex-wrap">
-                  <h2 id="spotlight-title" class="font-headline-lg text-headline-lg text-on-surface font-bold">Cumpleaños #4 de Lucas</h2>
-                  <span class="text-xl">🎉🎂</span>
+            <!-- ===============================================================
+                 PANEL DERECHO MODO CLIENTE (Información de Paquete, Horarios y Contacto)
+                 =============================================================== -->
+            <div id="client-side-panel" class="flex flex-col gap-space-lg">
+              <!-- Tarjeta de Paquete y Reservación para Clientes -->
+              <div class="bg-surface-container-lowest p-space-lg rounded-2xl shadow-sm flex flex-col gap-space-md relative overflow-hidden">
+                <div class="flex items-center justify-between">
+                  <span class="font-label-sm text-label-sm text-on-surface-variant uppercase tracking-wider font-semibold">Paquete Todo Incluido</span>
+                  <span class="px-2.5 py-0.5 rounded-full text-xs font-bold bg-primary text-white">Cupo 80 Personas</span>
                 </div>
-                <div class="flex items-center gap-1.5 text-xs text-on-surface-variant font-medium">
-                  <span class="material-symbols-outlined text-base text-primary">theater_comedy</span>
-                  <span id="spotlight-theme">Temática: Carnaval de Carrusel y Safari Mágico</span>
-                </div>
-              </div>
 
-              <!-- Tarjeta de Anfitrión y Contacto Directo -->
-              <div class="p-space-sm rounded-xl bg-surface-container-low flex items-center justify-between">
-                <div class="flex items-center gap-space-xs">
-                  <div id="spotlight-host-initials" class="w-9 h-9 rounded-lg bg-primary-fixed/40 text-primary flex items-center justify-center font-bold text-sm">
-                    CP
+                <div class="flex flex-col gap-1">
+                  <div class="flex items-center gap-2 flex-wrap">
+                    <h2 class="font-headline-lg text-headline-lg text-on-surface font-bold">Paquete Fiesta Carrusel Mágico</h2>
+                    <span class="text-xl">🎠🎂</span>
                   </div>
-                  <div class="flex flex-col">
-                    <span id="spotlight-host-name" class="text-xs font-bold text-on-surface">Camila &amp; Roberto Peña</span>
-                    <span id="spotlight-host-phone" class="text-[11px] text-on-surface-variant">+52 444 849 1034 • Salón Principal</span>
+                  <p class="text-xs text-on-surface-variant leading-relaxed">
+                    Incluye uso exclusivo del salón por 4 horas, carrusel mecánico central, zona de brincolines, área de estimulación temprana y comedor infantil completo.
+                  </p>
+                </div>
+
+                <!-- Desglose de Costos Claros -->
+                <div class="flex flex-col gap-2 p-space-md rounded-xl bg-surface-container-low text-xs">
+                  <div class="flex items-center justify-between font-semibold text-on-surface">
+                    <span>Renta del Salón (Turno 4 hrs):</span>
+                    <span class="text-sm font-bold">$1,250.00</span>
+                  </div>
+                  <div class="flex items-center justify-between text-emerald-800 font-semibold">
+                    <span>Depósito en Garantía (100% Reembolsable):</span>
+                    <span>$350.00</span>
+                  </div>
+                  <div class="pt-2 border-t border-surface-container flex items-center justify-between font-bold text-primary text-sm">
+                    <span>Total al Reservar:</span>
+                    <span>$1,600.00</span>
                   </div>
                 </div>
-                <button onclick="openContactHostModal()" aria-label="Contactar Anfitrión" class="w-8 h-8 rounded-lg bg-surface-container-lowest text-secondary flex items-center justify-center hover:bg-secondary-fixed/50 transition-colors shadow-xs" type="button">
-                  <span class="material-symbols-outlined text-base">call</span>
+
+                <!-- Turnos Disponibles -->
+                <div class="flex flex-col gap-1.5 text-xs">
+                  <span class="font-bold text-on-surface">Horarios de Eventos:</span>
+                  <div class="p-2.5 rounded-xl bg-surface-container-low flex items-center justify-between">
+                    <span class="font-semibold text-on-surface">☀️ Turno Mañana</span>
+                    <span class="text-on-surface-variant font-medium">09:30 - 13:30 hrs</span>
+                  </div>
+                  <div class="p-2.5 rounded-xl bg-surface-container-low flex items-center justify-between">
+                    <span class="font-semibold text-on-surface">🎈 Turno Tarde</span>
+                    <span class="text-on-surface-variant font-medium">15:00 - 19:00 hrs</span>
+                  </div>
+                  <div class="p-2.5 rounded-xl bg-surface-container-low flex items-center justify-between">
+                    <span class="font-semibold text-on-surface">🌙 Turno Noche</span>
+                    <span class="text-on-surface-variant font-medium">20:00 - 23:30 hrs</span>
+                  </div>
+                </div>
+
+                <!-- Ubicación y Contacto -->
+                <div class="p-3 rounded-xl bg-primary-fixed/20 flex flex-col gap-1 text-xs">
+                  <span class="font-bold text-on-surface flex items-center gap-1">
+                    <span class="material-symbols-outlined text-sm text-primary">location_on</span>
+                    Ubicación del Salón:
+                  </span>
+                  <span class="text-on-surface-variant">C. 5 de Mayo 1940, San Juan de Guadalupe, Santuario, C.P. 78340, San Luis Potosí, S.L.P.</span>
+                  <span class="text-primary font-semibold mt-1">Atención y Reservaciones: +52 444 540 2978</span>
+                </div>
+
+                <button onclick="openBookingModal()" class="w-full py-3 rounded-xl bg-primary text-white font-label-md text-xs font-bold hover:brightness-105 transition-all shadow-sm flex items-center justify-center gap-1.5" type="button">
+                  <span class="material-symbols-outlined text-base">event_available</span>
+                  <span>Reservar Fecha Ahora</span>
                 </button>
               </div>
 
-              <!-- Medidor y Control de Aforo -->
-              <div class="flex flex-col gap-1.5 p-space-md rounded-xl bg-surface-container-low">
-                <div class="flex items-center justify-between text-xs font-semibold">
-                  <span class="text-on-surface">Capacidad y Aforo de Invitados</span>
-                  <div class="flex items-center gap-2">
-                    <span id="spotlight-aforo-text" class="text-primary font-bold">62 / 80 Máx (77%)</span>
-                    <!-- Botones para modificar el aforo en vivo -->
-                    <div class="flex items-center gap-1 bg-surface-container-lowest p-0.5 rounded-lg shadow-xs">
-                      <button onclick="updateAforo(-1)" title="Restar 1 invitado" class="w-5 h-5 rounded flex items-center justify-center text-xs font-bold text-on-surface-variant hover:bg-surface-container hover:text-on-surface">-</button>
-                      <button onclick="updateAforo(1)" title="Sumar 1 invitado" class="w-5 h-5 rounded flex items-center justify-center text-xs font-bold text-primary hover:bg-primary/10">+</button>
-                    </div>
+              <!-- Tarjeta de Resumen de Reglas para el Cliente -->
+              <div class="bg-surface-container-lowest p-space-lg rounded-2xl shadow-sm flex flex-col gap-space-md">
+                <div class="flex items-center gap-2">
+                  <span class="text-2xl">🛡️</span>
+                  <div>
+                    <h2 class="font-headline-sm text-headline-sm text-on-surface font-bold">Reglas para tu Celebración</h2>
+                    <p class="font-body-sm text-body-sm text-on-surface-variant">Convivencia segura e instalaciones impecables</p>
                   </div>
                 </div>
 
-                <div class="w-full bg-surface-container rounded-full h-2.5 overflow-hidden">
-                  <div id="spotlight-aforo-bar" class="bg-primary h-2.5 rounded-full transition-all duration-300" style="width: 77.5%;"></div>
-                </div>
+                <ul class="space-y-2.5 text-xs text-on-surface-variant">
+                  <li class="flex items-start gap-2">
+                    <span class="material-symbols-outlined text-emerald-600 text-base mt-0.5">check_circle</span>
+                    <span><strong>Aforo máximo de 80 personas:</strong> Por comodidad y seguridad de todas las familias (niños y adultos).</span>
+                  </li>
+                  <li class="flex items-start gap-2">
+                    <span class="material-symbols-outlined text-emerald-600 text-base mt-0.5">check_circle</span>
+                    <span><strong>Calcetines antideslizantes:</strong> Obligatorios en brincolines, alberca de pelotas, túnel oruga y carrusel.</span>
+                  </li>
+                  <li class="flex items-start gap-2">
+                    <span class="material-symbols-outlined text-emerald-600 text-base mt-0.5">check_circle</span>
+                    <span><strong>Alimentos en área de comedor:</strong> No se permite ingresar comida o bebidas a las áreas de juego suave.</span>
+                  </li>
+                  <li class="flex items-start gap-2">
+                    <span class="material-symbols-outlined text-emerald-600 text-base mt-0.5">check_circle</span>
+                    <span><strong>Depósito 100% reembolsable:</strong> Se devuelve íntegro tras verificar al final de la fiesta que el mobiliario no presenta daños.</span>
+                  </li>
+                </ul>
 
-                <div id="spotlight-aforo-detail" class="flex items-center justify-between text-[11px] text-on-surface-variant pt-1">
-                  <span>38 Niños (Ingresados)</span>
-                  <span>24 Adultos (Acompañantes)</span>
-                </div>
+                <button onclick="openDepositPolicyModal()" class="w-full py-2.5 rounded-xl bg-surface-container-low text-on-surface font-label-md text-xs font-semibold hover:bg-surface-container transition-colors" type="button">
+                  Ver Reglamento Completo
+                </button>
               </div>
-
-              <!-- Estado Financiero y Custodia del Depósito -->
-              <div class="flex flex-col gap-space-xs pt-1">
-                <div id="spotlight-deposit-status" class="flex items-center justify-between p-space-sm rounded-xl bg-emerald-50 text-emerald-900">
-                  <div class="flex items-center gap-1.5">
-                    <span class="material-symbols-outlined text-lg text-emerald-700">lock</span>
-                    <span class="text-xs font-semibold">Depósito de Garantía:</span>
-                  </div>
-                  <span class="text-xs font-bold">$350.00 en Custodia</span>
-                </div>
-
-                <div class="flex items-center justify-between p-space-sm rounded-xl bg-surface-container-low text-on-surface">
-                  <div class="flex items-center gap-1.5">
-                    <span class="material-symbols-outlined text-lg text-secondary">payments</span>
-                    <span class="text-xs font-semibold">Total del Paquete:</span>
-                  </div>
-                  <span class="text-xs font-bold">$1,250.00 Liquidado (100%)</span>
-                </div>
-              </div>
-
-              <p class="text-[11px] text-on-surface-variant leading-relaxed">
-                *El depósito de garantía es elegible para reembolso automático del 100% una vez completada la entrega del salón a las 19:15 hrs.
-              </p>
             </div>
 
-            <!-- LISTA DE VERIFICACIÓN E INSPECCIÓN DEL PERSONAL -->
-            <div id="checklists-section" class="bg-surface-container-lowest p-space-lg rounded-2xl shadow-sm flex flex-col gap-space-md scroll-mt-24 transition-all">
-              <div class="flex items-center justify-between">
-                <div class="flex items-center gap-2">
-                  <span class="text-2xl">📋</span>
-                  <div>
-                    <h2 class="font-headline-sm text-headline-sm text-on-surface font-bold">Inspección de Seguridad del Salón</h2>
-                    <p class="font-body-sm text-body-sm text-on-surface-variant">Lista de 4 puntos obligatorios de entrega y salida</p>
+            <!-- ===============================================================
+                 PANEL DERECHO MODO DUEÑO / ADMINISTRACIÓN (Diseño Exacto del Cartel)
+                 =============================================================== -->
+            <div id="owner-side-panel" class="hidden flex-col gap-space-lg">
+              
+              <!-- FICHA DE RESERVACIÓN DESTACADA -->
+              <div class="bg-surface-container-lowest p-space-lg rounded-2xl shadow-sm flex flex-col gap-space-md relative overflow-hidden">
+                <div class="flex items-center justify-between">
+                  <span class="font-label-sm text-label-sm text-on-surface-variant uppercase tracking-wider font-semibold">Reservación en Curso</span>
+                  <span id="spotlight-code" class="px-2.5 py-0.5 rounded-full text-xs font-bold bg-primary text-white">#BC-2026-104</span>
+                </div>
+
+                <div class="flex flex-col gap-1">
+                  <div class="flex items-center gap-2 flex-wrap">
+                    <h2 id="spotlight-title" class="font-headline-lg text-headline-lg text-on-surface font-bold">Cumpleaños #4 de Lucas</h2>
+                    <span class="text-xl">🎉🎂</span>
+                  </div>
+                  <div class="flex items-center gap-1.5 text-xs text-on-surface-variant font-medium">
+                    <span class="material-symbols-outlined text-base text-primary">theater_comedy</span>
+                    <span id="spotlight-theme">Temática: Carnaval de Carrusel y Safari Mágico</span>
                   </div>
                 </div>
-                <span class="text-[10px] font-bold px-2 py-0.5 rounded bg-surface-container text-on-surface-variant">Norma 4-Pt</span>
-              </div>
 
-              <!-- Pestañas de la Lista de Verificación -->
-              <div class="flex items-center p-1 bg-surface-container-low rounded-xl">
-                <button id="tab-btn-pre" onclick="setChecklistTab('pre')" class="flex-1 py-1.5 rounded-lg text-xs font-bold bg-surface-container-lowest text-on-surface shadow-xs flex items-center justify-center gap-1" type="button">
-                  <span>Pre-Evento</span>
-                  <span class="text-emerald-600">✓</span>
-                </button>
-                <button id="tab-btn-post" onclick="setChecklistTab('post')" class="flex-1 py-1.5 rounded-lg text-xs font-semibold text-on-surface-variant hover:text-on-surface flex items-center justify-center gap-1" type="button">
-                  <span>Post-Evento</span>
-                  <span class="text-amber-500 font-bold">⏳</span>
-                </button>
-              </div>
-
-              <!-- Contenedor dinámico del Checklist -->
-              <div id="checklist-container" class="flex flex-col gap-2.5">
-                <!-- Se llena automáticamente con js/app.js -->
-              </div>
-
-              <!-- Acciones de Cierre de Evento -->
-              <div class="pt-2 border-t border-surface-container flex flex-col gap-space-xs">
-                <span class="font-label-sm text-label-sm text-on-surface font-semibold flex items-center justify-between">
-                  <span>Protocolo de Salida (19:00 hrs)</span>
-                  <span class="text-amber-600 font-bold text-[11px]">En Proceso de Fiesta</span>
-                </span>
-                <div class="flex gap-2">
-                  <button id="btn-release-deposit" onclick="confirmReleaseDeposit()" class="flex-1 py-2.5 rounded-xl bg-emerald-600 text-white font-label-md text-label-md hover:bg-emerald-700 transition-colors shadow-xs flex items-center justify-center gap-1" type="button">
-                    <span class="material-symbols-outlined text-base">check</span>
-                    <span>Liberar Depósito de $350</span>
-                  </button>
-                  <button onclick="openModal('modal-report-incident')" class="px-3 py-2.5 rounded-xl bg-surface-container text-on-surface font-label-md text-label-md hover:bg-surface-variant transition-colors" title="Reportar Daño o Incidencia para Deducción" type="button">
-                    <span class="material-symbols-outlined text-base text-rose-600">report_problem</span>
+                <!-- Tarjeta de Anfitrión y Contacto Directo -->
+                <div class="p-space-sm rounded-xl bg-surface-container-low flex items-center justify-between">
+                  <div class="flex items-center gap-space-xs">
+                    <div id="spotlight-host-initials" class="w-9 h-9 rounded-lg bg-primary-fixed/40 text-primary flex items-center justify-center font-bold text-sm">
+                      CP
+                    </div>
+                    <div class="flex flex-col">
+                      <span id="spotlight-host-name" class="text-xs font-bold text-on-surface">Camila &amp; Roberto Peña</span>
+                      <span id="spotlight-host-phone" class="text-[11px] text-on-surface-variant">+52 444 849 1034 • Salón Principal</span>
+                    </div>
+                  </div>
+                  <button onclick="openContactHostModal()" aria-label="Contactar Anfitrión" class="w-8 h-8 rounded-lg bg-surface-container-lowest text-secondary flex items-center justify-center hover:bg-secondary-fixed/50 transition-colors shadow-xs" type="button">
+                    <span class="material-symbols-outlined text-base">call</span>
                   </button>
                 </div>
+
+                <!-- Medidor y Control de Aforo -->
+                <div class="flex flex-col gap-1.5 p-space-md rounded-xl bg-surface-container-low">
+                  <div class="flex items-center justify-between text-xs font-semibold">
+                    <span class="text-on-surface">Capacidad y Aforo de Invitados</span>
+                    <div class="flex items-center gap-2">
+                      <span id="spotlight-aforo-text" class="text-primary font-bold">62 / 80 Máx (77%)</span>
+                      <!-- Botones para modificar el aforo en vivo -->
+                      <div class="flex items-center gap-1 bg-surface-container-lowest p-0.5 rounded-lg shadow-xs">
+                        <button onclick="updateAforo(-1)" title="Restar 1 invitado" class="w-5 h-5 rounded flex items-center justify-center text-xs font-bold text-on-surface-variant hover:bg-surface-container hover:text-on-surface">-</button>
+                        <button onclick="updateAforo(1)" title="Sumar 1 invitado" class="w-5 h-5 rounded flex items-center justify-center text-xs font-bold text-primary hover:bg-primary/10">+</button>
+                      </div>
+                    </div>
+                  </div>
+
+                  <div class="w-full bg-surface-container rounded-full h-2.5 overflow-hidden">
+                    <div id="spotlight-aforo-bar" class="bg-primary h-2.5 rounded-full transition-all duration-300" style="width: 77.5%;"></div>
+                  </div>
+
+                  <div id="spotlight-aforo-detail" class="flex items-center justify-between text-[11px] text-on-surface-variant pt-1">
+                    <span>38 Niños (Ingresados)</span>
+                    <span>24 Adultos (Acompañantes)</span>
+                  </div>
+                </div>
+
+                <!-- Estado Financiero y Custodia del Depósito -->
+                <div class="flex flex-col gap-space-xs pt-1">
+                  <div id="spotlight-deposit-status" class="flex items-center justify-between p-space-sm rounded-xl bg-emerald-50 text-emerald-900">
+                    <div class="flex items-center gap-1.5">
+                      <span class="material-symbols-outlined text-lg text-emerald-700">lock</span>
+                      <span class="text-xs font-semibold">Depósito de Garantía:</span>
+                    </div>
+                    <span class="text-xs font-bold">$350.00 en Custodia</span>
+                  </div>
+
+                  <div class="flex items-center justify-between p-space-sm rounded-xl bg-surface-container-low text-on-surface">
+                    <div class="flex items-center gap-1.5">
+                      <span class="material-symbols-outlined text-lg text-secondary">payments</span>
+                      <span class="text-xs font-semibold">Total del Paquete:</span>
+                    </div>
+                    <span class="text-xs font-bold">$1,250.00 Liquidado (100%)</span>
+                  </div>
+                </div>
+
+                <p class="text-[11px] text-on-surface-variant leading-relaxed">
+                  *El depósito de garantía es elegible para reembolso automático del 100% una vez completada la entrega del salón a las 19:15 hrs.
+                </p>
               </div>
+
+              <!-- LISTA DE VERIFICACIÓN E INSPECCIÓN DEL PERSONAL -->
+              <div id="checklists-section" class="bg-surface-container-lowest p-space-lg rounded-2xl shadow-sm flex flex-col gap-space-md scroll-mt-24 transition-all">
+                <div class="flex items-center justify-between">
+                  <div class="flex items-center gap-2">
+                    <span class="text-2xl">📋</span>
+                    <div>
+                      <h2 class="font-headline-sm text-headline-sm text-on-surface font-bold">Inspección de Seguridad del Salón</h2>
+                      <p class="font-body-sm text-body-sm text-on-surface-variant">Lista de puntos obligatorios de entrega y salida</p>
+                    </div>
+                  </div>
+                  <span class="text-[10px] font-bold px-2 py-0.5 rounded bg-surface-container text-on-surface-variant">Protocolo</span>
+                </div>
+
+                <!-- Pestañas de la Lista de Verificación -->
+                <div class="flex items-center p-1 bg-surface-container-low rounded-xl">
+                  <button id="tab-btn-pre" onclick="setChecklistTab('pre')" class="flex-1 py-1.5 rounded-lg text-xs font-bold bg-surface-container-lowest text-on-surface shadow-xs flex items-center justify-center gap-1" type="button">
+                    <span>Pre-Evento</span>
+                    <span class="text-emerald-600">✓</span>
+                  </button>
+                  <button id="tab-btn-post" onclick="setChecklistTab('post')" class="flex-1 py-1.5 rounded-lg text-xs font-semibold text-on-surface-variant hover:text-on-surface flex items-center justify-center gap-1" type="button">
+                    <span>Post-Evento</span>
+                    <span class="text-amber-500 font-bold">⏳</span>
+                  </button>
+                </div>
+
+                <!-- Contenedor dinámico del Checklist -->
+                <div id="checklist-container" class="flex flex-col gap-2.5">
+                  <!-- Se llena automáticamente con js/app.js -->
+                </div>
+
+                <!-- Acciones de Cierre de Evento -->
+                <div class="pt-2 border-t border-surface-container flex flex-col gap-space-xs">
+                  <span class="font-label-sm text-label-sm text-on-surface font-semibold flex items-center justify-between">
+                    <span>Protocolo de Salida (19:00 hrs)</span>
+                    <span class="text-amber-600 font-bold text-[11px]">En Proceso de Fiesta</span>
+                  </span>
+                  <div class="flex gap-2">
+                    <button id="btn-release-deposit" onclick="confirmReleaseDeposit()" class="flex-1 py-2.5 rounded-xl bg-emerald-600 text-white font-label-md text-label-md hover:bg-emerald-700 transition-colors shadow-xs flex items-center justify-center gap-1" type="button">
+                      <span class="material-symbols-outlined text-base">check</span>
+                      <span>Liberar Depósito de $350</span>
+                    </button>
+                    <button onclick="openModal('modal-report-incident')" class="px-3 py-2.5 rounded-xl bg-surface-container text-on-surface font-label-md text-label-md hover:bg-surface-variant transition-colors" title="Reportar Daño o Incidencia para Deducción" type="button">
+                      <span class="material-symbols-outlined text-base text-rose-600">report_problem</span>
+                    </button>
+                  </div>
+                </div>
+              </div>
+
             </div>
 
           </div>
@@ -679,7 +753,7 @@
             </span>
           </div>
           <div class="flex items-center gap-space-md flex-shrink-0 text-xs font-semibold text-on-surface-variant">
-            <span>Licencia #BC-CHI-9921</span>
+            <span>C. 5 de Mayo 1940, San Luis Potosí</span>
             <span>•</span>
             <span>Protección Civil &amp; Salud Municipal</span>
           </div>
@@ -696,12 +770,12 @@
     <div class="w-full px-margin flex flex-col md:flex-row items-center justify-between gap-space-md">
       <div class="flex items-center gap-space-sm">
         <img alt="Logo Jolie Baby Carrusel" class="h-9 w-9 rounded-full object-contain bg-white ring-1 ring-primary-fixed shadow-2xs" src="assets/images/logo.png" onerror="this.onerror=null; this.src='assets/images/logo.svg';"/>
-        <span class="font-label-md text-label-md text-on-surface-variant">© 2025 Baby Carrusel - Salón de Eventos &amp; Fiestas Infantiles. Todos los derechos reservados.</span>
+        <span class="font-label-md text-label-md text-on-surface-variant">© 2026 Baby Carrusel - Salón de Eventos &amp; Fiestas Infantiles. Todos los derechos reservados.</span>
       </div>
       <div class="flex items-center gap-space-lg">
-        <a onclick="openDepositPolicyModal(); return false;" class="font-label-sm text-label-sm text-on-surface-variant hover:text-on-surface transition-colors cursor-pointer" href="#">Guía Operativa</a>
-        <a onclick="openVenueMapModal(); return false;" class="font-label-sm text-label-sm text-on-surface-variant hover:text-on-surface transition-colors cursor-pointer" href="#">Protocolos de Emergencia</a>
-        <a onclick="openContactHostModal(); return false;" class="font-label-sm text-label-sm text-on-surface-variant hover:text-on-surface transition-colors cursor-pointer" href="#">Centro de Ayuda</a>
+        <a onclick="openDepositPolicyModal(); return false;" class="font-label-sm text-label-sm text-on-surface-variant hover:text-on-surface transition-colors cursor-pointer" href="#">Reglamento del Salón</a>
+        <a onclick="openVenueMapModal(); return false;" class="font-label-sm text-label-sm text-on-surface-variant hover:text-on-surface transition-colors cursor-pointer" href="#">Plano de Instalaciones</a>
+        <a onclick="openAdminLoginModal(); return false;" class="font-label-sm text-label-sm text-on-surface-variant hover:text-on-surface transition-colors cursor-pointer" href="#">Acceso Administración</a>
       </div>
     </div>
   </footer>
@@ -710,6 +784,43 @@
        MODALES FUNCIONALES
        ========================================================================= -->
 
+  <!-- 0. MODAL DE INICIO DE SESIÓN PARA DUEÑO / ADMINISTRACIÓN -->
+  <div id="modal-admin-login" class="modal-wrapper hidden fixed inset-0 z-50 modal-backdrop items-center justify-center p-4">
+    <div class="bg-surface-container-lowest w-full max-w-sm rounded-2xl shadow-2xl border border-surface-container p-6 modal-enter">
+      <div class="flex items-center justify-between pb-3 border-b border-surface-container">
+        <div class="flex items-center gap-2.5">
+          <img alt="Logo Baby Carrusel" class="w-9 h-9 rounded-full object-contain bg-white ring-2 ring-primary-fixed" src="assets/images/logo.png"/>
+          <div>
+            <h3 class="font-headline-sm text-sm font-bold text-on-surface">Acceso Administración</h3>
+            <p class="text-[11px] text-on-surface-variant">Panel de control y operaciones del salón</p>
+          </div>
+        </div>
+        <button onclick="closeModal('modal-admin-login')" class="p-1 rounded-lg text-on-surface-variant hover:bg-surface-container text-xl">&times;</button>
+      </div>
+
+      <form onsubmit="submitAdminLogin(event)" class="flex flex-col gap-3.5 pt-4">
+        <div>
+          <label class="block text-xs font-semibold text-on-surface mb-1">Usuario</label>
+          <input id="admin-login-user" required type="text" placeholder="Usuario de administración" class="w-full px-3 py-2 rounded-xl bg-surface-container-low text-on-surface text-sm border border-transparent focus:border-primary focus:outline-none"/>
+        </div>
+        <div>
+          <label class="block text-xs font-semibold text-on-surface mb-1">Contraseña</label>
+          <input id="admin-login-pass" required type="password" placeholder="••••••••••••" class="w-full px-3 py-2 rounded-xl bg-surface-container-low text-on-surface text-sm border border-transparent focus:border-primary focus:outline-none"/>
+        </div>
+        <div id="admin-login-error" class="hidden text-xs text-error font-semibold bg-error-container/40 p-2 rounded-lg">
+          Usuario o contraseña incorrectos.
+        </div>
+        <div class="flex items-center justify-end gap-2 pt-1">
+          <button type="button" onclick="closeModal('modal-admin-login')" class="px-4 py-2 rounded-xl bg-surface-container text-on-surface text-xs font-semibold hover:bg-surface-variant transition-colors">Cancelar</button>
+          <button type="submit" class="px-5 py-2 rounded-xl bg-primary text-white text-xs font-bold hover:brightness-105 shadow-sm transition-all flex items-center gap-1">
+            <span class="material-symbols-outlined text-sm">login</span>
+            <span>Entrar al Panel</span>
+          </button>
+        </div>
+      </form>
+    </div>
+  </div>
+
   <!-- 1. MODAL DE NUEVA RESERVACIÓN -->
   <div id="modal-new-booking" class="modal-wrapper hidden fixed inset-0 z-50 modal-backdrop items-center justify-center p-4">
     <div class="bg-surface-container-lowest w-full max-w-xl rounded-2xl shadow-2xl border border-surface-container p-6 modal-enter max-h-[90vh] overflow-y-auto">
@@ -717,8 +828,8 @@
         <div class="flex items-center gap-2">
           <span class="text-2xl">🎈</span>
           <div>
-            <h3 class="font-headline-md text-headline-md font-bold text-on-surface">Agendar Nueva Fiesta Infantil</h3>
-            <p class="text-xs text-on-surface-variant">Completa los datos de la celebración en Baby Carrusel</p>
+            <h3 class="font-headline-md text-headline-md font-bold text-on-surface">Agendar Fiesta Infantil</h3>
+            <p class="text-xs text-on-surface-variant">Completa los datos de tu celebración en Salón Baby Carrusel</p>
           </div>
         </div>
         <button onclick="closeModal('modal-new-booking')" class="p-1 rounded-lg text-on-surface-variant hover:bg-surface-container text-xl">&times;</button>
@@ -746,7 +857,7 @@
 
         <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
           <div>
-            <label class="block text-xs font-semibold text-on-surface mb-1">Nombre del Tutor / Anfitrión *</label>
+            <label class="block text-xs font-semibold text-on-surface mb-1">Nombre del Padre / Tutor *</label>
             <input id="booking-host" required type="text" placeholder="Ej. Mariana López" class="w-full px-3 py-2 rounded-xl bg-surface-container-low text-on-surface text-sm border border-transparent focus:border-primary focus:outline-none"/>
           </div>
           <div>
@@ -757,8 +868,8 @@
 
         <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
           <div>
-            <label class="block text-xs font-semibold text-on-surface mb-1">Correo Electrónico (Cliente)</label>
-            <input id="booking-email" type="email" placeholder="cliente@correo.mx" class="w-full px-3 py-2 rounded-xl bg-surface-container-low text-on-surface text-sm border border-transparent focus:border-primary focus:outline-none"/>
+            <label class="block text-xs font-semibold text-on-surface mb-1">Correo Electrónico</label>
+            <input id="booking-email" type="email" placeholder="correo@ejemplo.com" class="w-full px-3 py-2 rounded-xl bg-surface-container-low text-on-surface text-sm border border-transparent focus:border-primary focus:outline-none"/>
           </div>
           <div>
             <label class="block text-xs font-semibold text-on-surface mb-1">Invitados Estimados (Máx. 80) *</label>
@@ -769,7 +880,7 @@
         <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
           <div>
             <label class="block text-xs font-semibold text-on-surface mb-1">Fecha del Evento *</label>
-            <input id="booking-date" required type="date" value="2025-10-25" class="w-full px-3 py-2 rounded-xl bg-surface-container-low text-on-surface text-sm border border-transparent focus:border-primary focus:outline-none"/>
+            <input id="booking-date" required type="date" value="2026-11-21" class="w-full px-3 py-2 rounded-xl bg-surface-container-low text-on-surface text-sm border border-transparent focus:border-primary focus:outline-none"/>
           </div>
           <div>
             <label class="block text-xs font-semibold text-on-surface mb-1">Turno Solicitado *</label>
@@ -812,7 +923,7 @@
     </div>
   </div>
 
-  <!-- 2. MODAL DE HOJA DEL DÍA (IMPRIMIBLE) -->
+  <!-- 2. MODAL DE HOJA DEL DÍA (IMPRIMIBLE - SOLO DUEÑO) -->
   <div id="modal-day-sheet" class="modal-wrapper hidden fixed inset-0 z-50 modal-backdrop items-center justify-center p-4">
     <div class="bg-surface-container-lowest w-full max-w-2xl rounded-2xl shadow-2xl border border-surface-container p-6 modal-enter max-h-[90vh] overflow-y-auto">
       <div class="flex items-center justify-between pb-4 border-b border-surface-container">
@@ -820,7 +931,7 @@
           <img alt="Logo Jolie Baby Carrusel" class="w-10 h-10 rounded-full object-contain bg-white ring-2 ring-primary-fixed" src="assets/images/logo.png"/>
           <div>
             <h3 class="font-headline-md text-headline-md font-bold text-on-surface">Hoja de Operaciones del Día</h3>
-            <p class="text-xs text-on-surface-variant">Sábado 25 de Octubre 2025 • Salón Baby Carrusel</p>
+            <p id="day-sheet-date-subtitle" class="text-xs text-on-surface-variant">Sábado 21 de Noviembre 2026 • Salón Baby Carrusel</p>
           </div>
         </div>
         <div class="flex items-center gap-2">
@@ -835,50 +946,33 @@
       <div id="printable-day-sheet" class="flex flex-col gap-4 pt-4 text-xs">
         <div class="p-3 rounded-xl bg-primary-fixed/20 flex items-center justify-between">
           <div>
-            <span class="font-bold text-sm text-primary block">Responsable en Turno: Jolie (Coordinación) &amp; Javier García Ramos (Administración)</span>
-            <span class="text-on-surface-variant">Propietario: Heriberto García • Ubicación: C. 5 de Mayo 1940, San Juan de Guadalupe, C.P. 78340, San Luis Potosí, S.L.P.</span>
+            <span class="font-bold text-sm text-primary block">Responsable en Turno: Jolie &amp; Javier García Ramos</span>
+            <span class="text-on-surface-variant">Propietario: Heriberto García • C. 5 de Mayo 1940, San Juan de Guadalupe, San Luis Potosí, S.L.P.</span>
           </div>
-          <span class="px-2.5 py-1 rounded-lg bg-emerald-100 text-emerald-800 font-bold">Piso Activo</span>
+          <span class="px-2.5 py-1 rounded-lg bg-emerald-100 text-emerald-800 font-bold">Salón Activo</span>
         </div>
 
         <div class="border rounded-xl p-3">
-          <span class="font-bold text-on-surface block mb-2 text-sm">Personal Operativo Registrado (Tabla <code class="text-primary">empleados</code>):</span>
+          <span class="font-bold text-on-surface block mb-2 text-sm">Equipo del Salón en Turno:</span>
           <div id="day-sheet-empleados" class="grid grid-cols-1 sm:grid-cols-2 gap-2">
-            <!-- Se llena dinámicamente desde MariaDB -->
+            <!-- Se llena dinámicamente -->
           </div>
         </div>
 
         <div class="border rounded-xl p-3">
-          <span class="font-bold text-on-surface block mb-2 text-sm">Programación de Turnos (Tabla <code class="text-primary">reservaciones</code>):</span>
+          <span class="font-bold text-on-surface block mb-2 text-sm">Programación de Turnos del Día:</span>
           <div id="day-sheet-turnos" class="space-y-2">
-            <div class="p-2 rounded bg-surface-container-low flex justify-between items-center">
-              <div>
-                <strong>Turno 1 (09:30 - 13:30):</strong> Safari Mágico de Mía • Valeria Silva • 45 Invitados
-              </div>
-              <span class="text-emerald-700 font-bold">Completado &amp; Entregado</span>
-            </div>
-            <div class="p-2 rounded bg-primary-fixed/30 border border-primary/30 flex justify-between items-center">
-              <div>
-                <strong>Turno 2 (15:00 - 19:00):</strong> Carnaval de Carrusel #4 de Lucas • Camila &amp; Roberto Peña • 62 Invitados
-              </div>
-              <span class="text-primary font-bold">En Progreso (Salida 19:15)</span>
-            </div>
-            <div class="p-2 rounded bg-surface-container-low flex justify-between items-center">
-              <div>
-                <strong>Turno 3 (20:00 - 23:30):</strong> Turno Nocturno Libre para Evento Privado
-              </div>
-              <span class="text-blue-700 font-semibold">Disponible</span>
-            </div>
+            <!-- Se llena dinámicamente -->
           </div>
         </div>
 
         <div class="border rounded-xl p-3">
-          <span class="font-bold text-on-surface block mb-1">Checklist de Cumplimiento Técnico &amp; Mobiliario:</span>
+          <span class="font-bold text-on-surface block mb-1">Protocolo de Seguridad y Limpieza:</span>
           <ul class="list-disc list-inside space-y-1 text-on-surface-variant">
-            <li>Carrusel inspeccionado: Paro de emergencia verificado a las 14:15 hrs.</li>
-            <li>Volumen de cabina de sonido limitado a 80 dB (Seguridad auditiva infantil).</li>
-            <li>Alberca de pelotas desinfectada con máquina de vapor antes de cada turno.</li>
-            <li>Extintores y botiquín de primeros auxilios revisados con fecha vigente.</li>
+            <li>Carrusel inspeccionado: Paro de emergencia y arneses verificados antes de cada turno.</li>
+            <li>Volumen de cabina de sonido limitado a 80 dB para bienestar infantil.</li>
+            <li>Alberca de pelotas y área suave desinfectadas con vapor entre eventos.</li>
+            <li>Extintores, salidas de emergencia y botiquín de primeros auxilios verificados.</li>
           </ul>
         </div>
       </div>
@@ -891,7 +985,7 @@
       <div class="flex items-center justify-between pb-3 border-b border-surface-container">
         <div class="flex items-center gap-2">
           <span class="material-symbols-outlined text-secondary text-2xl">contact_phone</span>
-          <h3 class="font-headline-sm text-sm font-bold text-on-surface">Contactar con Anfitriones &amp; Administración</h3>
+          <h3 class="font-headline-sm text-sm font-bold text-on-surface">Contacto Directo con el Anfitrión</h3>
         </div>
         <button onclick="closeModal('modal-contact-host')" class="p-1 rounded-lg text-on-surface-variant hover:bg-surface-container text-xl">&times;</button>
       </div>
@@ -903,13 +997,13 @@
           </div>
           <div>
             <h4 id="contact-host-name" class="font-bold text-sm text-on-surface">Camila &amp; Roberto Peña</h4>
-            <span id="contact-host-event" class="text-xs text-on-surface-variant">Festejado: Lucas (4to Cumpleaños)</span>
+            <span id="contact-host-event" class="text-xs text-on-surface-variant">Cumpleaños #4 de Lucas</span>
           </div>
         </div>
 
-        <a id="contact-wa-link" href="https://wa.me/524448491034?text=Hola%20Camila,%20te%20saludamos%20del%20Sal%C3%B3n%20Baby%20Carrusel.%20Te%20recordamos%20el%20aforo%20m%C3%A1ximo%20de%2080%20invitados%20y%20la%20pol%C3%ADtica%20de%20dep%C3%B3sito%20reembolsable%20de%20$350." target="_blank" class="p-3 rounded-xl bg-emerald-500 text-white font-semibold text-xs flex items-center justify-center gap-2 hover:bg-emerald-600 transition-colors shadow-xs">
+        <a id="contact-wa-link" href="https://wa.me/524448491034" target="_blank" class="p-3 rounded-xl bg-emerald-500 text-white font-semibold text-xs flex items-center justify-center gap-2 hover:bg-emerald-600 transition-colors shadow-xs">
           <span class="material-symbols-outlined text-lg">chat</span>
-          <span>Enviar Recordatorio y Reglamento por WhatsApp</span>
+          <span>Enviar Confirmación y Reglamento por WhatsApp</span>
         </a>
 
         <a id="contact-tel-link" href="tel:+524448491034" class="p-3 rounded-xl bg-secondary text-white font-semibold text-xs flex items-center justify-center gap-2 hover:brightness-105 transition-all shadow-xs">
@@ -917,18 +1011,9 @@
           <span id="contact-tel-text">Llamar al Móvil (+52 444 849 1034)</span>
         </a>
 
-        <div class="p-3 rounded-xl bg-surface-container-low border border-surface-container text-xs flex flex-col gap-1.5">
-          <span class="font-bold text-on-surface">Administración Baby Carrusel (San Luis Potosí):</span>
-          <span class="text-on-surface-variant">Javier García Ramos • Tel: +52 444 540 2978</span>
-          <a href="https://wa.me/524445402978?text=Reporte%20operativo%20de%20Baby%20Carrusel" target="_blank" class="text-primary font-semibold hover:underline flex items-center gap-1">
-            <span class="material-symbols-outlined text-sm">support_agent</span>
-            <span>Contactar a Javier García por WhatsApp</span>
-          </a>
-        </div>
-
-        <button onclick="showToast('Notificación enviada a la pantalla del anfitrión'); closeModal('modal-contact-host');" class="p-3 rounded-xl bg-surface-container text-on-surface font-semibold text-xs flex items-center justify-center gap-2 hover:bg-surface-variant transition-colors">
-          <span class="material-symbols-outlined text-lg">campaign</span>
-          <span>Enviar Alerta de Turno / Check-out</span>
+        <button onclick="showToast('Aviso de entrega enviado al anfitrión'); closeModal('modal-contact-host');" class="p-3 rounded-xl bg-surface-container text-on-surface font-semibold text-xs flex items-center justify-center gap-2 hover:bg-surface-variant transition-colors">
+          <span class="material-symbols-outlined text-lg">schedule</span>
+          <span>Notificar Horario de Entrega del Salón</span>
         </button>
       </div>
     </div>
@@ -940,30 +1025,31 @@
       <div class="flex items-center justify-between pb-3 border-b border-surface-container">
         <div class="flex items-center gap-2">
           <span class="material-symbols-outlined text-primary text-2xl">gavel</span>
-          <h3 class="font-headline-md text-headline-md font-bold text-on-surface">Reglas del Salón &amp; Garantía de Depósito</h3>
+          <h3 class="font-headline-md text-headline-md font-bold text-on-surface">Reglamento del Salón &amp; Garantía de Depósito</h3>
         </div>
         <button onclick="closeModal('modal-deposit-policy')" class="p-1 rounded-lg text-on-surface-variant hover:bg-surface-container text-xl">&times;</button>
       </div>
 
       <div class="flex flex-col gap-4 pt-4 text-xs leading-relaxed text-on-surface-variant">
         <div class="p-3 rounded-xl bg-emerald-50 text-emerald-900 border border-emerald-200">
-          <h4 class="font-bold text-sm text-emerald-950 mb-1">Garantía de Depósito Transparente ($350) • Corresponsabilidad ESS</h4>
-          <p>El depósito en resguardo tiene la única finalidad de incentivar el buen uso de las instalaciones y el cumplimiento de los horarios. Es <strong>100% reembolsable</strong> y se transfiere de regreso en un plazo máximo de 24 horas tras finalizar el evento sin incidencias graves.</p>
+          <h4 class="font-bold text-sm text-emerald-950 mb-1">Garantía de Depósito Reembolsable ($350.00)</h4>
+          <p>El depósito en garantía tiene la finalidad de asegurar el cuidado de los juegos, el mobiliario y la puntualidad en los horarios. Es <strong>100% reembolsable</strong> y se devuelve en un plazo máximo de 24 horas tras concluir el evento sin daños al mobiliario.</p>
         </div>
 
         <div>
-          <h4 class="font-bold text-sm text-on-surface mb-2">Reglamento Activo en Base de Datos (Tabla <code class="text-primary">reglamento</code>):</h4>
+          <h4 class="font-bold text-sm text-on-surface mb-2">Normas de Convivencia y Uso de Instalaciones:</h4>
           <div id="db-reglamento-list" class="flex flex-col gap-2">
-            <!-- Cargado dinámicamente desde la tabla reglamento en MariaDB -->
+            <!-- Cargado dinámicamente -->
           </div>
         </div>
 
-        <form onsubmit="submitNewRule(event)" class="p-3 rounded-xl bg-surface-container-low flex flex-col gap-2 border border-surface-container">
-          <span class="font-bold text-on-surface">Agregar Nueva Regla al Reglamento (MariaDB):</span>
+        <!-- Formulario para agregar reglas (Visible SOLO en modo Dueño) -->
+        <form id="owner-add-rule-form" onsubmit="submitNewRule(event)" class="hidden p-3 rounded-xl bg-surface-container-low flex-col gap-2 border border-surface-container">
+          <span class="font-bold text-on-surface">Agregar Nueva Norma al Reglamento:</span>
           <input id="new-rule-title" required type="text" placeholder="Título de la regla (ej. Puntualidad de Recepción)" class="w-full px-3 py-1.5 rounded-lg bg-surface-container-lowest text-on-surface text-xs border border-transparent focus:border-primary focus:outline-none"/>
           <textarea id="new-rule-desc" required rows="2" placeholder="Descripción detallada de la norma..." class="w-full px-3 py-1.5 rounded-lg bg-surface-container-lowest text-on-surface text-xs border border-transparent focus:border-primary focus:outline-none"></textarea>
           <div class="flex justify-end">
-            <button type="submit" class="px-3 py-1.5 rounded-lg bg-primary text-white font-bold text-xs hover:brightness-105">+ Guardar Regla en BD</button>
+            <button type="submit" class="px-3 py-1.5 rounded-lg bg-primary text-white font-bold text-xs hover:brightness-105">+ Publicar Norma</button>
           </div>
         </form>
       </div>
@@ -1019,7 +1105,7 @@
         <h3 class="font-headline-md text-headline-md font-bold text-on-surface">Liberar Depósito de Seguridad</h3>
       </div>
       <p class="text-xs text-on-surface-variant leading-relaxed mb-4">
-        ¿Confirmas que la inspección del salón ha sido superada con éxito y autorizas la liberación y reembolso de <strong>$350.00</strong> a la cuenta del anfitrión <strong>Camila Peña</strong>?
+        ¿Confirmas que la inspección del salón ha sido superada con éxito y autorizas la liberación y reembolso de <strong>$350.00</strong> al anfitrión?
       </p>
       <div class="flex items-center justify-end gap-2">
         <button onclick="closeModal('modal-confirm-deposit')" class="px-4 py-2 rounded-xl bg-surface-container text-on-surface text-xs font-semibold hover:bg-surface-variant transition-colors">Volver a Revisar</button>
@@ -1069,51 +1155,61 @@
     </div>
   </div>
 
-  <!-- 9. MODAL DE GESTIÓN DEL TURNO ACTIVO & CONTROL DE MOBILIARIO BD -->
+  <!-- 9. MODAL DE GESTIÓN DEL TURNO ACTIVO & CONTROL DE MOBILIARIO (SOLO DUEÑO) -->
   <div id="modal-manage-slot" class="modal-wrapper hidden fixed inset-0 z-50 modal-backdrop items-center justify-center p-4">
     <div class="bg-surface-container-lowest w-full max-w-lg rounded-2xl shadow-2xl border border-surface-container p-6 modal-enter max-h-[90vh] overflow-y-auto">
       <div class="flex items-center justify-between pb-3 border-b border-surface-container">
         <div class="flex items-center gap-2">
           <span class="material-symbols-outlined text-primary text-2xl">tune</span>
-          <h3 class="font-headline-sm text-sm font-bold text-on-surface">Gestión en Vivo, Mobiliario &amp; Base de Datos</h3>
+          <h3 class="font-headline-sm text-sm font-bold text-on-surface">Gestión del Evento y Control de Mobiliario</h3>
         </div>
         <button onclick="closeModal('modal-manage-slot')" class="p-1 rounded-lg text-on-surface-variant hover:bg-surface-container text-xl">&times;</button>
       </div>
 
       <div class="flex flex-col gap-3 pt-4 text-xs">
-        <div class="p-3 rounded-xl bg-primary-fixed/20 flex items-center justify-between">
+        <div class="p-3 rounded-xl bg-primary-fixed/20 flex items-center justify-between gap-2">
           <div>
             <strong id="manage-slot-title" class="text-on-surface block font-bold">Cumpleaños #4 de Lucas • Carnaval de Carrusel</strong>
             <span id="manage-slot-subtitle" class="text-on-surface-variant">Turno de 15:00 a 19:00 hrs • Anfitriones: Camila y Roberto Peña</span>
           </div>
-          <button onclick="resetDemoDatabase()" title="Restaurar valores iniciales de demostración en MariaDB" class="px-2.5 py-1.5 rounded-lg bg-surface-container-lowest text-primary font-bold text-[11px] shadow-xs hover:bg-surface-container">
-            ↺ Reset Demo BD
+          <button onclick="resetDemoDatabase()" title="Restaurar valores iniciales del evento" class="px-2.5 py-1.5 rounded-lg bg-surface-container-lowest text-primary font-bold text-[11px] shadow-xs hover:bg-surface-container whitespace-nowrap">
+            ↺ Restaurar Turno
           </button>
         </div>
 
+        <!-- Cambiar Estado de la Reservación -->
         <div class="flex items-center justify-between p-3 rounded-xl bg-surface-container-low">
-          <span>Control Rápido de Aforo (Sincronizado con MariaDB):</span>
+          <span class="font-semibold text-on-surface">Estado de la Reservación:</span>
+          <div class="flex items-center gap-1.5">
+            <button onclick="changeReservationStatus('confirmada')" class="px-2.5 py-1 rounded-lg bg-blue-600 text-white font-bold text-[11px] hover:bg-blue-700">Confirmada</button>
+            <button onclick="changeReservationStatus('finalizada')" class="px-2.5 py-1 rounded-lg bg-emerald-600 text-white font-bold text-[11px] hover:bg-emerald-700">Finalizada</button>
+            <button onclick="changeReservationStatus('cancelada')" class="px-2.5 py-1 rounded-lg bg-rose-600 text-white font-bold text-[11px] hover:bg-rose-700">Cancelar</button>
+          </div>
+        </div>
+
+        <div class="flex items-center justify-between p-3 rounded-xl bg-surface-container-low">
+          <span class="font-semibold text-on-surface">Control Rápido de Aforo:</span>
           <div class="flex items-center gap-2">
             <button onclick="updateAforo(-1)" class="w-7 h-7 rounded-lg bg-surface-container-lowest text-on-surface font-bold text-sm shadow-xs hover:bg-surface-container">-1</button>
             <button onclick="updateAforo(1)" class="w-7 h-7 rounded-lg bg-primary text-white font-bold text-sm shadow-xs hover:brightness-105">+1</button>
           </div>
         </div>
 
-        <!-- Inventario de Mobiliario en Vivo (Tabla mobiliario de baby_carrusel.sql) -->
+        <!-- Inventario de Mobiliario -->
         <div class="p-3 rounded-xl bg-surface-container-low flex flex-col gap-2">
           <div class="flex items-center justify-between">
-            <span class="font-bold text-on-surface">Inventario y Estado de Mobiliario (Tabla <code class="text-primary">mobiliario</code>):</span>
-            <span class="text-[10px] text-on-surface-variant">Bitácora SCAMPER</span>
+            <span class="font-bold text-on-surface">Estado del Mobiliario e Instalaciones:</span>
+            <span class="text-[10px] text-on-surface-variant">Control de Mantenimiento</span>
           </div>
           <div id="db-mobiliario-list" class="flex flex-col gap-1.5 max-h-48 overflow-y-auto">
-            <!-- Renderizado dinámicamente desde la tabla mobiliario -->
+            <!-- Renderizado dinámicamente -->
           </div>
         </div>
 
         <div class="flex flex-col gap-2 pt-1">
           <button onclick="openContactHostModal(); closeModal('modal-manage-slot');" class="p-2.5 rounded-xl bg-surface-container-low text-on-surface font-semibold hover:bg-surface-container flex items-center gap-2">
             <span class="material-symbols-outlined text-secondary text-base">chat</span>
-            <span>Mensaje a Anfitriones (WhatsApp)</span>
+            <span>Contactar al Anfitrión (WhatsApp / Teléfono)</span>
           </button>
           <button onclick="showToast('Luces y música ambiental calibradas a 80 dB'); closeModal('modal-manage-slot');" class="p-2.5 rounded-xl bg-surface-container-low text-on-surface font-semibold hover:bg-surface-container flex items-center gap-2">
             <span class="material-symbols-outlined text-amber-600 text-base">volume_up</span>

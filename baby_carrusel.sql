@@ -149,47 +149,50 @@ CREATE TABLE `reservacion_mobiliario` (
 --
 
 INSERT INTO `clientes` (`id_cliente`, `nombre`, `telefono`, `correo`, `fecha_registro`) VALUES
-(1, 'Camila y Roberto Peña', '+52 444 849 1034', 'camila.pena@correo.mx', '2025-10-10 12:00:00'),
-(2, 'Valeria Silva', '+52 444 219 4501', 'valeria.silva@correo.mx', '2025-10-11 10:30:00'),
-(3, 'Familia Morales', '+52 444 310 8821', 'morales.fam@correo.mx', '2025-10-05 16:15:00'),
-(4, 'Lucía Mendoza', '+52 444 509 7712', 'lucia.mendoza@correo.mx', '2025-10-06 11:20:00'),
-(5, 'Alejandro Cruz', '+52 444 618 9940', 'alejandro.cruz@correo.mx', '2025-10-12 09:45:00'),
-(6, 'Mariana Garza', '+52 444 720 1138', 'mariana.garza@correo.mx', '2025-10-13 14:00:00'),
-(7, 'Daniela Ríos', '+52 444 831 5560', 'daniela.rios@correo.mx', '2025-10-14 17:30:00'),
-(8, 'Karla Gómez', '+52 444 942 6671', 'karla.gomez@correo.mx', '2025-10-15 18:10:00');
+(1, 'Camila y Roberto Peña', '+52 444 849 1034', 'camila.pena@correo.mx', '2026-11-05 12:00:00'),
+(2, 'Valeria Silva', '+52 444 219 4501', 'valeria.silva@correo.mx', '2026-11-06 10:30:00'),
+(3, 'Familia Morales', '+52 444 310 8821', 'morales.fam@correo.mx', '2026-11-01 16:15:00'),
+(4, 'Lucía Mendoza', '+52 444 509 7712', 'lucia.mendoza@correo.mx', '2026-11-02 11:20:00'),
+(5, 'Alejandro Cruz', '+52 444 618 9940', 'alejandro.cruz@correo.mx', '2026-11-08 09:45:00'),
+(6, 'Mariana Garza', '+52 444 720 1138', 'mariana.garza@correo.mx', '2026-11-09 14:00:00'),
+(7, 'Daniela Ríos', '+52 444 831 5560', 'daniela.rios@correo.mx', '2026-11-10 17:30:00'),
+(8, 'Karla Gómez', '+52 444 942 6671', 'karla.gomez@correo.mx', '2026-11-12 18:10:00');
 
 INSERT INTO `empleados` (`id_empleado`, `nombre`, `puesto`, `telefono`, `activo`) VALUES
-(1, 'Heriberto García', 'Dueño del Salón (Propietario)', '+52 444 540 2978', 1),
+(1, 'Heriberto García', 'Propietario del Salón', '+52 444 540 2978', 1),
 (2, 'Javier García Ramos', 'Administración y Reservaciones', '+52 444 540 2978', 1),
 (3, 'Elena Rodríguez', 'Supervisión de Seguridad e Inspección', '+52 444 312 8901', 1),
 (4, 'Carlos Méndez', 'Mantenimiento y Control de Mobiliario', '+52 444 621 4410', 1),
-(5, 'Sofía Torres', 'Limpieza Profunda y Sanitización Vapor/UV', '+52 444 789 3320', 1),
-(6, 'Equipo JOLIE (UPSLP)', 'Coordinación Operativa y Plataforma Digital', '+52 444 540 2978', 1);
+(5, 'Sofía Torres', 'Limpieza Profunda y Sanitización', '+52 444 789 3320', 1),
+(6, 'Jolie', 'Gerente de Turno y Coordinación', '+52 444 540 2978', 1);
 
 INSERT INTO `mobiliario` (`id_mobiliario`, `nombre`, `cantidad`, `estado`, `descripcion`) VALUES
 (1, 'Carrusel Mecánico Infantil (12 caballos)', 1, 'disponible', 'Carrusel central motorizado con arneses de seguridad y paro de emergencia.'),
 (2, 'Mesas Infantiles Chiavari', 12, 'disponible', 'Mesas tamaño infantil para área de comedor festivo y pastel.'),
 (3, 'Sillas Infantiles Chiavari', 60, 'disponible', 'Sillas ergonómicas infantiles de alta resistencia para comedor.'),
 (4, 'Brincolines y Trampolines Acolchonados', 2, 'disponible', 'Zona de salto con redes de protección perimetral y piso amortiguante.'),
-(5, 'Túnel Oruga y Set de Estimulación Temprana', 1, 'disponible', 'Área suave para bebés de 0 a 3 años desinfectada con vapor hospitalario.'),
-(6, 'Alberca de Pelotas con Sistema Vapor/UV', 1, 'disponible', 'Alberca infantil gigante con resbaladilla suave y ciclo de sanitización UV.');
+(5, 'Túnel Oruga y Set de Estimulación Temprana', 1, 'disponible', 'Área suave para bebés de 0 a 3 años desinfectada con vapor.'),
+(6, 'Alberca de Pelotas con Sistema Vapor/UV', 1, 'disponible', 'Alberca infantil gigante con resbaladilla suave y sanitización UV.');
 
 INSERT INTO `reglamento` (`id_regla`, `titulo`, `descripcion`, `activo`, `fecha_actualizacion`) VALUES
-(1, 'Garantía de Depósito Transparente ($350)', 'El depósito en resguardo ($350.00) incentiva el cuidado mutuo de las instalaciones (Economía Social y Solidaria). Es 100% reembolsable en un máximo de 24 horas tras finalizar el evento e inspección post-evento sin daños ni retrasos mayores a 45 min.', 1, current_timestamp()),
-(2, 'Control de Aforo y Capacidad Máxima (80 Personas)', 'Por normativa de Protección Civil y seguridad comunitaria (ODS 11), el cupo máximo estricto del salón es de 80 asistentes en total (niños + adultos acompañantes).', 1, current_timestamp()),
-(3, 'Calcetines Antideslizantes Obligatorios', 'Todo niño y adulto que ingrese a las áreas de brincolines, alberca de pelotas, túnel oruga o carrusel debe usar calcetines antideslizantes por higiene y seguridad.', 1, current_timestamp()),
-(4, 'Alimentos y Bebidas Exclusivos en Comedor', 'Los alimentos, bebidas, pastel y dulces están permitidos únicamente en el área de mesas y comedor. Queda prohibido ingresar comida o líquidos a las zonas de juego suave y túneles.', 1, current_timestamp()),
-(5, 'Límite Acústico (80 dB) y Bloqueo de Limpieza (2 hrs)', 'Por bienestar auditivo infantil el sonido no superará los 80 dB. Se programan 2 horas de separación entre eventos para sanitización profunda y revisión del mobiliario (ODS 8 y ODS 12).', 1, current_timestamp());
+(1, 'Garantía de Depósito Reembolsable ($350)', 'El depósito en garantía ($350.00) protege las instalaciones y el mobiliario. Es 100% reembolsable dentro de las 24 horas posteriores al evento tras verificar que no existan daños ni retrasos mayores a 45 minutos en la entrega del salón.', 1, current_timestamp()),
+(2, 'Capacidad y Aforo Máximo (80 Personas)', 'Por seguridad y normativa de Protección Civil, el cupo máximo permitido es de 80 asistentes en total (incluyendo niños y adultos acompañantes).', 1, current_timestamp()),
+(3, 'Uso Obligatorio de Calcetines Antideslizantes', 'Todo niño y adulto que ingrese al área de brincolines, alberca de pelotas, túnel oruga o carrusel deberá portar calcetines antideslizantes por higiene y seguridad.', 1, current_timestamp()),
+(4, 'Alimentos y Bebidas Exclusivos en Área de Comedor', 'Los alimentos, bebidas, pastel y dulces están permitidos únicamente en la zona de mesas y comedor. No se permite ingresar comida o líquidos a los juegos suaves.', 1, current_timestamp()),
+(5, 'Nivel de Sonido Seguro (80 dB) y Puntualidad de Turnos', 'Por bienestar infantil el sonido ambiental no supera los 80 dB. Entre cada turno se reservan 90 a 120 minutos exclusivos para limpieza profunda, desinfección y revisión del salón.', 1, current_timestamp());
 
 INSERT INTO `reservaciones` (`id_reservacion`, `id_cliente`, `fecha_evento`, `hora_inicio`, `hora_fin`, `tipo_evento`, `numero_invitados`, `estado`, `deposito`, `deposito_estado`, `observaciones`, `fecha_registro`) VALUES
-(1, 1, '2025-10-25', '15:00:00', '19:00:00', 'Cumpleaños #4 de Lucas • Carnaval de Carrusel y Safari Mágico', 62, 'confirmada', 350.00, 'pagado', 'Activo en Salón Principal • 38 Niños / 24 Adultos • Paquete $1,250.00 Liquidado', '2025-10-10 12:05:00'),
-(2, 2, '2025-10-25', '09:30:00', '13:30:00', 'Safari Mágico de Mía', 45, 'finalizada', 350.00, 'devuelto', 'Evento matutino completado e inspeccionado sin daños. Depósito reembolsado al 100%.', '2025-10-11 10:35:00'),
-(3, 3, '2025-10-19', '09:30:00', '13:30:00', 'Fiesta de Cumpleaños Mateo', 40, 'finalizada', 350.00, 'devuelto', 'Salón entregado en óptimas condiciones.', '2025-10-05 16:20:00'),
-(4, 4, '2025-10-19', '15:00:00', '19:00:00', 'Cumpleaños #5 de Valeria', 55, 'finalizada', 350.00, 'devuelto', 'Inspección post-evento aprobada.', '2025-10-06 11:25:00'),
-(5, 5, '2025-10-21', '10:00:00', '14:00:00', 'Apartado Tentativo (Bautizo)', 50, 'pendiente', 350.00, 'pendiente', 'En espera de confirmación de anticipo y depósito.', '2025-10-12 09:50:00'),
-(6, 6, '2025-10-22', '14:00:00', '18:00:00', 'Baby Shower de Valentina', 60, 'confirmada', 350.00, 'pagado', 'Montaje especial en salón comedor y área de regalos.', '2025-10-13 14:10:00'),
-(7, 7, '2025-10-24', '16:00:00', '20:00:00', 'Cumpleaños #3 de Emma', 65, 'confirmada', 350.00, 'pagado', 'Temática Unicornio • Depósito de garantía cubierto.', '2025-10-14 17:35:00'),
-(8, 8, '2025-10-24', '20:30:00', '23:30:00', 'Pijamada VIP (Apartado)', 30, 'pendiente', 350.00, 'pendiente', 'Apartado nocturno pendiente de pago de garantía.', '2025-10-15 18:15:00');
+(1, 1, '2026-11-21', '15:00:00', '19:00:00', 'Cumpleaños #4 de Lucas • Carnaval de Carrusel y Safari Mágico', 62, 'confirmada', 350.00, 'pagado', 'Activo en Salón Principal • 38 Niños / 24 Adultos • Paquete $1,250.00 Liquidado', '2026-11-05 12:05:00'),
+(2, 2, '2026-11-21', '09:30:00', '13:30:00', 'Safari Mágico de Mía', 45, 'finalizada', 350.00, 'devuelto', 'Evento matutino completado e inspeccionado sin daños. Depósito reembolsado al 100%.', '2026-11-06 10:35:00'),
+(3, 3, '2026-11-15', '09:30:00', '13:30:00', 'Fiesta de Cumpleaños Mateo', 40, 'finalizada', 350.00, 'devuelto', 'Salón entregado en óptimas condiciones.', '2026-11-01 16:20:00'),
+(4, 4, '2026-11-15', '15:00:00', '19:00:00', 'Cumpleaños #5 de Valeria', 55, 'finalizada', 350.00, 'devuelto', 'Inspección post-evento aprobada.', '2026-11-02 11:25:00'),
+(5, 5, '2026-11-17', '09:30:00', '13:30:00', 'Bautizo de Santiago', 50, 'pendiente', 350.00, 'pendiente', 'Apartado pendiente de confirmación de pago.', '2026-11-08 09:50:00'),
+(6, 6, '2026-11-18', '15:00:00', '19:00:00', 'Baby Shower de Valentina', 60, 'confirmada', 350.00, 'pagado', 'Montaje especial en salón comedor y área de regalos.', '2026-11-09 14:10:00'),
+(7, 7, '2026-11-20', '15:00:00', '19:00:00', 'Cumpleaños #3 de Emma • Unicornios', 65, 'confirmada', 350.00, 'pagado', 'Temática Unicornio • Depósito de garantía cubierto.', '2026-11-10 17:35:00'),
+(8, 8, '2026-11-20', '20:00:00', '23:30:00', 'Pijamada VIP de Sofía', 30, 'pendiente', 350.00, 'pendiente', 'Apartado nocturno pendiente de confirmación.', '2026-11-12 18:15:00'),
+(9, 3, '2026-11-22', '15:00:00', '19:00:00', 'Cumpleaños #2 de Leo • Dinosaurios', 50, 'confirmada', 350.00, 'pagado', 'Paquete Fiesta Carrusel Mágico confirmado.', '2026-11-14 11:00:00'),
+(10, 6, '2026-11-28', '09:30:00', '13:30:00', 'Cumpleaños #1 de Regina • Baby Splash', 45, 'confirmada', 350.00, 'pagado', 'Área de estimulación temprana reservada.', '2026-11-15 13:20:00'),
+(11, 7, '2026-11-28', '15:00:00', '19:00:00', 'Fiesta Sorpresa de Emiliano #6', 70, 'pendiente', 350.00, 'pendiente', 'Solicitud de apartado fin de semana.', '2026-11-18 16:40:00');
 
 INSERT INTO `reservacion_mobiliario` (`id_reservacion_mobiliario`, `id_reservacion`, `id_mobiliario`, `cantidad`) VALUES
 (1, 1, 1, 1),
@@ -200,8 +203,8 @@ INSERT INTO `reservacion_mobiliario` (`id_reservacion_mobiliario`, `id_reservaci
 (6, 1, 6, 1);
 
 INSERT INTO `checklists` (`id_checklist`, `id_reservacion`, `tipo`, `fecha_revision`, `responsable`, `observaciones`) VALUES
-(1, 1, 'pre_evento', '2025-10-25 14:15:00', 'Elena Rodríguez y Javier García', 'Inspección pre-evento aprobada al 100% antes del ingreso de invitados.'),
-(2, 1, 'post_evento', '2025-10-25 19:00:00', 'Javier García y Carlos Méndez', 'Protocolo de salida programado a las 19:00 hrs para liberación de depósito.');
+(1, 1, 'pre_evento', '2026-11-21 14:15:00', 'Elena Rodríguez y Javier García', 'Inspección pre-evento aprobada al 100% antes del ingreso de invitados.'),
+(2, 1, 'post_evento', '2026-11-21 19:00:00', 'Javier García y Carlos Méndez', 'Protocolo de salida programado a las 19:00 hrs para liberación de depósito.');
 
 INSERT INTO `checklist_detalles` (`id_detalle`, `id_checklist`, `elemento`, `estado`, `observaciones`) VALUES
 (1, 1, 'Seguridad Mecánica del Carrusel y Arneses', 'bueno', 'Inspeccionado y verificado por Elena R. a las 14:15 hrs'),
@@ -316,7 +319,7 @@ ALTER TABLE `reglamento`
 -- AUTO_INCREMENT de la tabla `reservaciones`
 --
 ALTER TABLE `reservaciones`
-  MODIFY `id_reservacion` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=9;
+  MODIFY `id_reservacion` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=12;
 
 --
 -- AUTO_INCREMENT de la tabla `reservacion_mobiliario`
