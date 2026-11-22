@@ -428,7 +428,7 @@
                     <p id="selected-day-subtitle" class="font-body-sm text-body-sm text-on-surface-variant">Selecciona un turno disponible para reservar tu evento</p>
                   </div>
                 </div>
-                <span class="text-xs font-semibold px-3 py-1 rounded-full bg-surface-container text-on-surface-variant">3 Turnos por Día</span>
+                <span class="text-xs font-semibold px-3 py-1 rounded-full bg-surface-container text-on-surface-variant">7 Horas de Evento (Antes de 11:00 PM)</span>
               </div>
 
               <!-- Contenedor dinámico de turnos del día -->
@@ -437,14 +437,14 @@
               </div>
             </div>
 
-            <!-- GALERÍA DE INSTALACIONES Y EQUIPAMIENTO DEL SALÓN -->
+            <!-- GALERÍA DE INSTALACIONES Y EQUIPAMIENTO DEL SALÓN (7 FOTOS REALES) -->
             <div class="bg-surface-container-lowest p-space-lg rounded-2xl shadow-sm flex flex-col gap-space-md">
               <div class="flex items-center justify-between">
                 <div class="flex items-center gap-2">
                   <span class="text-2xl">🎠</span>
                   <div>
-                    <h2 class="font-headline-sm text-headline-sm text-on-surface font-bold">Instalaciones del Salón &amp; Área de Carrusel</h2>
-                    <p class="font-body-sm text-body-sm text-on-surface-variant">Áreas físicas, zonas sanitizadas y ambientación infantil</p>
+                    <h2 class="font-headline-sm text-headline-sm text-on-surface font-bold">Instalaciones Reales de Salón Baby Carrusel</h2>
+                    <p class="font-body-sm text-body-sm text-on-surface-variant">Comedor para 50 y 80 personas, área de juegos infantiles, trampolín y cocina equipada (Haz clic para ampliar)</p>
                   </div>
                 </div>
                 <button onclick="openVenueMapModal()" class="font-label-sm text-label-sm text-secondary font-semibold hover:underline flex items-center gap-1" type="button">
@@ -453,54 +453,95 @@
                 </button>
               </div>
 
-              <!-- Tarjetas de Fotos del Salón -->
+              <!-- Fila Principal: 3 Fotos Destacadas -->
               <div class="grid grid-cols-1 sm:grid-cols-3 gap-space-md">
                 
-                <!-- Foto 1: Zona de Juegos & Brincolines -->
-                <div onclick="openGalleryLightbox('assets/images/salon-1.jpg', 'Zona de Juegos &amp; Brincolines', 'Superficies acolchonadas de alto impacto, redes de protección y monitoreo por personal calificado.')" class="rounded-2xl overflow-hidden relative group shadow-sm ring-1 ring-black/5 cursor-pointer interactive-card">
-                  <img alt="Zona de Juegos y Brincolines" class="w-full h-44 object-cover group-hover:scale-105 transition-transform duration-300" src="assets/images/salon-1.jpg" onerror="this.onerror=null; this.src='assets/images/salon-1.svg';"/>
+                <!-- Foto 4: Zona de Juegos y Trampolín con Red -->
+                <div onclick="openGalleryLightbox('assets/images/4.jpeg', 'Zona de Juegos &amp; Trampolín con Red', 'Área techada con piso verde, gran trampolín circular con malla protectora, casitas con resbaladilla, túnel oruga y canasta de básquetbol.')" class="rounded-2xl overflow-hidden relative group shadow-sm ring-1 ring-black/5 cursor-pointer interactive-card">
+                  <img alt="Zona de Juegos y Trampolín" class="w-full h-44 object-cover group-hover:scale-105 transition-transform duration-300" src="assets/images/4.jpeg"/>
                   <div class="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent flex flex-col justify-end p-3">
                     <div class="flex items-center gap-1.5">
                       <span class="text-xs text-white font-bold tracking-wide flex items-center gap-1">
-                        <span>🤸</span> Zona de Juegos &amp; Brincolines
+                        <span>🤸</span> Trampolín &amp; Zona de Juegos
                       </span>
                     </div>
                     <span class="text-[11px] text-emerald-200 font-medium flex items-center gap-1 mt-0.5">
                       <span class="w-1.5 h-1.5 rounded-full bg-emerald-400"></span>
-                      Acolchonado &amp; Monitoreado
+                      Red Protectora y Piso Verde
                     </span>
                   </div>
                 </div>
 
-                <!-- Foto 2: Estimulación Temprana & Túnel Oruga -->
-                <div onclick="openGalleryLightbox('assets/images/salon-2.jpg', 'Estimulación Temprana &amp; Túnel Oruga', 'Área especial para niños de 0 a 3 años. Materiales suaves desinfectados con vapor hospitalario.')" class="rounded-2xl overflow-hidden relative group shadow-sm ring-1 ring-black/5 cursor-pointer interactive-card">
-                  <img alt="Estimulación Temprana y Túnel Oruga" class="w-full h-44 object-cover group-hover:scale-105 transition-transform duration-300" src="assets/images/salon-2.jpg" onerror="this.onerror=null; this.src='assets/images/salon-2.svg';"/>
+                <!-- Foto 5: Túnel Oruga, Resbaladillas y Área Infantil -->
+                <div onclick="openGalleryLightbox('assets/images/5.jpeg', 'Túnel Oruga, Resbaladillas y Juegos', 'Túnel oruga morado, casitas infantiles con resbaladilla, caballito mecedor y mesita infantil con sillitas de colores.')" class="rounded-2xl overflow-hidden relative group shadow-sm ring-1 ring-black/5 cursor-pointer interactive-card">
+                  <img alt="Túnel Oruga y Resbaladillas" class="w-full h-44 object-cover group-hover:scale-105 transition-transform duration-300" src="assets/images/5.jpeg"/>
                   <div class="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent flex flex-col justify-end p-3">
                     <div class="flex items-center gap-1.5">
                       <span class="text-xs text-white font-bold tracking-wide flex items-center gap-1">
-                        <span>🐛</span> Estimulación &amp; Túnel Oruga
+                        <span>🐛</span> Túnel Oruga &amp; Resbaladillas
                       </span>
                     </div>
                     <span class="text-[11px] text-pink-200 font-medium flex items-center gap-1 mt-0.5">
                       <span class="w-1.5 h-1.5 rounded-full bg-pink-400"></span>
-                      Espuma Sanitizada con Vapor
+                      Juegos Infantiles Incluidos
                     </span>
                   </div>
                 </div>
 
-                <!-- Foto 3: Comedor Festivo & Salón Unicornio -->
-                <div onclick="openGalleryLightbox('assets/images/salon-3.jpg', 'Comedor Festivo &amp; Mesas Infantiles', 'Mesas y sillas Chiavari tamaño infantil, montaje de centros de mesa y área especial de pastel.')" class="rounded-2xl overflow-hidden relative group shadow-sm ring-1 ring-black/5 cursor-pointer interactive-card">
-                  <img alt="Comedor Festivo y Salón Unicornio" class="w-full h-44 object-cover group-hover:scale-105 transition-transform duration-300" src="assets/images/salon-3.jpg" onerror="this.onerror=null; this.src='assets/images/salon-3.svg';"/>
+                <!-- Foto 1: Salón Comedor con Manteles y Cubremanteles -->
+                <div onclick="openGalleryLightbox('assets/images/1.jpeg', 'Salón Comedor con Manteles y Cubremanteles', 'Montaje completo para 50 u 80 personas con mesas, sillas, manteles, cubremanteles, ventiladores de techo y murales infantiles.')" class="rounded-2xl overflow-hidden relative group shadow-sm ring-1 ring-black/5 cursor-pointer interactive-card">
+                  <img alt="Salón Comedor Principal" class="w-full h-44 object-cover group-hover:scale-105 transition-transform duration-300" src="assets/images/1.jpeg"/>
                   <div class="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent flex flex-col justify-end p-3">
                     <div class="flex items-center gap-1.5">
                       <span class="text-xs text-white font-bold tracking-wide flex items-center gap-1">
-                        <span>🦄</span> Comedor Festivo &amp; Salón
+                        <span>🍽️</span> Comedor &amp; Mantelería
                       </span>
                     </div>
                     <span class="text-[11px] text-blue-200 font-medium flex items-center gap-1 mt-0.5">
                       <span class="w-1.5 h-1.5 rounded-full bg-blue-300"></span>
-                      Montaje Completo &amp; Decorado
+                      Manteles y Cubremanteles Incluidos
                     </span>
+                  </div>
+                </div>
+
+              </div>
+
+              <!-- Segunda Fila: 4 Fotos Adicionales del Salón (2, 3, 6 y 7) -->
+              <div class="grid grid-cols-2 sm:grid-cols-4 gap-space-sm pt-1">
+
+                <!-- Foto 2: Comedor y Cocina Equipada -->
+                <div onclick="openGalleryLightbox('assets/images/2.jpeg', 'Salón Comedor y Cocina Equipada', 'Incluye cocina equipada con refrigerador, estufa con gas, microondas, tarja y barra de servicio junto al área de mesas.')" class="rounded-xl overflow-hidden relative group shadow-xs ring-1 ring-black/5 cursor-pointer interactive-card">
+                  <img alt="Cocina Equipada y Comedor" class="w-full h-32 object-cover group-hover:scale-105 transition-transform duration-300" src="assets/images/2.jpeg"/>
+                  <div class="absolute inset-0 bg-gradient-to-t from-black/80 via-black/15 to-transparent flex flex-col justify-end p-2.5">
+                    <span class="text-[11px] text-white font-bold leading-tight">🍳 Cocina Equipada &amp; Mesas</span>
+                    <span class="text-[10px] text-amber-200">Refri, Estufa, Gas y Micro</span>
+                  </div>
+                </div>
+
+                <!-- Foto 3: Área de Pastel, Dulces y Mesita Infantil -->
+                <div onclick="openGalleryLightbox('assets/images/3.jpeg', 'Área de Pastel, Dulces y Mesita Infantil', 'Espacio ideal para mesa de pastel, dulces y regalos, acompañado de mesita infantil con mini sillitas para los pequeños.')" class="rounded-xl overflow-hidden relative group shadow-xs ring-1 ring-black/5 cursor-pointer interactive-card">
+                  <img alt="Área de Pastel y Mesita Infantil" class="w-full h-32 object-cover group-hover:scale-105 transition-transform duration-300" src="assets/images/3.jpeg"/>
+                  <div class="absolute inset-0 bg-gradient-to-t from-black/80 via-black/15 to-transparent flex flex-col justify-end p-2.5">
+                    <span class="text-[11px] text-white font-bold leading-tight">🎂 Área de Pastel &amp; Niños</span>
+                    <span class="text-[10px] text-pink-200">Mesa de Dulces y Mini Sillas</span>
+                  </div>
+                </div>
+
+                <!-- Foto 6: Barra de Servicio y Montaje Rosa -->
+                <div onclick="openGalleryLightbox('assets/images/6.jpeg', 'Barra de Servicio y Montaje de Mesas', 'Amplia barra blanca de apoyo junto a la cocina equipada, refrigerador disponible y mesas vestidas con manteles y cubremanteles.')" class="rounded-xl overflow-hidden relative group shadow-xs ring-1 ring-black/5 cursor-pointer interactive-card">
+                  <img alt="Barra de Servicio y Comedor" class="w-full h-32 object-cover group-hover:scale-105 transition-transform duration-300" src="assets/images/6.jpeg"/>
+                  <div class="absolute inset-0 bg-gradient-to-t from-black/80 via-black/15 to-transparent flex flex-col justify-end p-2.5">
+                    <span class="text-[11px] text-white font-bold leading-tight">✨ Barra de Servicio</span>
+                    <span class="text-[10px] text-emerald-200">Apoyo de Cocina y Banquete</span>
+                  </div>
+                </div>
+
+                <!-- Foto 7: Vista General y Decoración -->
+                <div onclick="openGalleryLightbox('assets/images/7.jpeg', 'Ambientación para Fiestas y Eventos', 'Salón versátil con internet Wi-Fi, iluminación natural y ventiladores para eventos de 50 u 80 personas (7 horas de duración).')" class="rounded-xl overflow-hidden relative group shadow-xs ring-1 ring-black/5 cursor-pointer interactive-card">
+                  <img alt="Ambientación y Decoración" class="w-full h-32 object-cover group-hover:scale-105 transition-transform duration-300" src="assets/images/7.jpeg"/>
+                  <div class="absolute inset-0 bg-gradient-to-t from-black/80 via-black/15 to-transparent flex flex-col justify-end p-2.5">
+                    <span class="text-[11px] text-white font-bold leading-tight">🎈 Montaje para 50 y 80 Pers.</span>
+                    <span class="text-[10px] text-blue-200">7 Horas • Wi-Fi Incluido</span>
                   </div>
                 </div>
 
@@ -513,57 +554,61 @@
           <div class="lg:col-span-4 flex flex-col gap-space-lg">
 
             <!-- ===============================================================
-                 PANEL DERECHO MODO CLIENTE (Información de Paquete, Horarios y Contacto)
+                 PANEL DERECHO MODO CLIENTE (Información Real del Dueño)
                  =============================================================== -->
             <div id="client-side-panel" class="flex flex-col gap-space-lg">
-              <!-- Tarjeta de Paquete y Reservación para Clientes -->
+              <!-- Tarjeta de Paquetes y Servicios Incluidos para Clientes -->
               <div class="bg-surface-container-lowest p-space-lg rounded-2xl shadow-sm flex flex-col gap-space-md relative overflow-hidden">
                 <div class="flex items-center justify-between">
-                  <span class="font-label-sm text-label-sm text-on-surface-variant uppercase tracking-wider font-semibold">Paquete Todo Incluido</span>
-                  <span class="px-2.5 py-0.5 rounded-full text-xs font-bold bg-primary text-white">Cupo 80 Personas</span>
+                  <span class="font-label-sm text-label-sm text-on-surface-variant uppercase tracking-wider font-semibold">7 Horas de Evento</span>
+                  <span class="px-2.5 py-0.5 rounded-full text-xs font-bold bg-primary text-white">50 o 80 Personas</span>
                 </div>
 
                 <div class="flex flex-col gap-1">
                   <div class="flex items-center gap-2 flex-wrap">
-                    <h2 class="font-headline-lg text-headline-lg text-on-surface font-bold">Paquete Fiesta Carrusel Mágico</h2>
+                    <h2 class="font-headline-lg text-headline-lg text-on-surface font-bold">Paquetes Todo Incluido</h2>
                     <span class="text-xl">🎠🎂</span>
                   </div>
                   <p class="text-xs text-on-surface-variant leading-relaxed">
-                    Incluye uso exclusivo del salón por 4 horas, carrusel mecánico central, zona de brincolines, área de estimulación temprana y comedor infantil completo.
+                    Manejamos <strong>2 precios según tu número de invitados</strong> (para <strong>50 personas</strong> o para <strong>80 personas</strong>), con <strong>7 horas continuas de evento</strong> en horario antes de las 11:00 de la noche.
                   </p>
                 </div>
 
-                <!-- Desglose de Costos Claros -->
-                <div class="flex flex-col gap-2 p-space-md rounded-xl bg-surface-container-low text-xs">
-                  <div class="flex items-center justify-between font-semibold text-on-surface">
-                    <span>Renta del Salón (Turno 4 hrs):</span>
-                    <span class="text-sm font-bold">$1,250.00</span>
+                <!-- Las 2 Opciones de Paquete -->
+                <div class="grid grid-cols-1 sm:grid-cols-2 gap-2 text-xs">
+                  <div onclick="openBookingModalWithPackage('50')" class="p-3 rounded-xl bg-surface-container-low border-2 border-primary/20 hover:border-primary cursor-pointer transition-all flex flex-col justify-between gap-1">
+                    <span class="text-[10px] font-bold uppercase text-primary">Modalidad 1</span>
+                    <strong class="text-sm font-extrabold text-on-surface">Paquete 50 Personas</strong>
+                    <span class="text-[11px] text-on-surface-variant">7 Horas • Todo Incluido</span>
                   </div>
-                  <div class="flex items-center justify-between text-emerald-800 font-semibold">
-                    <span>Depósito en Garantía (100% Reembolsable):</span>
-                    <span>$350.00</span>
-                  </div>
-                  <div class="pt-2 border-t border-surface-container flex items-center justify-between font-bold text-primary text-sm">
-                    <span>Total al Reservar:</span>
-                    <span>$1,600.00</span>
+                  <div onclick="openBookingModalWithPackage('80')" class="p-3 rounded-xl bg-primary-fixed/25 border-2 border-primary/40 hover:border-primary cursor-pointer transition-all flex flex-col justify-between gap-1">
+                    <span class="text-[10px] font-bold uppercase text-primary">Modalidad 2</span>
+                    <strong class="text-sm font-extrabold text-on-surface">Paquete 80 Personas</strong>
+                    <span class="text-[11px] text-on-surface-variant">7 Horas • Cupo Máximo</span>
                   </div>
                 </div>
 
-                <!-- Turnos Disponibles -->
-                <div class="flex flex-col gap-1.5 text-xs">
-                  <span class="font-bold text-on-surface">Horarios de Eventos:</span>
-                  <div class="p-2.5 rounded-xl bg-surface-container-low flex items-center justify-between">
-                    <span class="font-semibold text-on-surface">☀️ Turno Mañana</span>
-                    <span class="text-on-surface-variant font-medium">09:30 - 13:30 hrs</span>
+                <!-- Qué incluye la renta (Datos exactos del dueño) -->
+                <div class="flex flex-col gap-1.5 p-space-md rounded-xl bg-surface-container-low text-xs">
+                  <span class="font-bold text-on-surface mb-0.5">¿Qué incluye tu reservación?</span>
+                  <div class="grid grid-cols-2 gap-1.5 text-[11px] text-on-surface-variant">
+                    <span class="flex items-center gap-1"><strong class="text-emerald-600">✓</strong> 7 Horas de evento</span>
+                    <span class="flex items-center gap-1"><strong class="text-emerald-600">✓</strong> Mesas y sillas</span>
+                    <span class="flex items-center gap-1"><strong class="text-emerald-600">✓</strong> Manteles incluidos</span>
+                    <span class="flex items-center gap-1"><strong class="text-emerald-600">✓</strong> Cubremanteles</span>
+                    <span class="flex items-center gap-1"><strong class="text-emerald-600">✓</strong> Juegos infantiles</span>
+                    <span class="flex items-center gap-1"><strong class="text-emerald-600">✓</strong> Internet Wi-Fi</span>
+                    <span class="flex items-center gap-1"><strong class="text-emerald-600">✓</strong> Refrigerador</span>
+                    <span class="flex items-center gap-1"><strong class="text-emerald-600">✓</strong> Microondas</span>
+                    <span class="flex items-center gap-1"><strong class="text-emerald-600">✓</strong> Estufa equipada</span>
+                    <span class="flex items-center gap-1"><strong class="text-emerald-600">✓</strong> Gas incluido</span>
                   </div>
-                  <div class="p-2.5 rounded-xl bg-surface-container-low flex items-center justify-between">
-                    <span class="font-semibold text-on-surface">🎈 Turno Tarde</span>
-                    <span class="text-on-surface-variant font-medium">15:00 - 19:00 hrs</span>
-                  </div>
-                  <div class="p-2.5 rounded-xl bg-surface-container-low flex items-center justify-between">
-                    <span class="font-semibold text-on-surface">🌙 Turno Noche</span>
-                    <span class="text-on-surface-variant font-medium">20:00 - 23:30 hrs</span>
-                  </div>
+                </div>
+
+                <!-- Horario Límite -->
+                <div class="p-2.5 rounded-xl bg-amber-50 border border-amber-200 text-amber-950 text-xs flex items-center gap-2">
+                  <span class="material-symbols-outlined text-amber-600 text-lg">schedule</span>
+                  <span><strong>Horario del Salón:</strong> 7 horas de evento a elegir, terminando siempre <strong>antes de las 11:00 de la noche (23:00 hrs)</strong>.</span>
                 </div>
 
                 <!-- Ubicación y Contacto -->
@@ -573,7 +618,7 @@
                     Ubicación del Salón:
                   </span>
                   <span class="text-on-surface-variant">C. 5 de Mayo 1940, San Juan de Guadalupe, Santuario, C.P. 78340, San Luis Potosí, S.L.P.</span>
-                  <span class="text-primary font-semibold mt-1">Atención y Reservaciones: +52 444 540 2978</span>
+                  <span class="text-primary font-semibold mt-1">Informes y Precios: +52 444 540 2978</span>
                 </div>
 
                 <button onclick="openBookingModal()" class="w-full py-3 rounded-xl bg-primary text-white font-label-md text-xs font-bold hover:brightness-105 transition-all shadow-sm flex items-center justify-center gap-1.5" type="button">
@@ -587,27 +632,27 @@
                 <div class="flex items-center gap-2">
                   <span class="text-2xl">🛡️</span>
                   <div>
-                    <h2 class="font-headline-sm text-headline-sm text-on-surface font-bold">Reglas para tu Celebración</h2>
-                    <p class="font-body-sm text-body-sm text-on-surface-variant">Convivencia segura e instalaciones impecables</p>
+                    <h2 class="font-headline-sm text-headline-sm text-on-surface font-bold">Lineamientos del Salón</h2>
+                    <p class="font-body-sm text-body-sm text-on-surface-variant">Convivencia segura e instalaciones completas</p>
                   </div>
                 </div>
 
                 <ul class="space-y-2.5 text-xs text-on-surface-variant">
                   <li class="flex items-start gap-2">
                     <span class="material-symbols-outlined text-emerald-600 text-base mt-0.5">check_circle</span>
-                    <span><strong>Aforo máximo de 80 personas:</strong> Por comodidad y seguridad de todas las familias (niños y adultos).</span>
+                    <span><strong>Capacidad para 50 u 80 personas:</strong> Elige el paquete que mejor se adapte a tu número de invitados.</span>
                   </li>
                   <li class="flex items-start gap-2">
                     <span class="material-symbols-outlined text-emerald-600 text-base mt-0.5">check_circle</span>
-                    <span><strong>Calcetines antideslizantes:</strong> Obligatorios en brincolines, alberca de pelotas, túnel oruga y carrusel.</span>
+                    <span><strong>7 Horas de Evento:</strong> Disfruta de 7 horas continuas; el horario límite de cierre es antes de las 11:00 PM.</span>
                   </li>
                   <li class="flex items-start gap-2">
                     <span class="material-symbols-outlined text-emerald-600 text-base mt-0.5">check_circle</span>
-                    <span><strong>Alimentos en área de comedor:</strong> No se permite ingresar comida o bebidas a las áreas de juego suave.</span>
+                    <span><strong>Cocina y Mantelería listas:</strong> Incluye manteles, cubremanteles, refrigerador, microondas, estufa con gas e internet.</span>
                   </li>
                   <li class="flex items-start gap-2">
                     <span class="material-symbols-outlined text-emerald-600 text-base mt-0.5">check_circle</span>
-                    <span><strong>Depósito 100% reembolsable:</strong> Se devuelve íntegro tras verificar al final de la fiesta que el mobiliario no presenta daños.</span>
+                    <span><strong>Depósito en garantía reembolsable:</strong> Se devuelve íntegro tras verificar al final de la fiesta que el mobiliario y juegos no presentan daños.</span>
                   </li>
                 </ul>
 
@@ -888,8 +933,11 @@
             <input id="booking-email" type="email" placeholder="correo@ejemplo.com" class="w-full px-3 py-2 rounded-xl bg-surface-container-low text-on-surface text-sm border border-transparent focus:border-primary focus:outline-none"/>
           </div>
           <div>
-            <label class="block text-xs font-semibold text-on-surface mb-1">Invitados Estimados (Máx. 80) *</label>
-            <input id="booking-guests" required type="number" min="10" max="80" value="50" class="w-full px-3 py-2 rounded-xl bg-surface-container-low text-on-surface text-sm border border-transparent focus:border-primary focus:outline-none"/>
+            <label class="block text-xs font-semibold text-on-surface mb-1">Paquete por Capacidad *</label>
+            <select id="booking-package" onchange="onPackageCapacityChange(this.value)" class="w-full px-3 py-2 rounded-xl bg-surface-container-low text-on-surface text-sm font-semibold border border-transparent focus:border-primary focus:outline-none">
+              <option value="50">Paquete para 50 Personas (7 Horas)</option>
+              <option value="80" selected>Paquete para 80 Personas (7 Horas)</option>
+            </select>
           </div>
         </div>
 
@@ -902,35 +950,42 @@
                 <span>Ver Calendario</span>
               </button>
             </div>
-            <input id="booking-date" required type="date" min="2026-11-21" value="2026-11-21" class="w-full px-3 py-2 rounded-xl bg-surface-container-low text-on-surface text-sm border border-transparent focus:border-primary focus:outline-none"/>
+            <input id="booking-date" required type="date" min="2026-11-21" value="2026-11-23" class="w-full px-3 py-2 rounded-xl bg-surface-container-low text-on-surface text-sm border border-transparent focus:border-primary focus:outline-none"/>
           </div>
           <div>
-            <label class="block text-xs font-semibold text-on-surface mb-1">Turno Solicitado *</label>
+            <label class="block text-xs font-semibold text-on-surface mb-1">Horario de 7 Horas (Antes de 11:00 PM) *</label>
             <select id="booking-slot" class="w-full px-3 py-2 rounded-xl bg-surface-container-low text-on-surface text-sm border border-transparent focus:border-primary focus:outline-none">
-              <option value="mañana">Mañana (09:30 - 13:30)</option>
-              <option value="tarde">Tarde (15:00 - 19:00)</option>
-              <option value="noche" selected>Noche (20:00 - 23:30)</option>
+              <option value="11:00-18:00">11:00 AM a 06:00 PM (7 Horas)</option>
+              <option value="13:00-20:00">01:00 PM a 08:00 PM (7 Horas)</option>
+              <option value="14:00-21:00" selected>02:00 PM a 09:00 PM (7 Horas)</option>
+              <option value="15:00-22:00">03:00 PM a 10:00 PM (7 Horas)</option>
+              <option value="16:00-23:00">04:00 PM a 11:00 PM (7 Hrs • Límite 11 PM)</option>
             </select>
           </div>
         </div>
 
-        <div>
-          <label class="block text-xs font-semibold text-on-surface mb-1">Temática de la Celebración</label>
-          <input id="booking-theme" type="text" placeholder="Ej. Safari, Granja, Dinosaurios, Unicornios..." class="w-full px-3 py-2 rounded-xl bg-surface-container-low text-on-surface text-sm border border-transparent focus:border-primary focus:outline-none"/>
+        <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
+          <div>
+            <label class="block text-xs font-semibold text-on-surface mb-1">Invitados Estimados *</label>
+            <input id="booking-guests" required type="number" min="10" max="80" value="80" class="w-full px-3 py-2 rounded-xl bg-surface-container-low text-on-surface text-sm border border-transparent focus:border-primary focus:outline-none"/>
+          </div>
+          <div>
+            <label class="block text-xs font-semibold text-on-surface mb-1">Color de Cubremanteles / Temática</label>
+            <input id="booking-theme" type="text" placeholder="Ej. Princesas, Rosa, Azul, Dinosaurios..." class="w-full px-3 py-2 rounded-xl bg-surface-container-low text-on-surface text-sm border border-transparent focus:border-primary focus:outline-none"/>
+          </div>
         </div>
 
         <div class="p-3 rounded-xl bg-surface-container-low flex flex-col gap-1 text-xs">
-          <div class="flex justify-between font-semibold">
-            <span>Paquete Fiesta Carrusel Mágico:</span>
-            <span>$1,250.00</span>
+          <div class="flex justify-between font-bold text-on-surface">
+            <span id="booking-summary-pkg">Paquete Seleccionado (80 Personas • 7 Horas):</span>
+            <span class="text-primary">Todo Incluido</span>
           </div>
-          <div class="flex justify-between text-on-surface-variant">
-            <span>Depósito Reembolsable en Garantía:</span>
-            <span>+$350.00</span>
-          </div>
-          <div class="flex justify-between font-bold text-primary pt-1 border-t border-surface-container">
-            <span>Total Inicial:</span>
-            <span>$1,600.00</span>
+          <p class="text-[11px] text-on-surface-variant leading-relaxed">
+            <strong>Incluye:</strong> Mesas, sillas, manteles, cubremanteles, área de juegos infantiles, internet Wi-Fi, refrigerador, microondas, estufa y gas (7 hrs de evento antes de las 11:00 PM).
+          </p>
+          <div class="flex justify-between text-emerald-800 font-semibold pt-1 border-t border-surface-container">
+            <span>Depósito en Garantía (100% Reembolsable):</span>
+            <span>$350.00</span>
           </div>
         </div>
 
@@ -1091,13 +1146,13 @@
 
       <div class="flex flex-col gap-3 pt-4">
         <div class="rounded-xl overflow-hidden border border-surface-container shadow-inner bg-slate-50 flex items-center justify-center">
-          <img alt="Plano de distribución del salón" class="w-full h-auto object-contain max-h-[500px]" src="assets/images/salon-mapa.jpg" onerror="this.onerror=null; this.src='assets/images/salon-mapa.svg';"/>
+          <img alt="Plano de distribución del salón" class="w-full h-auto object-contain max-h-[500px]" src="assets/images/salon-mapa.svg?v=20261121_v7"/>
         </div>
         <div class="grid grid-cols-2 sm:grid-cols-4 gap-2 text-[11px] pt-1">
-          <span class="p-2 rounded-lg bg-blue-50 text-blue-800 font-semibold text-center">🤸 Brincolines: Cap. 25</span>
-          <span class="p-2 rounded-lg bg-pink-50 text-pink-800 font-semibold text-center">🎠 Carrusel: Cap. 12</span>
-          <span class="p-2 rounded-lg bg-purple-50 text-purple-800 font-semibold text-center">🎂 Comedor: 60 Asientos</span>
-          <span class="p-2 rounded-lg bg-emerald-50 text-emerald-800 font-semibold text-center">🚨 2 Salidas Emergencia</span>
+          <span class="p-2 rounded-lg bg-emerald-50 text-emerald-800 font-semibold text-center">🤸 Juegos y Trampolín (Piso Verde)</span>
+          <span class="p-2 rounded-lg bg-pink-50 text-pink-800 font-semibold text-center">🍳 Cocina: Refri, Estufa, Gas y Micro</span>
+          <span class="p-2 rounded-lg bg-amber-50 text-amber-900 font-semibold text-center">🍽️ Comedor: 50 o 80 Personas</span>
+          <span class="p-2 rounded-lg bg-blue-50 text-blue-800 font-semibold text-center">📶 Wi-Fi, Manteles y 7 Hrs Evento</span>
         </div>
       </div>
     </div>
@@ -1309,6 +1364,6 @@
   </div>
 
   <!-- SCRIPT PRINCIPAL INTERACTIVO -->
-  <script src="js/app.js?v=20261121_v5"></script>
+  <script src="js/app.js?v=20261121_v7"></script>
 </body>
 </html>

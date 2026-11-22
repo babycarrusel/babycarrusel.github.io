@@ -167,56 +167,51 @@ INSERT INTO `empleados` (`id_empleado`, `nombre`, `puesto`, `telefono`, `activo`
 (6, 'Jolie', 'Gerente de Turno y Coordinación', '+52 444 540 2978', 1);
 
 INSERT INTO `mobiliario` (`id_mobiliario`, `nombre`, `cantidad`, `estado`, `descripcion`) VALUES
-(1, 'Carrusel Mecánico Infantil (12 caballos)', 1, 'disponible', 'Carrusel central motorizado con arneses de seguridad y paro de emergencia.'),
-(2, 'Mesas Infantiles Chiavari', 12, 'disponible', 'Mesas tamaño infantil para área de comedor festivo y pastel.'),
-(3, 'Sillas Infantiles Chiavari', 60, 'disponible', 'Sillas ergonómicas infantiles de alta resistencia para comedor.'),
-(4, 'Brincolines y Trampolines Acolchonados', 2, 'disponible', 'Zona de salto con redes de protección perimetral y piso amortiguante.'),
-(5, 'Túnel Oruga y Set de Estimulación Temprana', 1, 'disponible', 'Área suave para bebés de 0 a 3 años desinfectada con vapor.'),
-(6, 'Alberca de Pelotas con Sistema Vapor/UV', 1, 'disponible', 'Alberca infantil gigante con resbaladilla suave y sanitización UV.');
+(1, 'Mesas, Sillas, Manteles y Cubremanteles (Paquete 50 / 80 personas)', 10, 'disponible', 'Mobiliario completo para 50 u 80 invitados con mantelería y cubremanteles incluidos.'),
+(2, 'Cocina Equipada (Refrigerador, Estufa con Gas y Microondas)', 1, 'disponible', 'Área de cocina con refrigerador, estufa conectada a gas, horno de microondas, tarja y barra.'),
+(3, 'Trampolín Circular con Red de Seguridad', 1, 'disponible', 'Brincolín infantil en área de piso verde con malla protectora perimetral.'),
+(4, 'Túnel Oruga, Casitas con Resbaladilla y Juegos Infantiles', 1, 'disponible', 'Túnel oruga morado, casitas infantiles con resbaladilla, caballito mecedor y canasta de básquetbol.'),
+(5, 'Mesita y Sillitas Infantiles + Mesa de Pastel y Dulces', 2, 'disponible', 'Mesas infantiles con mini sillitas para niños y mesa principal para pastel y regalos.'),
+(6, 'Servicio de Internet Wi-Fi y Ventilación del Salón', 1, 'disponible', 'Conexión a internet inalámbrico para invitados y ventiladores de techo en área de comedor.');
 
 INSERT INTO `reglamento` (`id_regla`, `titulo`, `descripcion`, `activo`, `fecha_actualizacion`) VALUES
-(1, 'Garantía de Depósito Reembolsable ($350)', 'El depósito en garantía ($350.00) protege las instalaciones y el mobiliario. Es 100% reembolsable dentro de las 24 horas posteriores al evento tras verificar que no existan daños ni retrasos mayores a 45 minutos en la entrega del salón.', 1, current_timestamp()),
-(2, 'Capacidad y Aforo Máximo (80 Personas)', 'Por seguridad y normativa de Protección Civil, el cupo máximo permitido es de 80 asistentes en total (incluyendo niños y adultos acompañantes).', 1, current_timestamp()),
-(3, 'Uso Obligatorio de Calcetines Antideslizantes', 'Todo niño y adulto que ingrese al área de brincolines, alberca de pelotas, túnel oruga o carrusel deberá portar calcetines antideslizantes por higiene y seguridad.', 1, current_timestamp()),
-(4, 'Alimentos y Bebidas Exclusivos en Área de Comedor', 'Los alimentos, bebidas, pastel y dulces están permitidos únicamente en la zona de mesas y comedor. No se permite ingresar comida o líquidos a los juegos suaves.', 1, current_timestamp()),
-(5, 'Nivel de Sonido Seguro (80 dB) y Puntualidad de Turnos', 'Por bienestar infantil el sonido ambiental no supera los 80 dB. Entre cada turno se reservan 90 a 120 minutos exclusivos para limpieza profunda, desinfección y revisión del salón.', 1, current_timestamp());
+(1, 'Duración de 7 Horas y Horario Límite (Antes de las 11:00 PM)', 'Cada reservación incluye 7 horas continuas de evento. Por disposición del salón, todos los eventos deben concluir antes de las 11:00 de la noche (23:00 hrs).', 1, current_timestamp()),
+(2, 'Dos Modalidades de Capacidad: 50 Personas y 80 Personas', 'El salón maneja dos precios según el aforo contratado: Paquete para 50 personas o Paquete para 80 personas (cupo máximo permitido).', 1, current_timestamp()),
+(3, 'Servicios Incluidos en tu Renta', 'Tu reservación incluye mesas, sillas, manteles, cubremanteles, área de juegos infantiles, internet Wi-Fi, refrigerador, microondas, estufa y gas.', 1, current_timestamp()),
+(4, 'Garantía de Depósito Reembolsable ($350)', 'El depósito en garantía ($350.00) protege el mobiliario, mantelería, electrodomésticos y juegos. Es 100% reembolsable tras verificar al cierre que las instalaciones se entregan sin daños.', 1, current_timestamp()),
+(5, 'Cuidado del Área de Juegos (Piso Verde) y Comedor', 'Se solicita supervisar a los niños en el trampolín, resbaladillas y túnel oruga, así como mantener los alimentos y bebidas dentro del área de comedor.', 1, current_timestamp());
 
 INSERT INTO `reservaciones` (`id_reservacion`, `id_cliente`, `fecha_evento`, `hora_inicio`, `hora_fin`, `tipo_evento`, `numero_invitados`, `estado`, `deposito`, `deposito_estado`, `observaciones`, `fecha_registro`) VALUES
-(1, 1, '2026-11-21', '15:00:00', '19:00:00', 'Cumpleaños #4 de Lucas • Carnaval de Carrusel y Safari Mágico', 62, 'confirmada', 350.00, 'pagado', 'Activo en Salón Principal • 38 Niños / 24 Adultos • Paquete $1,250.00 Liquidado', '2026-11-05 12:05:00'),
-(2, 2, '2026-11-21', '09:30:00', '13:30:00', 'Safari Mágico de Mía', 45, 'finalizada', 350.00, 'devuelto', 'Evento matutino completado e inspeccionado sin daños. Depósito reembolsado al 100%.', '2026-11-06 10:35:00'),
-(3, 3, '2026-11-22', '09:30:00', '13:30:00', 'Fiesta de Cumpleaños Mateo', 40, 'confirmada', 350.00, 'pagado', 'Turno mañana confirmado.', '2026-11-01 16:20:00'),
-(4, 4, '2026-11-22', '15:00:00', '19:00:00', 'Cumpleaños #5 de Valeria', 55, 'confirmada', 350.00, 'pagado', 'Turno tarde confirmado.', '2026-11-02 11:25:00'),
-(5, 3, '2026-11-22', '20:00:00', '23:30:00', 'Cumpleaños #2 de Leo • Dinosaurios', 50, 'confirmada', 350.00, 'pagado', 'Turno noche confirmado (Día con cupo lleno 3/3).', '2026-11-14 11:00:00'),
-(6, 5, '2026-11-24', '09:30:00', '13:30:00', 'Bautizo de Santiago', 50, 'pendiente', 350.00, 'pendiente', 'Apartado pendiente de confirmación de pago.', '2026-11-08 09:50:00'),
-(7, 6, '2026-11-25', '15:00:00', '19:00:00', 'Baby Shower de Valentina', 60, 'confirmada', 350.00, 'pagado', 'Montaje especial en salón comedor y área de regalos.', '2026-11-09 14:10:00'),
-(8, 7, '2026-11-27', '15:00:00', '19:00:00', 'Cumpleaños #3 de Emma • Unicornios', 65, 'confirmada', 350.00, 'pagado', 'Temática Unicornio • Depósito de garantía cubierto.', '2026-11-10 17:35:00'),
-(9, 8, '2026-11-27', '20:00:00', '23:30:00', 'Pijamada VIP de Sofía', 30, 'pendiente', 350.00, 'pendiente', 'Apartado nocturno pendiente de confirmación.', '2026-11-12 18:15:00'),
-(10, 6, '2026-11-28', '09:30:00', '13:30:00', 'Cumpleaños #1 de Regina • Baby Splash', 45, 'confirmada', 350.00, 'pagado', 'Área de estimulación temprana reservada.', '2026-11-15 13:20:00'),
-(11, 7, '2026-11-28', '15:00:00', '19:00:00', 'Fiesta Sorpresa de Emiliano #6', 70, 'confirmada', 350.00, 'pagado', 'Reservación fin de semana.', '2026-11-18 16:40:00');
+(1, 1, '2026-11-21', '14:00:00', '21:00:00', 'Cumpleaños #4 de Lucas • Paquete 80 Personas (7 Horas)', 62, 'confirmada', 350.00, 'pagado', 'Activo en Salón • Incluye mantelería, cocina con gas, internet y juegos • 7 hrs de evento', '2026-11-05 12:05:00'),
+(2, 3, '2026-11-22', '14:00:00', '21:00:00', 'Fiesta de Cumpleaños Mateo • Paquete 80 Personas (7 Horas)', 80, 'confirmada', 350.00, 'pagado', 'Evento de 7 horas confirmado (14:00 a 21:00 hrs).', '2026-11-01 16:20:00'),
+(3, 5, '2026-11-24', '15:00:00', '22:00:00', 'Bautizo de Santiago • Paquete 50 Personas (7 Horas)', 50, 'pendiente', 350.00, 'pendiente', 'Solicitud pendiente de confirmación por el dueño.', '2026-11-08 09:50:00'),
+(4, 6, '2026-11-25', '14:00:00', '21:00:00', 'Baby Shower de Valentina • Paquete 80 Personas (7 Horas)', 80, 'confirmada', 350.00, 'pagado', 'Montaje completo con manteles rosas y cocina equipada.', '2026-11-09 14:10:00'),
+(5, 7, '2026-11-27', '15:00:00', '22:00:00', 'Cumpleaños #3 de Emma • Paquete 80 Personas (7 Horas)', 80, 'confirmada', 350.00, 'pagado', 'Incluye manteles, cubremanteles, juegos y cocina.', '2026-11-10 17:35:00'),
+(6, 8, '2026-11-28', '16:00:00', '23:00:00', 'Fiesta Sorpresa de Emiliano #6 • Paquete 80 Personas (7 Horas)', 80, 'pendiente', 350.00, 'pendiente', 'Horario 16:00 a 23:00 hrs (cierre 11:00 PM) pendiente de confirmar.', '2026-11-12 18:15:00');
 
 INSERT INTO `reservacion_mobiliario` (`id_reservacion_mobiliario`, `id_reservacion`, `id_mobiliario`, `cantidad`) VALUES
-(1, 1, 1, 1),
-(2, 1, 2, 12),
-(3, 1, 3, 60),
-(4, 1, 4, 2),
-(5, 1, 5, 1),
+(1, 1, 1, 10),
+(2, 1, 2, 1),
+(3, 1, 3, 1),
+(4, 1, 4, 1),
+(5, 1, 5, 2),
 (6, 1, 6, 1);
 
 INSERT INTO `checklists` (`id_checklist`, `id_reservacion`, `tipo`, `fecha_revision`, `responsable`, `observaciones`) VALUES
-(1, 1, 'pre_evento', '2026-11-21 14:15:00', 'Elena Rodríguez y Javier García', 'Inspección pre-evento aprobada al 100% antes del ingreso de invitados.'),
-(2, 1, 'post_evento', '2026-11-21 19:00:00', 'Javier García y Carlos Méndez', 'Protocolo de salida programado a las 19:00 hrs para liberación de depósito.');
+(1, 1, 'pre_evento', '2026-11-21 13:15:00', 'Elena Rodríguez y Javier García', 'Inspección pre-evento aprobada al 100% antes del ingreso de invitados.'),
+(2, 1, 'post_evento', '2026-11-21 21:00:00', 'Javier García y Carlos Méndez', 'Protocolo de salida al concluir las 7 horas de evento.');
 
 INSERT INTO `checklist_detalles` (`id_detalle`, `id_checklist`, `elemento`, `estado`, `observaciones`) VALUES
-(1, 1, 'Seguridad Mecánica del Carrusel y Arneses', 'bueno', 'Inspeccionado y verificado por Elena R. a las 14:15 hrs'),
-(2, 1, 'Sanitización de Área Suave (Toddlers)', 'bueno', '100% desinfectado con vapor; ciclo UV en alberca de pelotas completado'),
-(3, 1, 'Mobiliario Infantil y Sillas Chiavari', 'bueno', '12 mesas infantiles / 60 sillas verificadas sin daños'),
-(4, 1, 'Sistema de Audio y Luces LED Ambientales', 'bueno', 'Prueba OK (volumen seguro limitado a 80dB para niños)'),
-(5, 1, 'Higiene de Sanitarios, Botiquín y Extintores', 'bueno', 'Sanitarios con cambiador desinfectados y salidas de emergencia libres'),
-(6, 2, 'Revisión y Apagado Seguro del Carrusel', 'pendiente', 'Verificar paro de emergencia y desconexión de energía'),
-(7, 2, 'Inventario de Mobiliario y Juegos Suaves', 'pendiente', 'Comprobar que no existan piezas dañadas o faltantes'),
-(8, 2, 'Limpieza Básica y Desalojo de Salón', 'pendiente', 'Mesas despejadas, retiro de regalos y pertenencias'),
-(9, 2, 'Inspección de Brincolines y Redes de Protección', 'pendiente', 'Verificar lonas y costuras sin rasgaduras por objetos'),
-(10, 2, 'Entrega de Llaves y Retiro de Brazaletes', 'pendiente', 'Firma de conformidad de salida con el anfitrión');
+(1, 1, 'Trampolín con Red, Túnel Oruga y Casitas con Resbaladilla', 'bueno', 'Juegos infantiles en piso verde limpios y verificados'),
+(2, 1, 'Mesas, Sillas, Manteles y Cubremanteles Instalados', 'bueno', 'Montaje completo de acuerdo al paquete contratado (50 u 80 personas)'),
+(3, 1, 'Cocina: Refrigerador, Estufa con Gas y Microondas', 'bueno', 'Electrodomésticos funcionando y suministro de gas verificado'),
+(4, 1, 'Internet Wi-Fi, Iluminación y Ventiladores de Techo', 'bueno', 'Red Wi-Fi activa y ventilación lista en área de comedor'),
+(5, 1, 'Higiene de Sanitarios, Botiquín y Extintor', 'bueno', 'Sanitarios limpios con insumos completos y extintor en cocina'),
+(6, 2, 'Revisión de Trampolín, Resbaladillas y Juegos Infantiles', 'pendiente', 'Verificar que la malla y los juegos plásticos no presenten daños'),
+(7, 2, 'Conteo de Mesas, Sillas, Manteles y Cubremanteles', 'pendiente', 'Comprobar que la mantelería y sillas estén completas y sin roturas'),
+(8, 2, 'Revisión de Cocina: Estufa (Gas Cerrado), Refri y Microondas', 'pendiente', 'Verificar llave de gas cerrada y electrodomésticos limpios'),
+(9, 2, 'Limpieza General y Retiro de Pertenencias', 'pendiente', 'Comedor y barra despejados antes del límite de las 11:00 PM'),
+(10, 2, 'Entrega del Salón y Liberación de Depósito ($350)', 'pendiente', 'Conformidad de cierre con el anfitrión');
 
 --
 -- Índices para tablas volcadas

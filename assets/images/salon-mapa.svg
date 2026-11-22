@@ -1,69 +1,127 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 500" width="100%" height="100%">
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 840 520" width="100%" height="100%">
   <defs>
-    <pattern id="blueprintGrid" width="20" height="20" patternUnits="userSpaceOnUse">
+    <pattern id="gridPattern" width="20" height="20" patternUnits="userSpaceOnUse">
       <path d="M 20 0 L 0 0 0 20" fill="none" stroke="#e2e8f0" stroke-width="1"/>
+    </pattern>
+    <pattern id="terracottaTile" width="24" height="24" patternUnits="userSpaceOnUse">
+      <rect width="24" height="24" fill="#fff7ed"/>
+      <path d="M 24 0 L 0 0 0 24" fill="none" stroke="#fdba74" stroke-width="1"/>
+      <rect x="0" y="0" width="4" height="4" fill="#9a3412" opacity="0.25"/>
     </pattern>
   </defs>
 
-  <!-- Background Canvas -->
-  <rect width="800" height="500" rx="16" fill="#f8fafc"/>
-  <rect width="800" height="500" fill="url(#blueprintGrid)"/>
+  <!-- Fondo general -->
+  <rect width="840" height="520" rx="16" fill="#f8fafc"/>
+  <rect width="840" height="520" fill="url(#gridPattern)"/>
 
-  <!-- Venue Outer Wall -->
-  <rect x="40" y="40" width="720" height="420" rx="12" fill="#ffffff" stroke="#0f172a" stroke-width="4"/>
+  <!-- Muro Perimetral del Salón Baby Carrusel -->
+  <rect x="30" y="30" width="780" height="460" rx="14" fill="#ffffff" stroke="#0f172a" stroke-width="4"/>
 
-  <!-- Entrance / Lobby (Bottom Center) -->
-  <rect x="300" y="380" width="200" height="80" fill="#f1f5f9" stroke="#64748b" stroke-width="2"/>
-  <rect x="360" y="454" width="80" height="10" fill="#22c55e"/>
-  <text x="400" y="420" font-family="'Plus Jakarta Sans', system-ui, sans-serif" font-weight="700" font-size="14" fill="#0f172a" text-anchor="middle">RECEPCIÓN Y ACCESO</text>
-  <text x="400" y="440" font-family="'Inter', system-ui, sans-serif" font-weight="500" font-size="11" fill="#64748b" text-anchor="middle">Check-in de Invitados &amp; Casilleros</text>
+  <!-- =======================================================================
+       MITAD IZQUIERDA: ÁREA DE JUEGOS INFANTILES (PISO ALFOMBRA VERDE / PALAPA)
+       ======================================================================= -->
+  <rect x="34" y="34" width="350" height="452" rx="10" fill="#dcfce7" stroke="#16a34a" stroke-width="2.5"/>
+  <text x="209" y="62" font-family="'Plus Jakarta Sans', system-ui, sans-serif" font-weight="800" font-size="14" fill="#14532d" text-anchor="middle">🤸 ÁREA DE JUEGOS INFANTILES (PISO VERDE)</text>
 
-  <!-- Central Carousel (Heart of the Venue) -->
-  <circle cx="400" cy="220" r="85" fill="#fdf2f8" stroke="#a43073" stroke-width="3" stroke-dasharray="6,4"/>
-  <circle cx="400" cy="220" r="70" fill="#fce7f3" stroke="#f472b6" stroke-width="2"/>
-  <circle cx="400" cy="220" r="16" fill="#a43073"/>
-  <text x="400" y="215" font-family="'Plus Jakarta Sans', system-ui, sans-serif" font-weight="800" font-size="15" fill="#a43073" text-anchor="middle">🎠 CARRUSEL CENTRAL</text>
-  <text x="400" y="235" font-family="'Inter', system-ui, sans-serif" font-weight="600" font-size="11" fill="#831843" text-anchor="middle">Capacidad: 12 Niños a la vez</text>
+  <!-- Trampolín Circular con Red (Arriba Izquierda - Fotos 4) -->
+  <circle cx="125" cy="145" r="62" fill="#1e293b" stroke="#0284c7" stroke-width="6"/>
+  <circle cx="125" cy="145" r="54" fill="none" stroke="#22c55e" stroke-width="3" stroke-dasharray="6,4"/>
+  <text x="125" y="142" font-family="'Plus Jakarta Sans', system-ui, sans-serif" font-weight="700" font-size="12" fill="#ffffff" text-anchor="middle">Trampolín</text>
+  <text x="125" y="158" font-family="'Inter', system-ui, sans-serif" font-size="10" fill="#bae6fd" text-anchor="middle">con Red Protectora</text>
 
-  <!-- Left Zone: Indoor Playground & Trampolines -->
-  <rect x="60" y="60" width="220" height="300" rx="8" fill="#eff6ff" stroke="#3b82f6" stroke-width="2"/>
-  <text x="170" y="90" font-family="'Plus Jakarta Sans', system-ui, sans-serif" font-weight="700" font-size="14" fill="#1d4ed8" text-anchor="middle">🤸 ZONA DE BRINCOLINES</text>
-  <rect x="80" y="110" width="80" height="110" rx="8" fill="#dbeafe" stroke="#2563eb" stroke-width="1.5"/>
-  <text x="120" y="170" font-family="'Inter', system-ui, sans-serif" font-size="11" font-weight="600" fill="#1e40af" text-anchor="middle">Trampolín 1</text>
-  <rect x="180" y="110" width="80" height="110" rx="8" fill="#dbeafe" stroke="#2563eb" stroke-width="1.5"/>
-  <text x="220" y="170" font-family="'Inter', system-ui, sans-serif" font-size="11" font-weight="600" fill="#1e40af" text-anchor="middle">Trampolín 2</text>
-  <rect x="80" y="240" width="180" height="100" rx="8" fill="#fed7aa" stroke="#f97316" stroke-width="1.5"/>
-  <text x="170" y="295" font-family="'Inter', system-ui, sans-serif" font-size="12" font-weight="700" fill="#c2410c" text-anchor="middle">Alberca de Pelotas Gigante</text>
+  <!-- Casita Infantil con Resbaladilla (Centro-Arriba - Fotos 4 y 5) -->
+  <rect x="215" y="85" width="90" height="75" rx="8" fill="#ffedd5" stroke="#ea580c" stroke-width="2"/>
+  <text x="260" y="120" font-family="'Plus Jakarta Sans', system-ui, sans-serif" font-weight="700" font-size="11" fill="#9a3412" text-anchor="middle">Casita Infantil</text>
+  <text x="260" y="136" font-family="'Inter', system-ui, sans-serif" font-size="9.5" fill="#c2410c" text-anchor="middle">y Resbaladilla</text>
 
-  <!-- Bottom Left: Toddler Soft-Play Zone -->
-  <rect x="60" y="380" width="220" height="65" rx="6" fill="#f0fdf4" stroke="#22c55e" stroke-width="1.5"/>
-  <text x="170" y="415" font-family="'Plus Jakarta Sans', system-ui, sans-serif" font-weight="700" font-size="12" fill="#15803d" text-anchor="middle">🐛 ESTIMULACIÓN BEBÉS (0-3 AÑOS)</text>
-  <text x="170" y="432" font-family="'Inter', system-ui, sans-serif" font-size="10" fill="#166534" text-anchor="middle">Túnel Oruga &amp; Bloques Suaves</text>
+  <!-- Túnel Oruga Morado y Mini Resbaladilla (Centro - Fotos 4 y 5) -->
+  <rect x="175" y="195" width="135" height="58" rx="22" fill="#f3e8ff" stroke="#7e22ce" stroke-width="2"/>
+  <text x="242" y="222" font-family="'Plus Jakarta Sans', system-ui, sans-serif" font-weight="700" font-size="11" fill="#581c87" text-anchor="middle">🐛 Túnel Oruga Morado</text>
+  <text x="242" y="238" font-family="'Inter', system-ui, sans-serif" font-size="9.5" fill="#6b21a8" text-anchor="middle">y Mecedora Infantil</text>
 
-  <!-- Right Zone: Dining & Cake Area -->
-  <rect x="520" y="60" width="220" height="260" rx="8" fill="#faf5ff" stroke="#9333ea" stroke-width="2"/>
-  <text x="630" y="90" font-family="'Plus Jakarta Sans', system-ui, sans-serif" font-weight="700" font-size="14" fill="#7e22ce" text-anchor="middle">🎂 SALÓN COMEDOR &amp; PASTEL</text>
-  <!-- Tables -->
-  <rect x="545" y="110" width="170" height="40" rx="6" fill="#f3e8ff" stroke="#a855f7" stroke-width="1"/>
-  <text x="630" y="135" font-family="'Inter', system-ui, sans-serif" font-size="11" font-weight="600" fill="#6b21a8" text-anchor="middle">Mesa Infantil 1 (14 niños)</text>
-  <rect x="545" y="165" width="170" height="40" rx="6" fill="#f3e8ff" stroke="#a855f7" stroke-width="1"/>
-  <text x="630" y="190" font-family="'Inter', system-ui, sans-serif" font-size="11" font-weight="600" fill="#6b21a8" text-anchor="middle">Mesa Infantil 2 (14 niños)</text>
-  <rect x="545" y="220" width="170" height="80" rx="6" fill="#ede9fe" stroke="#8b5cf6" stroke-width="1"/>
-  <text x="630" y="260" font-family="'Inter', system-ui, sans-serif" font-size="11" font-weight="700" fill="#5b21b6" text-anchor="middle">Mesa Principal de Pastel &amp; Regalos</text>
+  <!-- Mini Resbaladilla Bebés -->
+  <rect x="60" y="235" width="95" height="65" rx="10" fill="#fef3c7" stroke="#d97706" stroke-width="2"/>
+  <text x="107" y="265" font-family="'Plus Jakarta Sans', system-ui, sans-serif" font-weight="700" font-size="10.5" fill="#92400e" text-anchor="middle">Mini Resbaladilla</text>
+  <text x="107" y="280" font-family="'Inter', system-ui, sans-serif" font-size="9.5" fill="#b45309" text-anchor="middle">Área Bebés</text>
 
-  <!-- Restrooms & Parents Lounge (Bottom Right) -->
-  <rect x="520" y="340" width="105" height="105" rx="6" fill="#f1f5f9" stroke="#64748b" stroke-width="1.5"/>
-  <text x="572" y="390" font-family="'Plus Jakarta Sans', system-ui, sans-serif" font-weight="700" font-size="11" fill="#334155" text-anchor="middle">SANITARIOS</text>
-  <text x="572" y="408" font-family="'Inter', system-ui, sans-serif" font-size="9" fill="#64748b" text-anchor="middle">Con Cambiadores</text>
+  <!-- Mesita Infantil y Sillitas de Colores + Básquetbol (Abajo Centro - Fotos 4 y 5) -->
+  <rect x="175" y="275" width="135" height="70" rx="10" fill="#e0f2fe" stroke="#0284c7" stroke-width="1.8"/>
+  <text x="242" y="305" font-family="'Plus Jakarta Sans', system-ui, sans-serif" font-weight="700" font-size="10.5" fill="#075985" text-anchor="middle">Mesita de Juegos</text>
+  <text x="242" y="322" font-family="'Inter', system-ui, sans-serif" font-size="9.5" fill="#0369a1" text-anchor="middle">Canasta Básquet y Arcade</text>
 
-  <rect x="635" y="340" width="105" height="105" rx="6" fill="#f1f5f9" stroke="#64748b" stroke-width="1.5"/>
-  <text x="687" y="390" font-family="'Plus Jakarta Sans', system-ui, sans-serif" font-weight="700" font-size="11" fill="#334155" text-anchor="middle">CAFETERÍA</text>
-  <text x="687" y="408" font-family="'Inter', system-ui, sans-serif" font-size="9" fill="#64748b" text-anchor="middle">Área para Padres</text>
+  <!-- Casita Blanca / Área Inferior Izquierda y Entrada -->
+  <rect x="55" y="330" width="100" height="75" rx="8" fill="#ede9fe" stroke="#6d28d9" stroke-width="1.8"/>
+  <text x="105" y="365" font-family="'Plus Jakarta Sans', system-ui, sans-serif" font-weight="700" font-size="10.5" fill="#4c1d95" text-anchor="middle">Casita de Juegos</text>
+  <text x="105" y="380" font-family="'Inter', system-ui, sans-serif" font-size="9.5" fill="#5b21b6" text-anchor="middle">Techada</text>
 
-  <!-- Emergency Exits -->
-  <rect x="38" y="200" width="6" height="40" fill="#ef4444"/>
-  <text x="25" y="225" font-family="'Inter', system-ui, sans-serif" font-size="9" font-weight="700" fill="#ef4444" transform="rotate(-90 25,225)">SALIDA</text>
+  <!-- Acceso Principal -->
+  <rect x="110" y="476" width="140" height="14" rx="4" fill="#16a34a"/>
+  <text x="180" y="468" font-family="'Plus Jakarta Sans', system-ui, sans-serif" font-weight="800" font-size="11" fill="#14532d" text-anchor="middle">🚪 ENTRADA PRINCIPAL Y RECEPCIÓN</text>
 
-  <rect x="756" y="200" width="6" height="40" fill="#ef4444"/>
-  <text x="772" y="225" font-family="'Inter', system-ui, sans-serif" font-size="9" font-weight="700" fill="#ef4444" transform="rotate(90 772,225)">SALIDA</text>
+  <!-- =======================================================================
+       MITAD DERECHA: SALÓN COMEDOR, COCINA Y ÁREA DE PASTEL (PISO TERRACOTA)
+       ======================================================================= -->
+  <rect x="384" y="34" width="422" height="452" rx="10" fill="url(#terracottaTile)" stroke="#c2410c" stroke-width="2"/>
+
+  <!-- Módulo de Sanitarios y Cocina Equipada (Muro Rosa/Azul Central - Fotos 2, 4, 6, 7) -->
+  <rect x="384" y="34" width="125" height="90" fill="#dbeafe" stroke="#1d4ed8" stroke-width="2"/>
+  <text x="446" y="75" font-family="'Plus Jakarta Sans', system-ui, sans-serif" font-weight="800" font-size="11" fill="#1e3a8a" text-anchor="middle">🚻 SANITARIOS</text>
+  <text x="446" y="92" font-family="'Inter', system-ui, sans-serif" font-size="9.5" fill="#1d4ed8" text-anchor="middle">Damas y Caballeros</text>
+
+  <!-- Cocina Equipada (Refrigerador, Estufa con Gas, Microondas y Barra - Fotos 2 y 6) -->
+  <rect x="384" y="124" width="125" height="165" fill="#fce7f3" stroke="#be185d" stroke-width="2.5"/>
+  <text x="446" y="152" font-family="'Plus Jakarta Sans', system-ui, sans-serif" font-weight="800" font-size="11.5" fill="#831843" text-anchor="middle">🍳 COCINA EQUIPADA</text>
+  <text x="446" y="172" font-family="'Inter', system-ui, sans-serif" font-weight="600" font-size="9.5" fill="#9d174d" text-anchor="middle">• Refrigerador</text>
+  <text x="446" y="188" font-family="'Inter', system-ui, sans-serif" font-weight="600" font-size="9.5" fill="#9d174d" text-anchor="middle">• Estufa con Gas</text>
+  <text x="446" y="204" font-family="'Inter', system-ui, sans-serif" font-weight="600" font-size="9.5" fill="#9d174d" text-anchor="middle">• Microondas y Tarja</text>
+  <text x="446" y="220" font-family="'Inter', system-ui, sans-serif" font-weight="600" font-size="9.5" fill="#9d174d" text-anchor="middle">• Barra de Servicio</text>
+  <rect x="497" y="140" width="12" height="135" rx="3" fill="#ffffff" stroke="#94a3b8" stroke-width="1.5"/>
+
+  <!-- Área de Pastel, Dulces y Piñata (Foto 3 y 7) -->
+  <rect x="396" y="315" width="130" height="150" rx="10" fill="#fdf2f8" stroke="#db2777" stroke-width="2"/>
+  <text x="461" y="352" font-family="'Plus Jakarta Sans', system-ui, sans-serif" font-weight="800" font-size="11.5" fill="#9d174d" text-anchor="middle">🎂 MESA DE PASTEL</text>
+  <text x="461" y="370" font-family="'Inter', system-ui, sans-serif" font-weight="600" font-size="10" fill="#be185d" text-anchor="middle">Mesa de Dulces y Regalos</text>
+  <rect x="412" y="390" width="98" height="55" rx="6" fill="#e0f2fe" stroke="#0284c7" stroke-width="1.5"/>
+  <text x="461" y="416" font-family="'Plus Jakarta Sans', system-ui, sans-serif" font-weight="700" font-size="10" fill="#0369a1" text-anchor="middle">Mesita Infantil</text>
+  <text x="461" y="430" font-family="'Inter', system-ui, sans-serif" font-size="9" fill="#0284c7" text-anchor="middle">con Mini Sillitas</text>
+
+  <!-- Salón Comedor Principal (Fotos 1, 2, 3, 6, 7) -->
+  <text x="660" y="60" font-family="'Plus Jakarta Sans', system-ui, sans-serif" font-weight="800" font-size="13" fill="#7c2d12" text-anchor="middle">🍽️ SALÓN COMEDOR (50 A 80 PERSONAS)</text>
+  <text x="660" y="76" font-family="'Inter', system-ui, sans-serif" font-weight="600" font-size="10" fill="#9a3412" text-anchor="middle">Incluye Mesas, Sillas, Manteles, Cubremanteles y Wi-Fi</text>
+
+  <!-- Mural Baby Looney Tunes al Fondo (Fotos 1, 3, 6, 7) -->
+  <rect x="545" y="88" width="230" height="18" rx="4" fill="#dbeafe" stroke="#3b82f6" stroke-width="1"/>
+  <text x="660" y="101" font-family="'Inter', system-ui, sans-serif" font-weight="700" font-size="9.5" fill="#1d4ed8" text-anchor="middle">🎨 Mural Infantil Fondo + Ventiladores de Techo</text>
+
+  <!-- Mesas con Manteles y Cubremanteles (6 Mesas representadas) -->
+  <g fill="#ffffff" stroke="#e11d48" stroke-width="2">
+    <rect x="540" y="125" width="105" height="48" rx="6"/>
+    <rect x="670" y="125" width="105" height="48" rx="6"/>
+    <rect x="540" y="195" width="105" height="48" rx="6"/>
+    <rect x="670" y="195" width="105" height="48" rx="6"/>
+    <rect x="540" y="265" width="105" height="48" rx="6"/>
+    <rect x="670" y="265" width="105" height="48" rx="6"/>
+    <rect x="540" y="335" width="105" height="48" rx="6"/>
+    <rect x="670" y="335" width="105" height="48" rx="6"/>
+  </g>
+  <g font-family="'Inter', system-ui, sans-serif" font-size="9.5" font-weight="700" fill="#9f1239" text-anchor="middle">
+    <text x="592" y="153">Mesa + Mantel</text>
+    <text x="722" y="153">Mesa + Mantel</text>
+    <text x="592" y="223">Mesa + Mantel</text>
+    <text x="722" y="223">Mesa + Mantel</text>
+    <text x="592" y="293">Mesa + Mantel</text>
+    <text x="722" y="293">Mesa + Mantel</text>
+    <text x="592" y="363">Mesa + Mantel</text>
+    <text x="722" y="363">Mesa + Mantel</text>
+  </g>
+
+  <!-- Mural de Princesas en Muro Derecho (Fotos 1, 2, 3, 6) -->
+  <rect x="786" y="120" width="16" height="270" rx="4" fill="#fce7f3" stroke="#ec4899" stroke-width="1"/>
+  <text x="797" y="255" font-family="'Inter', system-ui, sans-serif" font-weight="700" font-size="9.5" fill="#be185d" text-anchor="middle" transform="rotate(90 797,255)">👑 Mural de Princesas</text>
+
+  <!-- Banner de Servicios Incluidos (Abajo Derecha) -->
+  <rect x="540" y="405" width="245" height="62" rx="10" fill="#eff6ff" stroke="#3b82f6" stroke-width="1.5"/>
+  <text x="662" y="427" font-family="'Plus Jakarta Sans', system-ui, sans-serif" font-weight="800" font-size="11" fill="#1e40af" text-anchor="middle">📶 Servicios Incluidos (7 Horas)</text>
+  <text x="662" y="444" font-family="'Inter', system-ui, sans-serif" font-size="9.5" fill="#1e3a8a" text-anchor="middle">Internet Wi-Fi • Gas • Estufa • Refrigerador</text>
+  <text x="662" y="458" font-family="'Inter', system-ui, sans-serif" font-size="9.5" fill="#1e3a8a" text-anchor="middle">Microondas • Mesas • Sillas • Mantelería</text>
 </svg>
