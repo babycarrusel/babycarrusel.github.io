@@ -9,6 +9,24 @@ html {
   scroll-behavior: smooth;
 }
 
+/* Prevención de parpadeo o desbordamiento de texto al cargar iconos Material Symbols */
+.material-symbols-outlined {
+  display: inline-block;
+  width: 1em;
+  height: 1em;
+  line-height: 1;
+  overflow: hidden;
+  white-space: nowrap;
+  word-wrap: normal;
+  direction: ltr;
+  user-select: none;
+  flex-shrink: 0;
+  vertical-align: middle;
+  -webkit-font-smoothing: antialiased;
+  text-rendering: optimizeLegibility;
+  font-feature-settings: 'liga';
+}
+
 /* Modales */
 .modal-backdrop {
   backdrop-filter: blur(8px);
@@ -72,21 +90,39 @@ html {
 
 /* Estilos de impresión para la Hoja del Día */
 @media print {
-  body * {
-    visibility: hidden;
+  @page {
+    size: auto;
+    margin: 12mm;
+  }
+  html, body {
+    height: auto !important;
+    min-height: 0 !important;
+    overflow: visible !important;
+    background: #ffffff !important;
+    margin: 0 !important;
+    padding: 0 !important;
+  }
+  body > *:not(#modal-day-sheet) {
+    display: none !important;
+  }
+  #modal-day-sheet {
+    position: static !important;
+    display: block !important;
+    padding: 0 !important;
+    margin: 0 !important;
+    background: #ffffff !important;
+    backdrop-filter: none !important;
+  }
+  #modal-day-sheet > div {
+    max-width: 100% !important;
+    max-height: none !important;
+    overflow: visible !important;
+    box-shadow: none !important;
+    border: none !important;
+    padding: 0 !important;
   }
   #printable-day-sheet, #printable-day-sheet * {
-    visibility: visible;
-  }
-  #printable-day-sheet {
-    position: absolute;
-    left: 0;
-    top: 0;
-    width: 100%;
-    margin: 0;
-    padding: 20px;
-    background: white;
-    color: black;
+    visibility: visible !important;
   }
   .no-print {
     display: none !important;
